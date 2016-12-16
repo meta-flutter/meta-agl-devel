@@ -29,8 +29,6 @@ RDEPENDS_${PN} += "\
     curl \
     giflib \
     neon \
-    mongodb \
-    nodejs \
     mongoose \
     fuse \
     protobuf \

@@ -36,6 +36,8 @@ FILES_${PN}-dev = "${exec_prefix}/include/mongoose.h"
 
 FILES_${PN}-doc = "${exec_prefix}/share/doc/*"
 
+TARGET_CC_ARCH += "${LDFLAGS}"
+
 do_compile() {
 
     if [ "${@bb.utils.contains('MONGOOSE_EXLIBS', 'libmongoose.so', 'def', '', d)}" = "def" ]; then

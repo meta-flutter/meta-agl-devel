@@ -38,4 +38,13 @@ RDEPENDS_${PN} += "\
     tiff \
     librsvg \
     libpcap \
+    iputils \
+    net-tools \
+    pixman \
+    bluez5 \
+    speex \
+    glib-2.0 \
+    libogg \
+    thrift \
+    ppp \
 "

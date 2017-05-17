@@ -49,4 +49,5 @@ RDEPENDS_${PN} += "\
     ppp \
     libdatrie \
     libthai \
+    libwebsockets \
 "

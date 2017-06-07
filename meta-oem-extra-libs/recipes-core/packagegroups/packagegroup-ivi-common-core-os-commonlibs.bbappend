@@ -47,4 +47,6 @@ RDEPENDS_${PN} += "\
     libogg \
     thrift \
     ppp \
+    libdatrie \
+    libthai \
 "

@@ -1,6 +1,6 @@
 DESCRIPTION = "Thai language support routines"
 LICENSE = "LGPL"
-DEPENDS = "libdatrie"
+DEPENDS = "libdatrie libdatrie-native"
 
 SRC_URI = "http://linux.thai.net/pub/thailinux/software/libthai/${PN}-${PV}.tar.xz"
 

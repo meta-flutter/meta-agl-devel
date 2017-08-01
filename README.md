@@ -1,3 +1,21 @@
+meta-agl-devel layer
+======================================================
+
+The meta-agl-devel layer is intended to contain components that are under
+testing/development or software packages that OEMs need but to not exist
+in AGL.
+
+Here below you can find more information about the components of this layer.
+
+Virtualization support (meta-egvirt)
+======================================================
+
+meta-egvirt is the Virtualization Expert Group (EG-VIRT) layer, targeting to enable
+virtualization support in AGL.
+
+For more information, see the README.md file included in the layer, or alternatively
+visit the EG\_VIRT wiki page at: https://wiki.automotivelinux.org/eg-virt
+
 The OEM needs library for AGL
 ======================================================
 

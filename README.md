@@ -70,3 +70,18 @@ Reference hardware:
 * QEMU (x86-64) - emulated machine: qemux86-64
 * Renesas R-Car Gen2 (R-Car M2) - machine: porter
 
+HMI Framework
+======================================================
+Quick start guide
+-----------------
+To Add HMI Framework, it is necessary to add 'hmi-framework' at source command as same as agl-oem-extra-libs
+
+1. Before build you need prepare agl layers:
+ * You can read it at meta-agl/README-AGL.md
+
+2. build the agl-demo-platform with 'hmi-framework':
+
+```bash
+source meta-agl/scripts/aglsetup.sh -m m3ulcb agl-demo [agl-appfw-smack] [agl-devel] [agl-netboot] hmi-framework
+```
+

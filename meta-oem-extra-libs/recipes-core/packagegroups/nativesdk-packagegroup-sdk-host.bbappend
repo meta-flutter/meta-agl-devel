@@ -1,1 +1,1 @@
-RDEPENDS_${PN} =+ "nativesdk-protobuf"
+RDEPENDS_${PN} =+ "nativesdk-protobuf-dev"

@@ -5,11 +5,6 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
-PACKAGES = " \
-  packagegroup-hmi-framework \
-  packagegroup-hmi-framework-dev \
-"
-
 RDEPENDS_${PN} += " \
   agl-service-windowmanager-2017 \
   agl-service-soundmanager-2017 \

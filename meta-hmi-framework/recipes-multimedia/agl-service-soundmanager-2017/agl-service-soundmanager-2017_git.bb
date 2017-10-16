@@ -13,7 +13,7 @@ DEPENDS = "dbus glib-2.0 af-binder json-c"
 RDEPENDS_${PN} = "audiomanager audiomanager-plugins"
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/apps/agl-service-soundmanager-2017;protocol=https;branch=master"
-SRCREV = "4bf8930f4f56eae60cf4562b9a601c828f2bd501"
+SRCREV = "2ad2d4f0879d091debf3853cfac0cd5129d5699a"
 
 inherit cmake aglwgt
 

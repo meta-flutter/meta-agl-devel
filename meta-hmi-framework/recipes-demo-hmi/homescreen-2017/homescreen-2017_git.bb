@@ -10,6 +10,6 @@ inherit qmake5 systemd pkgconfig aglwgt
 DEPENDS = " qtbase qtdeclarative qtquickcontrols2 pulseaudio agl-service-homescreen-2017 agl-service-windowmanager-2017"
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/staging/homescreen-2017;protocol=https;branch=master"
-SRCREV = "381755e4686a08e766316aaf40e8fdfa202d48d4"
+SRCREV = "3d836c185f92fb38fed31e373f371187322b2f3f"
 
 PATH_prepend = "${STAGING_DIR_NATIVE}${OE_QMAKE_PATH_QT_BINS}:"

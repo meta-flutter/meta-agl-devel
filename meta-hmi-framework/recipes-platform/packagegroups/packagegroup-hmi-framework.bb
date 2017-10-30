@@ -10,13 +10,7 @@ RDEPENDS_${PN} += " \
   agl-service-soundmanager-2017 \
   agl-service-homescreen-2017 \
   homescreen-2017 \
-"
-
-#
-# THESE SHOULD NOT BE NEEDED and have to be converted to being shipped as platform libraries instead !
-#
-RDEPENDS_${PN}-dev += " \
-   agl-service-windowmanager-2017-dev \
-   agl-service-soundmanager-2017-dev \
-   agl-service-homescreen-2017-dev \
+  libwindowmanager \
+  libsoundmanager \
+  libhomescreen \
 "

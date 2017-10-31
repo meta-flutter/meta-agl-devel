@@ -19,6 +19,6 @@ DEPENDS = "\
 "
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/staging/homescreen-2017;protocol=https;branch=master"
-SRCREV = "3d836c185f92fb38fed31e373f371187322b2f3f"
+SRCREV = "4940d001f08bec6fd68293efcbd6673a9ffce65e"
 
 PATH_prepend = "${STAGING_DIR_NATIVE}${OE_QMAKE_PATH_QT_BINS}:"

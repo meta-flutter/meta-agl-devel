@@ -6,7 +6,7 @@ DEPENDS = "af-binder json-c"
 RDEPENDS_${PN} = "agl-service-windowmanager-2017"
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/staging/libwindowmanager.git;protocol=https;branch=master"
-SRCREV = "922255ac97240980059979ab7975118f46c950a0"
+SRCREV = "71d3c9ee49ece6063ea93090b3661df6a90dd1de"
 S = "${WORKDIR}/git"
 
 inherit cmake

@@ -5,7 +5,8 @@ DESCRIPTION = "Window Manager 2017 is the service binding for controlling render
 HOMEPAGE    = "https://wiki.automotivelinux.org/windowmanager"
 SECTION = "graphics"
 LICENSE     = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=2ee41112a44fe7014dce33e26468ba93"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=2ee41112a44fe7014dce33e26468ba93 \
+                    file://LICENSE.MIT;md5=a7514fe5664902e337bd8a4443d8f348"
 DEPENDS = "af-binder json-c wayland wayland-ivi-extension wayland-native"
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/apps/agl-service-windowmanager-2017;protocol=https;branch=master"

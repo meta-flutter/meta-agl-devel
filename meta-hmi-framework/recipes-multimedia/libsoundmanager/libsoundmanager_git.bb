@@ -7,7 +7,7 @@ DEPENDS = "af-binder json-c"
 RDEPENDS_${PN} = "agl-service-soundmanager-2017"
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/staging/libsoundmanager.git;protocol=https;branch=master"
-SRCREV = "5e5eb5cdf5684ab47d9d4e91833ed27e29215479"
+SRCREV = "cda4a958e85d397bae142fbe6068a3e17d4aa935"
 S = "${WORKDIR}/git"
 
 inherit cmake

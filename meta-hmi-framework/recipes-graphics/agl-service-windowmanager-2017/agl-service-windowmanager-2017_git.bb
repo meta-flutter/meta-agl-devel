@@ -16,4 +16,4 @@ S = "${WORKDIR}/git"
 inherit cmake aglwgt
 
 #If you would like to output log, uncomment out
-#EXTRA_OECMAKE = " -DENABLE_DEBUG_OUTPUT=ON "
+EXTRA_OECMAKE_append_agl-devel = " -DENABLE_DEBUG_OUTPUT=ON "

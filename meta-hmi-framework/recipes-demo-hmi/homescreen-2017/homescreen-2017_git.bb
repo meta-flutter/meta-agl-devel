@@ -12,8 +12,8 @@ DEPENDS = "\
         pulseaudio \
         agl-service-homescreen-2017 \
         agl-service-windowmanager-2017 \
-        libhomescreen \
         libwindowmanager \
+        virtual/libhomescreen \
 "
 
 inherit qmake5 systemd pkgconfig aglwgt

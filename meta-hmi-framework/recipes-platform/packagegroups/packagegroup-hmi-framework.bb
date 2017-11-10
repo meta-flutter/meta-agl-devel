@@ -11,6 +11,7 @@ RDEPENDS_${PN} += " \
   agl-service-homescreen-2017 \
   homescreen-2017 \
   libwindowmanager \
+  qlibwindowmanager \
   libsoundmanager \
   libhomescreen \
 "

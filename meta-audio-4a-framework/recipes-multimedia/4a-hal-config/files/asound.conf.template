@@ -1,0 +1,136 @@
+
+# ------------------------------------------------------
+# Mixer PCM allow to play multiple stream simultaneously
+# ------------------------------------------------------
+pcm.@AUDIO_DEV_NAME@ {
+    type dmix
+    slave {pcm "hw:@AUDIO_DEV_NAME_ID@"} #
+    ipc_key 1001          # ipc_key should be unique to each dmix
+}
+
+# -----------------------------------------------------
+#  Register ControllerHookPlugin (ToiBeFix fullpath)
+# -----------------------------------------------------
+pcm_hook_type.CtlHookPlugin {
+    install "AlsaInstallHook"
+    lib "@INSTALL_PREFIX@/lib/policy_alsa_hook.so"
+}
+
+
+# -------------------------------------------------------
+# Define one Audio Virtual Channel per Audio Roles
+# -------------------------------------------------------
+pcm.MusicPCM {
+    type softvol
+
+    # Point Slave on HOOK for policies control
+    slave.pcm "@AUDIO_DEV_NAME@"
+
+    # name should match with HAL definition
+    control.name  "Playback Multimedia"
+}
+
+pcm.NaviPCM {
+    type softvol
+
+    # Point Slave on HOOK for policies control
+    slave.pcm "@AUDIO_DEV_NAME@"
+
+    # name should match with HAL definition
+    control.name  "Playback Navigation"
+}
+
+pcm.UrgentPCM {
+    type softvol
+
+    # Point Slave on HOOK for policies control
+    slave.pcm "@AUDIO_DEV_NAME@"
+
+    # name should match with HAL definition
+    control.name  "Playback Emergency"
+}
+
+# ----------------------------------------------------
+# Define one hooked PCM channel per Audio Roles
+# ----------------------------------------------------
+pcm.Multimedia {
+    type hooks
+    slave {pcm "MusicPCM"}
+    hooks.0 {
+        comment "Defined used hook sharelib and provide arguments/config to install func"
+        type "CtlHookPlugin"
+        hook_args {
+
+            # print few log messages (default false)
+            verbose true
+
+            # uri to audio-4a policy engine
+            uri="unix:/var/tmp/pol4a"
+
+            # timeout in ms (default 500)
+            timeout 5000
+
+            # force API synchronous mode
+            synchronous true
+
+            # api subcall to request a role
+            request {
+                multimedia-role "{'uid':'alsa-hook-client'}"
+                signal-timeout  "{'timeout':180, 'music':'quit'}"
+            }
+
+            # api subcall to request a role
+            release {
+                release-role "{'uid':'alsa-hook-client'}"
+            }
+
+            # map AGL event on Unix signal. Search in event for json key=value
+            events {
+                sig-02 {search music, value quit}
+                sig-31 {search event, value start}
+                sig-32 {search event, value start}
+            }
+        }
+    }
+}
+
+pcm.Navigation {
+    type hooks
+    slave {pcm "NaviPCM"}
+    hooks.0 {
+        comment "Defined used hook sharelib and provide arguments/config to install func"
+        type "CtlHookPlugin"
+        hook_args {
+
+            # print few log messages (default false)
+            verbose true
+
+            # uri to audio-4a policy engine
+            uri="unix:/var/tmp/pol4a"
+
+            # timeout in ms (default 500)
+            timeout 5000
+
+            # force API synchronous mode
+            synchronous true
+
+            # api subcall to request a role
+            request {
+                navigation-role "{'uid':'alsa-hook-client'}"
+                signal-timeout  "{'timeout':5, 'navi':'quit'}"
+            }
+
+            # api subcall to request a role
+            release {
+                release-role "{'uid':'alsa-hook-client'}"
+            }
+
+            # map AGL event on Unix signal. Search in event for json key=value
+            events {
+                sig-02 {search navi, value quit}
+                sig-31 {search event, value start}
+                sig-32 {search event, value start}
+            }
+        }
+    }
+}

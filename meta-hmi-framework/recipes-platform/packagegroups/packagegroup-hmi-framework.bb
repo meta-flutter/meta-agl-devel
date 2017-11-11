@@ -13,5 +13,5 @@ RDEPENDS_${PN} += " \
   libwindowmanager \
   qlibwindowmanager \
   libsoundmanager \
-  libhomescreen \
+  libhomescreen-2017 \
 "

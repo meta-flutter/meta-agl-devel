@@ -12,5 +12,5 @@ RDEPENDS_${PN} += "\
     4a-alsa-core \
     4a-hal-reference \
     agl-service-audio-4a \
-    virtual/4a-hal-config \
+    VIRTUAL-RUNTIME_alsa-state \
 "

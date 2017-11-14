@@ -12,7 +12,7 @@ SRC_URI = "file://asound.conf.template \
 
 PV = "0.1"
 
-RPROVIDES_${PN} = "virtual/4a-hal-config"
+RPROVIDES_${PN} += "VIRTUAL-RUNTIME_alsa-state"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

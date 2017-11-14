@@ -1,10 +1,10 @@
+#AGL Audio High Level ALSA configuration
+#This define 2 sounds card with 8 audio roles each
+#The alsa soft volume control name must match with the HAL Control Name
 
-# ------------------------------------------------------
-# Mixer PCM allow to play multiple stream simultaneously
-# ------------------------------------------------------
 pcm.@AUDIO_DEV_NAME@ {
     type dmix
-    slave {pcm "hw:@AUDIO_DEV_NAME_ID@"} #
+    slave {pcm "hw:@AUDIO_DEV_NAME_ID@"}
     ipc_key 1001          # ipc_key should be unique to each dmix
 }
 
@@ -16,38 +16,68 @@ pcm_hook_type.CtlHookPlugin {
     lib "@INSTALL_PREFIX@/lib/policy_alsa_hook.so"
 }
 
-
-# -------------------------------------------------------
-# Define one Audio Virtual Channel per Audio Roles
-# -------------------------------------------------------
-pcm.MusicPCM {
-    type softvol
-
-    # Point Slave on HOOK for policies control
-    slave.pcm "@AUDIO_DEV_NAME@"
-
-    # name should match with HAL definition
-    control.name  "Playback Multimedia"
+pcm.Entertainment_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "Entertainment_Volume"
+ }
 }
 
-pcm.NaviPCM {
-    type softvol
-
-    # Point Slave on HOOK for policies control
-    slave.pcm "@AUDIO_DEV_NAME@"
-
-    # name should match with HAL definition
-    control.name  "Playback Navigation"
+pcm.Guidance_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "Guidance_Volume"
+ }
 }
 
-pcm.UrgentPCM {
-    type softvol
+pcm.Communications_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "Communications_Volume"
+ }
+}
 
-    # Point Slave on HOOK for policies control
-    slave.pcm "@AUDIO_DEV_NAME@"
+pcm.Notification_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "Notification_Volume"
+ }
+}
 
-    # name should match with HAL definition
-    control.name  "Playback Emergency"
+pcm.Warning_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "Warning_Volume"
+ }
+}
+
+pcm.System_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "System_Volume"
+ }
+}
+
+pcm.Startup_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "Startup_Volume"
+ }
+}
+
+pcm.Shutdown_Main {
+ type softvol
+ slave.pcm "@AUDIO_DEV_NAME@"
+ control{
+   name "Shutdown_Volume"
+ }
 }
 
 # ----------------------------------------------------
@@ -55,7 +85,7 @@ pcm.UrgentPCM {
 # ----------------------------------------------------
 pcm.Multimedia {
     type hooks
-    slave {pcm "MusicPCM"}
+    slave {pcm "Entertainment_Main"}
     hooks.0 {
         comment "Defined used hook sharelib and provide arguments/config to install func"
         type "CtlHookPlugin"
@@ -65,7 +95,7 @@ pcm.Multimedia {
             verbose true
 
             # uri to audio-4a policy engine
-            uri="unix:/var/tmp/pol4a"
+            uri="unix:/run/user/0/apis/ws/ahl-4a"
 
             # timeout in ms (default 500)
             timeout 5000
@@ -75,28 +105,32 @@ pcm.Multimedia {
 
             # api subcall to request a role
             request {
-                multimedia-role "{'uid':'alsa-hook-client'}"
-                signal-timeout  "{'timeout':180, 'music':'quit'}"
+                stream_open "{'audio_role': 'Entertainment', 'endpoint_type':'sink'}"
+                set_stream_state "{'state':'running'}"
             }
 
             # api subcall to request a role
             release {
-                release-role "{'uid':'alsa-hook-client'}"
+                set_stream_state "{'state':'idle'}"
+                stream_close "{}"
             }
 
             # map AGL event on Unix signal. Search in event for json key=value
             events {
-                sig-02 {search music, value quit}
-                sig-31 {search event, value start}
-                sig-32 {search event, value start}
+                sig-02 {search state_event, value 1}
+                sig-31 {search state_event, value 2}
+                sig-32 {search state_event, value 3}
             }
         }
     }
 }
 
+# ----------------------------------------------------
+# Define one hooked PCM channel per Audio Roles
+# ----------------------------------------------------
 pcm.Navigation {
     type hooks
-    slave {pcm "NaviPCM"}
+    slave {pcm "Guidance_Main"}
     hooks.0 {
         comment "Defined used hook sharelib and provide arguments/config to install func"
         type "CtlHookPlugin"
@@ -106,7 +140,7 @@ pcm.Navigation {
             verbose true
 
             # uri to audio-4a policy engine
-            uri="unix:/var/tmp/pol4a"
+            uri="unix:/run/user/0/apis/ws/ahl-4a"
 
             # timeout in ms (default 500)
             timeout 5000
@@ -116,20 +150,21 @@ pcm.Navigation {
 
             # api subcall to request a role
             request {
-                navigation-role "{'uid':'alsa-hook-client'}"
-                signal-timeout  "{'timeout':5, 'navi':'quit'}"
+                stream_open "{'audio_role': 'Guidance', 'endpoint_type':'sink'}"
+                set_stream_state "{'state':'running'}"
             }
 
             # api subcall to request a role
             release {
-                release-role "{'uid':'alsa-hook-client'}"
+                set_stream_state "{'state':'idle'}"
+                stream_close "{}"
             }
 
             # map AGL event on Unix signal. Search in event for json key=value
             events {
-                sig-02 {search navi, value quit}
-                sig-31 {search event, value start}
-                sig-32 {search event, value start}
+                sig-02 {search state_event, value 1}
+                sig-31 {search state_event, value 2}
+                sig-32 {search state_event, value 3}
             }
         }
     }

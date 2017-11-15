@@ -15,6 +15,8 @@ S  = "${WORKDIR}/git"
 
 inherit afb-system-cmake
 
+EXTRA_OECMAKE += " -DHAL_USB_DEVICE=1"
+
 #Select Here your HAL
 EXTRA_OECMAKE_m3ulcb += " -DHAL_RCAR-M3=1"
 

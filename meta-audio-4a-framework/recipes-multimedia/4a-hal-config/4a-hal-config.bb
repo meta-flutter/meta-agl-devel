@@ -17,7 +17,7 @@ RPROVIDES_${PN} += "VIRTUAL-RUNTIME_alsa-state"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 AUDIO_DEV_NAME ?= "Speakers"
-AUDIO_DEV_NAME_ID ?= "usb-audio"
+AUDIO_DEV_NAME_ID ?= "0"
 
 AUDIO_DEV_NAME_m3ulcb = "M3-Speakers"
 AUDIO_DEV_NAME_ID_m3ulcb = "rsnddai0ak4613h"

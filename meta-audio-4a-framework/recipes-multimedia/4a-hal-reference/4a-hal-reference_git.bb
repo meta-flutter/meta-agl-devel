@@ -15,10 +15,13 @@ S  = "${WORKDIR}/git"
 
 inherit afb-system-cmake
 
-EXTRA_OECMAKE += " -DHAL_USB_DEVICE=1"
+EXTRA_OECMAKE += "-DHAL_USB_DEVICE=1"
 
-#Select Here your HAL
-EXTRA_OECMAKE_m3ulcb += " -DHAL_RCAR-M3=1"
+# Select platform specific additional HAL(s)
+EXTRA_OECMAKE_append_x86-64 = " -DHAL_INTEL_HDA=1"
+# Mark as specific to M3
+PACKAGE_ARCH_m3ulcb = "${MACHINE_ARCH}"
+EXTRA_OECMAKE_append_m3ulcb = " -DHAL_RCAR-M3=1"
 
 FILES_${PN}-dev += "${INSTALL_PREFIX}/afb-aaaa/htdocs"
 FILES_${PN} += "${INSTALL_PREFIX}/afb-aaaa"

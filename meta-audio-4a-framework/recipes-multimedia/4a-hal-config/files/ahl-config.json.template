@@ -6,31 +6,112 @@
     "hal_list": ["@AUDIO_DEV_NAME_ID@"],
     "audio_roles": [
         {
-            "name": "Guidance",
-            "description": "Important user information where user action is expected (e.g. navigation instruction)",
-            "priority": 25,
+            "name": "Emergency",
+            "description": "to complete",
+            "priority": 99,
             "output": [
-                "alsa.plug:Guidance_Main"
+                "alsa.plug:Emergency_Main"
             ],
             "interupt_behavior": "continue"
         },
         {
-            "name": "Notification",
-            "description": "HMI or else notifications (e.g. touchscreen events, speech recognition on/off,...)",
-            "priority": 100,
+            "name": "Warning",
+            "description": "to complete",
+            "priority": 95,
             "output": [
-                "alsa.plug:Notification_Main"
+                "alsa.plug:Warning_Main"
+            ],
+            "interupt_behavior": "continue"
+        },
+        {
+            "name": "CustomHigh",
+            "description": "to complete",
+            "priority": 79,
+            "output": [
+                "alsa.plug:CustomHigh_Main"
+            ],
+            "interupt_behavior": "continue"
+        },
+        {
+            "name": "Phone",
+            "description": "to complete",
+            "priority": 72,
+            "output": [
+                "alsa.plug:Phone_Main"
+            ],
+            "interupt_behavior": "continue"
+        },
+        {
+            "name": "Navigation",
+            "description": "Important user information where user action is expected (e.g. navigation instruction)",
+            "priority": 71,
+            "output": [
+                "alsa.plug:Navigation_Main"
             ],
             "interupt_behavior": "pause"
         },
         {
-            "name": "Entertainment",
-            "description": "Multimedia content (e.g. tuner, media player, etc.)",
-            "priority": 0,
+            "name": "CustomMedium",
+            "description": "to complete",
+            "priority": 59,
             "output": [
-                "alsa.plug:Entertainment_Main"
+                "alsa.plug:CustomMedium_Main"
+            ],
+            "interupt_behavior": "continue"
+        },
+        {
+            "name": "Video",
+            "description": "Video content",
+            "priority": 57,
+            "output": [
+                "alsa.plug:Video_Main"
             ],
             "interupt_behavior": "pause"
+        },
+        {
+            "name": "Streaming",
+            "description": "Streaming content",
+            "priority": 55,
+            "output": [
+                "alsa.plug:Streaming_Main"
+            ],
+            "interupt_behavior": "pause"
+        },
+        {
+            "name": "Multimedia",
+            "description": "Multimedia content",
+            "priority": 53,
+            "output": [
+                "alsa.plug:Multimedia_Main"
+            ],
+            "interupt_behavior": "pause"
+        },
+        {
+            "name": "Radio",
+            "description": "Radio content",
+            "priority": 51,
+            "output": [
+                "alsa.plug:Radio_Main"
+            ],
+            "interupt_behavior": "continue"
+        },
+        {
+            "name": "CustomLow",
+            "description": "to complete",
+            "priority": 19,
+            "output": [
+                "alsa.plug:CustomLow_Main"
+            ],
+            "interupt_behavior": "continue"
+        },
+        {
+            "name": "Fallback",
+            "description": "to complete",
+            "priority": 0,
+            "output": [
+                "alsa.plug:Fallback_Main"
+            ],
+            "interupt_behavior": "continue"
         }
     ]
 }

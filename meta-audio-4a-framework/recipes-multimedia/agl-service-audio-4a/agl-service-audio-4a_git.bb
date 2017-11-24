@@ -28,6 +28,9 @@ while ! ls $svcfile > /dev/null; do
 	sleep 0.2
 	N=$(expr $N - 1)
 done
+sed -i '/\[Unit\]/ a Before=pulseaudio.service' $svcfile;
+sed -i '/\[Unit\]/ a ConditionPathExistsGlob=/dev/snd/control*' $svcfile;
+
 sed -i -e 's|/usr/bin/afb-daemon\>|& --ldpath=/usr/libexec/agl/afb-aaaa/lib:/usr/libexec/agl/4a-alsa-core/lib|' $svcfile
 echo "-- TMP 4A INSTALL FIX END"
 

@@ -7,9 +7,9 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = "gitsm://gerrit.automotivelinux.org/gerrit/src/4a-hal-unicens;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "${AUTOREV}"
+SRCREV = "${AGL_APP_REVISION}"
 
-PV = "0.1"
+PV = "0.1+git${SRCPV}"
 S  = "${WORKDIR}/git"
 
 inherit afb-system-cmake

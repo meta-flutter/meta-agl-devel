@@ -12,14 +12,14 @@ DEPENDS = "\
         pulseaudio \
         agl-service-homescreen-2017 \
         agl-service-windowmanager-2017 \
-        libwindowmanager \
+        qlibwindowmanager \
         virtual/libhomescreen \
 "
 
 inherit qmake5 systemd pkgconfig aglwgt
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/staging/homescreen-2017;protocol=https;branch=${AGL_BRANCH}"
-SRCREV  = "4940d001f08bec6fd68293efcbd6673a9ffce65e"
+SRCREV  = "2c179df8e22fd1434c88b8595ddd65ec0ed48622"
 S       = "${WORKDIR}/git/"
 
 PATH_prepend = "${STAGING_DIR_NATIVE}${OE_QMAKE_PATH_QT_BINS}:"

@@ -18,7 +18,7 @@ DEPENDS += "alsa-lib json-c systemd af-binder glib-2.0"
 
 do_aglwgt_deploy_append() {
 	cat <<'EOF' >${D}/${sysconfdir}/agl-postinsts/99_4A_service_patch.sh
-N=100
+N=600
 svcfile="/usr/local/lib/systemd/*/afm-service-agl-service-audio-4a*.service"
 set -x
 echo "-- TMP 4A INSTALL FIX from meta-agl/meta-app-framework/recipes-multimedia/agl-service-audio-4a/agl-service-audio-4a_git.bb - MUST BE REMOVED !!!"
@@ -28,7 +28,7 @@ while ! ls $svcfile > /dev/null; do
 	sleep 0.2
 	N=$(expr $N - 1)
 done
-sed -i -e 's|--verbose |--verbose --ldpath=/usr/libexec/agl/afb-aaaa/lib/:/usr/libexec/agl/4a-alsa-core/lib/ |' $svcfile
+sed -i -e 's|/usr/bin/afb-daemon\>|& --ldpath=/usr/libexec/agl/afb-aaaa/lib:/usr/libexec/agl/4a-alsa-core/lib|' $svcfile
 echo "-- TMP 4A INSTALL FIX END"
 
 EOF

@@ -3,3 +3,4 @@
 #
 DISTRO_FEATURES_append = " agl-hmi-framework"
 PREFERRED_PROVIDER_virtual/libhomescreen = "libhomescreen-2017"
+PREFERRED_RPROVIDER_virtual/navigation = "navigation"

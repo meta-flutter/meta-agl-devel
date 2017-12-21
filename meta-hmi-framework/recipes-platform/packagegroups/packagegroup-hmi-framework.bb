@@ -12,4 +12,5 @@ RDEPENDS_${PN} += " \
   libwindowmanager \
   qlibwindowmanager \
   libhomescreen-2017 \
+  runxdg \
 "

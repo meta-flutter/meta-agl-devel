@@ -12,7 +12,7 @@
             "output": [
                 "alsa.plug:Emergency_Main"
             ],
-            "interupt_behavior": "continue"
+            "interupt_behavior": "pause"
         },
         {
             "name": "Warning",
@@ -21,7 +21,7 @@
             "output": [
                 "alsa.plug:Warning_Main"
             ],
-            "interupt_behavior": "continue"
+            "interupt_behavior": "pause"
         },
         {
             "name": "CustomHigh",

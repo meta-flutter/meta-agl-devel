@@ -151,13 +151,6 @@ pcm.Emergency {
             release {
                 stream_close "{}"
             }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
-            }
         }
     }
 }
@@ -191,13 +184,6 @@ pcm.Warning {
             # api subcall to request a role
             release {
                 stream_close "{}"
-            }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
             }
         }
     }
@@ -233,13 +219,6 @@ pcm.CustomHigh {
             release {
                 stream_close "{}"
             }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
-            }
         }
     }
 }
@@ -273,13 +252,6 @@ pcm.Phone {
             # api subcall to request a role
             release {
                 stream_close "{}"
-            }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
             }
         }
     }
@@ -315,13 +287,6 @@ pcm.Navigation {
             release {
                 stream_close "{}"
             }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
-            }
         }
     }
 }
@@ -356,13 +321,6 @@ pcm.CustomMedium {
             release {
                 stream_close "{}"
             }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
-            }
         }
     }
 }
@@ -396,13 +354,6 @@ pcm.Video {
             # api subcall to request a role
             release {
                 stream_close "{}"
-            }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
             }
         }
     }
@@ -439,13 +390,6 @@ pcm.Streaming {
             release {
                 stream_close "{}"
             }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
-            }
         }
     }
 }
@@ -479,13 +423,6 @@ pcm.Multimedia {
             # api subcall to request a role
             release {
                 stream_close "{}"
-            }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
             }
         }
     }
@@ -521,13 +458,6 @@ pcm.Radio {
             release {
                 stream_close "{}"
             }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
-            }
         }
     }
 }
@@ -562,13 +492,6 @@ pcm.CustomLow {
             release {
                 stream_close "{}"
             }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
-            }
         }
     }
 }
@@ -602,13 +525,6 @@ pcm.Fallback {
             # api subcall to request a role
             release {
                 stream_close "{}"
-            }
-
-            # map AGL event on Unix signal. Search in event for json key=value
-            events {
-                sig-02 {search state_event, value 1}
-                sig-31 {search state_event, value 2}
-                sig-32 {search state_event, value 3}
             }
         }
     }

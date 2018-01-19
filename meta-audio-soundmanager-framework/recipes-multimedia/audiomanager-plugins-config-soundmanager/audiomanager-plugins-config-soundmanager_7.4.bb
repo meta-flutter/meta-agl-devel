@@ -37,4 +37,4 @@ do_install() {
     install -m 644 ${WORKDIR}/customtypes.xsd ${D}${sysconfdir}/audiomanager/control/
 }
 
-PROVIDES_${PN} += "virtual/audiomanager-plugins-config"
+RPROVIDES_${PN} += "virtual/audiomanager-plugins-config"

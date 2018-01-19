@@ -9,4 +9,4 @@ do_install () {
     install -m 0644 ${WORKDIR}/soundmanager.pa ${D}${sysconfdir}/pulse/default.d/
 }
 
-PROVIDES_${PN} += "virtual/pulseaudio-config"
+RPROVIDES_${PN} += "virtual/pulseaudio-config"

@@ -13,4 +13,5 @@ RDEPENDS_${PN} += " \
   qlibwindowmanager \
   libhomescreen-2017 \
   runxdg \
+  hmi-debug \
 "

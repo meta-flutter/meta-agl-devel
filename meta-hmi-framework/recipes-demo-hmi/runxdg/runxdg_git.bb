@@ -3,8 +3,7 @@ DESCRIPTION = "The command 'runxdg' is a launcher to execute XDG application \
                on AGL HMI Framework which using wayland-ivi-extension"
 HOMEPAGE    = "https://git.automotivelinux.org/staging/xdg-launcher"
 LICENSE     = "MIT"
-LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
-                    file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 DEPENDS = "json-c wayland wayland-ivi-extension virtual/libhomescreen libwindowmanager"
 

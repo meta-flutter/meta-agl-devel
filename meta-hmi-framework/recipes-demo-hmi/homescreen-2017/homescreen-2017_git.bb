@@ -12,6 +12,8 @@ DEPENDS = "\
         pulseaudio \
         agl-service-homescreen-2017 \
         agl-service-windowmanager-2017 \
+        agl-service-weather \
+        libqtappfw \
         qlibwindowmanager \
         virtual/libhomescreen \
 "
@@ -19,7 +21,8 @@ DEPENDS = "\
 inherit qmake5 systemd pkgconfig aglwgt
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/staging/homescreen-2017;protocol=https;branch=${AGL_BRANCH}"
-SRCREV  = "db9f41d75fb4460f668117c69be05c4d4d4c7c7c"
+SRCREV  = "928dd96f5225769d4af7354e75d4d245ae586884"
+
 PV      = "1.0+git${SRCPV}"
 S       = "${WORKDIR}/git/"
 

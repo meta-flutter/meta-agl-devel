@@ -15,7 +15,7 @@ DEPENDS = "af-binder json-c wayland wayland-ivi-extension wayland-native"
 inherit cmake aglwgt
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/apps/agl-service-windowmanager-2017;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "e890bc6f1880c8b8a439692ea85c2f3992b99c15"
+SRCREV = "c146ba77b6546ac6703b41072a7f0b1a72803d63"
 PV = "1.0+git${SRCPV}"
 S = "${WORKDIR}/git"
 

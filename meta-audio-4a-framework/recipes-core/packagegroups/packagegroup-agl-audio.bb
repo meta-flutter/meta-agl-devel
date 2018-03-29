@@ -15,4 +15,5 @@ RDEPENDS_${PN} += "\
     VIRTUAL-RUNTIME_alsa-state \
     agl-service-unicens \
     4a-hal-unicens \
+    bluez-alsa \
 "

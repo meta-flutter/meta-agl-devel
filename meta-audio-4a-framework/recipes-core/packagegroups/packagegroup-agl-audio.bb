@@ -10,10 +10,11 @@ PACKAGES = "\
 
 RDEPENDS_${PN} += "\
     4a-alsa-core \
-    4a-hal-reference \
     agl-service-audio-4a \
     VIRTUAL-RUNTIME_alsa-state \
     agl-service-unicens \
     4a-hal-unicens \
     bluez-alsa \
+    4a-softmixer \
+    4a-hal-generic \
 "

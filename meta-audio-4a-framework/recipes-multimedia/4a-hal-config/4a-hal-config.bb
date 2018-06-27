@@ -30,11 +30,6 @@ do_install () {
     sed -i "s|@AUDIO_DEV_NAME@|${AUDIO_DEV_NAME}|g" ${D}/${sysconfdir}/asound.conf
     sed -i "s|@AUDIO_DEV_NAME_ID@|${AUDIO_DEV_NAME_ID}|g" ${D}/${sysconfdir}/asound.conf
     sed -i "s|@INSTALL_PREFIX@|${INSTALL_PREFIX}|g" ${D}/${sysconfdir}/asound.conf
-
-    install -d "${D}${prefix}/agl-service-audio-4a"
-    install -m 0755 ${WORKDIR}/ahl-config.json.template  "${D}${prefix}/agl-service-audio-4a/ahl-agl-service-audio-4a-config.json"
-    sed -i "s|@AUDIO_DEV_NAME_ID@|${AUDIO_DEV_NAME_ID}|g" "${D}${prefix}/agl-service-audio-4a/ahl-agl-service-audio-4a-config.json"
 }
 
 FILES_${PN} += "${sysconfdir}/asound.conf"
-FILES_${PN} += "${prefix}/agl-service-audio-4a/ahl-agl-service-audio-4a-config.json"

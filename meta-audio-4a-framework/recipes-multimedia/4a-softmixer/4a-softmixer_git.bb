@@ -4,12 +4,11 @@ HOMEPAGE    = "https://github.com/iotbzh/4a-softmixer/"
 SECTION     = "apps"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=89aea4e17d99a7cacdbeed46a0096b10"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
-SRC_URI = "gitsm://github.com/iotbzh/4a-softmixer/;protocol=https;branch=hal-rc1-sandbox"
-
-SRCREV = "acfda0a2236ca70b18ad2e7a6ec1ef3192405aac"
-#SRCREV = "${AUTOREV}"
+SRC_URI = "gitsm://github.com/iotbzh/4a-softmixer/;protocol=https;branch=${AGL_BRANCH}"
+#SRCREV = "${AGL_APP_REVISION}"
+SRCREV = "731c21e80ba45339b7dd9b8eae63accd3597d281"
 
 DEPENDS += "lua"
 

@@ -15,4 +15,5 @@ RDEPENDS_${PN} += " \
   qlibhomescreen \
   runxdg \
   hmi-debug \
+  launcher \
 "

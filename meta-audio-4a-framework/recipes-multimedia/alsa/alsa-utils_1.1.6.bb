@@ -19,6 +19,10 @@ PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftwf"
 PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,--with-udev-rules-dir=/unwanted/rules.d,udev"
 PACKAGECONFIG[manpages] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 
+MIRRORS += "\
+ftp://ftp.alsa-project.org    http://www.mirrorservice.org/sites/ftp.alsa-project.org \n \
+"
+
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
           "
 

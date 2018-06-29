@@ -20,6 +20,10 @@ LIC_FILES_CHKSUM = "\
         file://rate/rate_samplerate.c;endline=35;md5=fd77bce85f4a338c0e8ab18430b69fae \
 "
 
+MIRRORS += "\
+ftp://ftp.alsa-project.org    http://www.mirrorservice.org/sites/ftp.alsa-project.org \n \
+"
+
 SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2"
 SRC_URI[md5sum] = "8387279e99feeb2ecffaac5f293223d7"
 SRC_URI[sha256sum] = "6f1d31ebe3b1fa1cc8dade60b7bed1cb2583ac998167002d350dc0a5e3e40c13"

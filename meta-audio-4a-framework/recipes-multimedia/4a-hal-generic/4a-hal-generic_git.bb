@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "gitsm://github.com/iotbzh/4a-hal-generic;protocol=https;branch=${AGL_BRANCH}"
 #SRCREV = "${AGL_APP_REVISION}"
-SRCREV = "90cae7bdb9487225d11e8daeea0202a1db5605bb"
+SRCREV = "08b6e7144a87f60b86c8988c33a44dbd61026a8f"
 
 DEPENDS += "lua"
 

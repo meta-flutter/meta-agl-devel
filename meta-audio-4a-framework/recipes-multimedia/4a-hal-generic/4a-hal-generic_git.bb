@@ -36,16 +36,16 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ### TODO: this list should be completed for more machines
 
 do_install_append () {
-	# get pkgdir - note that '4a-hal' comes from project ${project_git_repo}/conf.d/cmake/config.cmake
-	PKGDIR=${D}/${INSTALL_PREFIX}/4a-hal
+    # get pkgdir - note that '4a-hal' comes from project ${project_git_repo}/conf.d/cmake/config.cmake
+    PKGDIR=${D}/${INSTALL_PREFIX}/4a-hal
 
-	# move all config files to a 'available' dir
-	mv $PKGDIR/etc $PKGDIR/etc.available
+    # move all config files to a 'available' dir
+    mv $PKGDIR/etc $PKGDIR/etc.available
 
-	# then install only required hals files in the etc folder
-	mkdir -p $PKGDIR/etc
-	for x in ${4A_HAL_LIST}; do
-		hal=hal-4a-$x.json
-		mv -v $PKGDIR/etc.available/${hal}.json $PKGDIR/etc/
-	done
+    # then install only required hals files in the etc folder
+    mkdir -p $PKGDIR/etc
+    for x in ${4A_HAL_LIST}; do
+        hal=hal-4a-$x.json
+        mv -v $PKGDIR/etc.available/${hal} $PKGDIR/etc/
+    done
 }

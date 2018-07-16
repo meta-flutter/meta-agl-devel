@@ -14,7 +14,7 @@ PACKAGES_pn-alsa-state_remove = "alsa-state-dev"
 PACKAGES_pn-alsa-state_remove = "alsa-states-dev"
 PACKAGES_pn-alsa-state = "alsa-state alsa-states"
 
-PREFERRED_PROVIDER_virtual/mixer ?= "4a-mixer"
+PREFERRED_RPROVIDER_virtual/mixer ?= "4a-mixer"
 
 PREFERRED_VERSION_alsa-lib           = "1.1.6"
 PREFERRED_VERSION_alsa-plugins       = "1.1.6"

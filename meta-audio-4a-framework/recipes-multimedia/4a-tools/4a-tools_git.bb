@@ -18,5 +18,5 @@ do_install() {
     oe_runmake install DESTDIR=${D}${prefix}
 }
 
-RDEPENDS_${PN} += "bash"
+RDEPENDS_${PN} += "bash python3-websockets"
 FILES_${PN} += "${datadir}/4a/media/*"

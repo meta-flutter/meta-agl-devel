@@ -20,6 +20,7 @@ DEPENDS += "qtquickcontrols2 \
             qlibwindowmanager \
 "
 
+PROVIDES += "virtual/mixer"
 RPROVIDES_${PN} += "virtual/mixer"
 
 inherit cmake_qt5 aglwgt

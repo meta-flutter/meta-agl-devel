@@ -19,8 +19,8 @@ visit the EG\_VIRT wiki page at: https://wiki.automotivelinux.org/eg-virt
 The OEM needs library for AGL
 ======================================================
 
-There are some software package that the OEM needs, but not exist in the AGL source.  
-This layer is add OEM needs library for AGL.  
+There are some software package that the OEM needs, but not exist in the AGL source.
+This layer is add OEM needs library for AGL.
 
 The software packages list:
  * boost
@@ -68,7 +68,6 @@ Supported Machines
 Reference hardware:
 
 * QEMU (x86-64) - emulated machine: qemux86-64
-* Renesas R-Car Gen2 (R-Car M2) - machine: porter
 
 HMI Framework
 ======================================================

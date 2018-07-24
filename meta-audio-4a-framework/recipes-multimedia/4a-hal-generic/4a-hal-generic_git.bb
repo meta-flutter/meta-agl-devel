@@ -7,7 +7,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "gitsm://github.com/iotbzh/4a-hal-generic;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "08b6e7144a87f60b86c8988c33a44dbd61026a8f"
+SRCREV = "e94909270325accdbeba7cde9f8e9e96e554dcda"
 
 DEPENDS += "lua"
 
@@ -32,6 +32,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 4A_HAL_LIST_h3ulcb          ?= "rcar-m3 rcar-m3kf"
 4A_HAL_LIST_intel-corei7-64 ?= "intel-minnow"
 4A_HAL_LIST_qemux86-64      ?= "intel-qemu"
+
+# Due to bug SPEC-1610, default hal for RPI3 is not active yet
+# 4A_HAL_LIST_raspberrypi3    ?= "raspberry-pi-3"
+
 ### TODO: this list should be completed for more machines
 
 do_install_append () {

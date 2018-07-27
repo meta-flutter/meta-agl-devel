@@ -15,11 +15,11 @@ S  = "${WORKDIR}/git"
 # build-time dependencies
 DEPENDS += "qtquickcontrols2 \
             qtwebsockets \
-            pulseaudio \
             virtual/libhomescreen \
             qlibwindowmanager \
 "
 
+PROVIDES += "virtual/mixer"
 RPROVIDES_${PN} += "virtual/mixer"
 
 inherit cmake_qt5 aglwgt

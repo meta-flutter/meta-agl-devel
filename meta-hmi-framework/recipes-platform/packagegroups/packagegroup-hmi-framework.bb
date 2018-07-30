@@ -8,7 +8,7 @@ inherit packagegroup
 RDEPENDS_${PN} += " \
   agl-service-windowmanager-2017 \
   agl-service-homescreen-2017 \
-  homescreen-2017 \
+  homescreen \
   libwindowmanager \
   qlibwindowmanager \
   libhomescreen-2017 \

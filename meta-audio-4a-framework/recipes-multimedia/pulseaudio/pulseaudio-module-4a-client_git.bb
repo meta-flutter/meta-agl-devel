@@ -17,4 +17,4 @@ inherit cmake pkgconfig
 DEPENDS += "af-binder systemd json-c pulseaudio"
 RDEPENDS_${PN} = "pulseaudio-module-alsa-sink"
 
-FILES_${PN} += "/usr/lib/pulse-*/modules/module-4a-client.so"
+FILES_${PN} += "${libdir}/pulse-*/modules/module-4a-client.so"

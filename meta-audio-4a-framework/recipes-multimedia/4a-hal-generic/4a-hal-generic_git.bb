@@ -7,7 +7,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "gitsm://github.com/iotbzh/4a-hal-generic;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "e94909270325accdbeba7cde9f8e9e96e554dcda"
+SRCREV = "92765214a57266e04738a47b3bcda64300cfa9a6"
 
 DEPENDS += "lua"
 

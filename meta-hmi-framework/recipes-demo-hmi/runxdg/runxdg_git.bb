@@ -5,7 +5,7 @@ HOMEPAGE    = "https://git.automotivelinux.org/staging/xdg-launcher"
 LICENSE     = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-DEPENDS = "json-c wayland wayland-ivi-extension virtual/libhomescreen libwindowmanager"
+DEPENDS = "json-c wayland wayland-ivi-extension libhomescreen libwindowmanager"
 
 inherit cmake
 

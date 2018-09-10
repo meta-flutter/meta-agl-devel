@@ -1,0 +1,46 @@
+From 39f578d2c44fef9fd2e105eb7594a2d249152e63 Mon Sep 17 00:00:00 2001
+From: Thierry Bultel <thierry.bultel@iot.bzh>
+Date: Mon, 10 Sep 2018 14:56:14 +0200
+Subject: [PATCH] proxy plugin: close transport when null device is set
+
+Simply closes the transport when bluealsa_proxy_set_remote_device
+specifies a null device.
+Also removed spurious log.
+
+Signed-off-by: Thierry Bultel <thierry.bultel@iot.bzh>
+---
+ src/asound/bluealsa-pcm-proxy.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/src/asound/bluealsa-pcm-proxy.c b/src/asound/bluealsa-pcm-proxy.c
+index 4abab2b..7c59cd1 100644
+--- a/src/asound/bluealsa-pcm-proxy.c
++++ b/src/asound/bluealsa-pcm-proxy.c
+@@ -130,7 +130,7 @@ static void *io_thread(void *arg) {
+ 
+ wait_pcm_fd:
+ 
+-	debug("PLUGIN io-thread: wait for pcm_fd\n");
++	//debug("PLUGIN io-thread: wait for pcm_fd\n");
+ 
+ 	/* In the capture mode, the PCM FIFO is opened in the non-blocking mode.
+ 	 * So right now, we have to synchronize write and read sides, otherwise
+@@ -784,7 +784,14 @@ int bluealsa_proxy_set_remote_device(const char * interface, const char * device
+ 
+ 	enum pcm_type type;
+ 
+-	if (device == NULL || str2ba(device, &the_pcm->addr) != 0) {
++	/* When the hardware address is NULL, just close the connection */
++	if (device == NULL ) {
++		close_bluez_connection();
++		ret = 0;
++		goto failed;
++	}
++
++	if ( str2ba(device, &the_pcm->addr) != 0) {
+ 		SNDERR("Invalid BT device address: %s", device);
+ 		ret = -EINVAL;
+ 		goto failed;
+-- 
+2.16.4
+

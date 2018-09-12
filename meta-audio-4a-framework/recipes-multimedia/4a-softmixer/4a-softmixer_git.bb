@@ -7,7 +7,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "gitsm://github.com/iotbzh/4a-softmixer/;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "13fd8b9e68faf4c666a21ecada74b94668ad9b27"
+SRCREV = "b678f39644b3a80ca599c10d33574d3b1ffbf427"
 
 DEPENDS += "lua"
 

@@ -37,8 +37,22 @@ sed -i -e 's|/usr/bin/afb-daemon\>|& --ldpath=/usr/libexec/agl/4a-alsa-core/lib:
 # binder name matters: it must match "afbd-4a-*" => the config file (controller json file) that will be searched will be "policy-4a-*.json"
 sed -i -e 's|--name afbd-agl-\(.*\)|--name afbd-4a-\1|' $svcfile
 
+# workaround for SPEC-1762
+sed -i -e 's|/usr/bin/afb-daemon\>|/usr/bin/4a_wait_bt.sh &|' $svcfile
+
 echo "-- TMP 4A INSTALL FIX END"
 
 EOF
 	chmod a+x ${D}/${sysconfdir}/agl-postinsts/99_4A_service_patch.sh
 }
+
+##############################################
+# workaround for SPEC-1762/SPEC-1763
+RDEPENDS_${PN} += "bash"
+SRC_URI += "file://4a_wait_bt.sh"
+do_install_append() {
+	install -d ${D}${bindir}
+	install -m 0755 ${WORKDIR}/4a_wait_bt.sh ${D}${bindir}/
+}
+#
+##############################################

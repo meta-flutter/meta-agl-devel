@@ -7,7 +7,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "gitsm://github.com/iotbzh/4a-hal-generic;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "49a750a4ff8f64752839d5e8c10ad0d03bd5ad57"
+SRCREV = "a94119d3e7d862f4f31c3c4101085e6eaefeff8e"
 
 DEPENDS += "lua"
 
@@ -30,7 +30,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 # for specific machines, activate only known HALs
 4A_HAL_LIST_m3ulcb          ?= "rcar-m3 rcar-m3kf"
 4A_HAL_LIST_h3ulcb          ?= "rcar-m3 rcar-m3kf"
-4A_HAL_LIST_intel-corei7-64 ?= "intel-minnow"
+4A_HAL_LIST_intel-corei7-64 ?= "intel-minnow intel-upsquared-hdmi"
 4A_HAL_LIST_qemux86-64      ?= "intel-qemu"
 
 # Due to bug SPEC-1610, default hal for RPI3 is not active yet

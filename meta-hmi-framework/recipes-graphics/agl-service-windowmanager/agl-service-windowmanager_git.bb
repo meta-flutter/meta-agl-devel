@@ -1,5 +1,5 @@
 SUMMARY     = "Window Manager service binding for applications"
-DESCRIPTION = "Window Manager 2017 is the service binding for controlling \
+DESCRIPTION = "Window Manager is the service binding for controlling \
                rendering rights. Applications request to render itself, \
                then Window Manager checks the policy and notifies the \
                layout to the respective applications \
@@ -14,7 +14,7 @@ DEPENDS = "af-binder json-c wayland wayland-ivi-extension wayland-native"
 
 inherit cmake aglwgt
 
-SRC_URI = "git://gerrit.automotivelinux.org/gerrit/apps/agl-service-windowmanager-2017;protocol=https;branch=${AGL_BRANCH}"
+SRC_URI = "git://gerrit.automotivelinux.org/gerrit/apps/agl-service-windowmanager;protocol=https;branch=${AGL_BRANCH}"
 SRCREV = "e65b048f311335ee550ac51f97f8ce50468babf9"
 PV = "1.0+git${SRCPV}"
 S = "${WORKDIR}/git"

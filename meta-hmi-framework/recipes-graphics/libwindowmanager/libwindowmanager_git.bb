@@ -5,7 +5,7 @@ LICENSE     = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2ee41112a44fe7014dce33e26468ba93"
 
 DEPENDS = "af-binder json-c"
-RDEPENDS_${PN} = "agl-service-windowmanager-2017"
+RDEPENDS_${PN} = "agl-service-windowmanager"
 
 inherit cmake
 

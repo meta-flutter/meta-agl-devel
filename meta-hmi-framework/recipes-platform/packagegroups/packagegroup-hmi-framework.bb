@@ -10,7 +10,7 @@ PR = "2"
 inherit packagegroup
 
 RDEPENDS_${PN} += " \
-  agl-service-windowmanager-2017 \
+  agl-service-windowmanager \
   agl-service-homescreen \
   homescreen \
   libwindowmanager \

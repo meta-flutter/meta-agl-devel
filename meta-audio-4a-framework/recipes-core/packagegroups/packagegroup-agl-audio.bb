@@ -13,7 +13,6 @@ RDEPENDS_${PN} += "\
     agl-service-audio-4a \
     VIRTUAL-RUNTIME_alsa-state \
     agl-service-unicens \
-    4a-hal-unicens \
     bluez-alsa \
     4a-softmixer \
     4a-hal-generic \

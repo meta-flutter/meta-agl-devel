@@ -32,7 +32,7 @@ sed -i '/\[Unit\]/ a Before=pulseaudio.service' $svcfile;
 sed -i '/\[Unit\]/ a ConditionPathExistsGlob=/dev/snd/control*' $svcfile;
 sed -i '/ExecStartPre=/ a Environment=LIBASOUND_THREAD_SAFE=0' $svcfile;
 
-sed -i -e 's|/usr/bin/afb-daemon\>|& --ldpath=/usr/libexec/agl/4a-alsa-core/lib:/usr/libexec/agl/4a-hal/lib:/usr/libexec/agl/afb-aaaa/lib:/usr/libexec/agl/smixer/lib|' $svcfile
+sed -i -e 's|/usr/bin/afb-daemon\>|& --ldpath=/usr/libexec/agl/4a-alsa-core/lib:/usr/libexec/agl/4a-hal/lib:/usr/libexec/agl/smixer/lib|' $svcfile
 
 # binder name matters: it must match "afbd-4a-*" => the config file (controller json file) that will be searched will be "policy-4a-*.json"
 sed -i -e 's|--name afbd-agl-\(.*\)|--name afbd-4a-\1|' $svcfile

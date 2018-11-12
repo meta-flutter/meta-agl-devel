@@ -16,6 +16,7 @@ RDEPENDS_${PN} += "\
     bluez-alsa \
     4a-softmixer \
     4a-hal-generic \
+    snd-avirt \
     ${@bb.utils.contains('DISTRO_FEATURES', 'agl-devel', '4a-tools', '' , d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-module-4a-client', '' , d)} \
 "

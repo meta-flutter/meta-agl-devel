@@ -1,0 +1,32 @@
+From ea9a8ede7f343d589c8d9fac945f7b3d9dca9c3f Mon Sep 17 00:00:00 2001
+From: Mark Farrugia <mark.farrugia@fiberdyne.com.au>
+Date: Thu, 15 Nov 2018 09:47:29 +1100
+Subject: [PATCH] snd-avirt-backport-Kernel-API
+
+Backport snd-pcm-ops struct callbacks for kernels prior to
+4.13
+
+Signed-off-by: Mark Farrugia <mark.farrugia@fiberdyne.com.au>
+---
+ core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/core.c b/core.c
+index 35998c0..6fd3ab3 100644
+--- a/core.c
++++ b/core.c
+@@ -250,9 +250,8 @@ static struct snd_pcm *pcm_create(struct snd_avirt_stream *stream)
+ 	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, trigger);
+ 	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, pointer);
+ 	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, get_time_info);
+-	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, fill_silence);
+-	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, copy_user);
+-	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, copy_kernel);
++	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, silence);
++	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, copy);
+ 	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, mmap);
+ 	PCM_OPS_SET(pcm_ops_ap, &pcm_ops, ack);
+ 
+-- 
+2.17.1
+

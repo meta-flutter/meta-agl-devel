@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=dab9a7a261563ca5dafa097c91369074"
 DEPENDS += "lua"
 
 SRC_URI = "gitsm://github.com/tjahnk/4a-hal-unicens;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "fc45c13a106e9e45b14860ef7f42b6651128f8a6"
+SRCREV = "8be9b941f6364ba8f251ef6acb95350a8e289ce3"
 
 
 PV = "0.1+git${SRCPV}"

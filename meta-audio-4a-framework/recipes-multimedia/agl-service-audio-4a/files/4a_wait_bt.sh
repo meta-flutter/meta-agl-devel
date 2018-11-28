@@ -64,9 +64,9 @@ function waitloop() {
 
 	# wait for bluetooth-service to return something
 	while havetime; do
-		res=$(afb-client-demo -d unix:/run/user/$UID/apis/ws/Bluetooth-Manager power true)
+		res=$(afb-client-demo -d unix:/run/user/$UID/apis/ws/Bluetooth-Manager adapter_state true)
 		[[ "$res" =~ \"response\":(.*)}$ ]] && res=${BASH_REMATCH[1]}
-		[[ "$res" == '{"power":"on"}' ]] && {
+		[[ "$res" =~ \"powered\":true ]] && {
 			echo "Bluetooth-Manager/power: $res"
 			break
 		}

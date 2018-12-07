@@ -22,8 +22,8 @@ do_install_append () {
     # get pkgdir - note that '4a-hal' comes from project ${project_git_repo}/conf.d/cmake/config.cmake
     PKGDIR=${D}/${INSTALL_PREFIX}/4a-hal
 
-    # move all config files to a 'available' dir
-    mv $PKGDIR/etc $PKGDIR/etc.available
+    # transition: provided by separate package
+    rm -rf $PKGDIR/etc
 }
 
 

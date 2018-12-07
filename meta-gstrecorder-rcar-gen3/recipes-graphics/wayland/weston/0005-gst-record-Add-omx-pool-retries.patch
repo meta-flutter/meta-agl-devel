@@ -1,0 +1,51 @@
+gst-record: Add retry on omx buffer pool query
+
+The omx encoder plugin seems to sometimes not be ready immediately to
+answer the pad query to get the buffer pool, add a retry loop with a
+slight delay between attempts to avoid failing.
+
+Upstream-Status: Inappropriate [bugfix]
+
+Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+
+diff --git a/libweston/gst-recorder.c b/libweston/gst-recorder.c
+index 7dafd956..9c29d04b 100644
+--- a/libweston/gst-recorder.c
++++ b/libweston/gst-recorder.c
+@@ -833,6 +833,7 @@ static int
+ gst_recorder_find_omx_pool(struct gst_recorder *r)
+ {
+ 	int ret = 0;
++	int i;
+ 	GstCaps *caps;
+ 	GstQuery *query;
+ 	GstBufferPool *pool;
+@@ -853,14 +854,24 @@ gst_recorder_find_omx_pool(struct gst_recorder *r)
+ 	/* find a pool for the negotiated caps now */
+ 	query = gst_query_new_allocation (caps, TRUE);
+ 
+-	if (!gst_pad_peer_query (r->appsrc_pad, query)) {
+-		/* query failed, not a problem, we use the query defaults */
+-		weston_log("allocation query failed\n");
++	/*
++	 * The omx plugin seems to not always be ready to respond to queries
++	 * immediately, try a few times with a delay to avoid failures.
++	 */
++	for (i = 0; i < 5; i++) {
++		usleep(100000);
++		if (gst_pad_peer_query (r->appsrc_pad, query)) {
++			break;
++		} else {
++			weston_log("allocation query attempt %d failed\n", i + 1);
++		}
++	}
++	if (i == 5) {
+ 		ret = -1;
+ 		goto err;
+ 	}
+ 
+-	weston_log("goot %d pools\n", gst_query_get_n_allocation_pools (query));
++	weston_log("got %d pools\n", gst_query_get_n_allocation_pools (query));
+ 	if (gst_query_get_n_allocation_pools (query) > 0) {
+ 		/* we got configuration from our peer, parse them */
+ 		gst_query_parse_nth_allocation_pool (query, 0, &pool, &size, &min, &max);

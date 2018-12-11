@@ -1,12 +1,11 @@
-# THIS IS A TEMPORARY WORKAROUND TO IMPLEMENT PERSISTENT PCMS FOR SOFTMIXER
+# This brings some mandatory patches for the softmixer. This is not an actual hack,
+# because all the 3 patches below have been discussed with the maintainer of bluez-alsa,
+# and will be mainlined in the future
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI += "file://0001-Added-a-connection-proxy-plugin.patch"
-SRC_URI += "file://0002-proxy-plugin-close-transport-when-null-device-is-set.patch"
+SRC_URI += "file://0001-build-and-link-with-a-shared-library.patch"
+SRC_URI += "file://0002-log-add-calling-function-name.patch"
+SRC_URI += "file://0003-increased-the-number-of-connexions-to-16.patch"
 
-FILES_${PN} += "\
-  ${libdir}/alsa-lib/libasound_module_pcm_bluealsa_proxy.so\
-  ${datadir}/alsa/alsa.conf.d/20-bluealsa_proxy.conf\
-"
 

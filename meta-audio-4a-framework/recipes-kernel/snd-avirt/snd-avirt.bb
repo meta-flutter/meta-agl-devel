@@ -9,6 +9,6 @@ PV = "0.1"
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/src/avirt;protocol=https;branch=${AGL_BRANCH}"
 
 S = "${WORKDIR}/git"
-SRCREV = "0b7527a463a9f494e15e067ff7bbc604f24fac3a"
+SRCREV = "42000f29ef6775f092dab2c80f8b3a6a319b5658"
 
 KERNEL_MODULE_AUTOLOAD += "snd-avirt-core snd-avirt-ap-loopback"

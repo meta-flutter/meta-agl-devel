@@ -7,7 +7,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "gitsm://gerrit.automotivelinux.org/gerrit/src/4a-hal-configs;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "45f205076573a858348c10a52d31382f31deaf55"
+SRCREV = "d6d98220643113701857f03c8534c412c8eeac33"
 
 PV = "0.1+git${SRCPV}"
 S  = "${WORKDIR}/git"

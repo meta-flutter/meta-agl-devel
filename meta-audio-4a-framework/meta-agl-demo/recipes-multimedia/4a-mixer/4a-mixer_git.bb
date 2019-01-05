@@ -23,3 +23,5 @@ PROVIDES += "virtual/mixer"
 RPROVIDES_${PN} += "virtual/mixer"
 
 inherit cmake_qt5 aglwgt
+
+OECMAKE_CXX_FLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'agl-devel', '' , '-DQT_NO_DEBUG_OUTPUT', d)}"

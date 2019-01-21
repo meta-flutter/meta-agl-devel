@@ -9,5 +9,5 @@ RDEPENDS_${PN} = "libhomescreen"
 inherit qmake5
 
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/src/libqthomescreen.git;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "0d7f000588954006d4687c97c19b424769189f9f"
+SRCREV = "b218476402bceda7eb42d41064552a7261ff3205"
 S = "${WORKDIR}/git"

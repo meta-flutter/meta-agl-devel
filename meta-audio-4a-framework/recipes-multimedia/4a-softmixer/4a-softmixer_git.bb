@@ -16,6 +16,9 @@ S  = "${WORKDIR}/git"
 
 inherit afb-system-cmake
 
+# FIXME: Remove once CMake+ninja issues are resolved
+OECMAKE_GENERATOR = "Unix Makefiles"
+
 #FIXME :
 #FILES_${PN}-dev += "${INSTALL_PREFIX}/4a-softmixer/htdocs"
 #FILES_${PN} += "${INSTALL_PREFIX}/afb-aaaa"

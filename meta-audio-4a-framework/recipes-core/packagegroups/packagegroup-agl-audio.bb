@@ -19,5 +19,6 @@ RDEPENDS_${PN} += "\
     4a-hal-unicens \
     snd-avirt \
     ${@bb.utils.contains('DISTRO_FEATURES', 'agl-devel', '4a-tools', '' , d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-module-4a-client', '' , d)} \
 "
+# FIXME: Disable for now due to compilation issues against PulseAudio 12.x
+#    ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-module-4a-client', '' , d)}

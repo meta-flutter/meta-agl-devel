@@ -17,6 +17,9 @@ S  = "${WORKDIR}/git"
 
 inherit afb-system-cmake
 
+# FIXME: Remove once CMake+ninja issues are resolved
+OECMAKE_GENERATOR = "Unix Makefiles"
+
 do_install_append () {
     # installation folder for this plugin is '4a-hal'
     # get pkgdir - note that '4a-hal' comes from project ${project_git_repo}/conf.d/cmake/config.cmake

@@ -14,6 +14,9 @@ S  = "${WORKDIR}/git"
 
 inherit afb-system-cmake
 
+# FIXME: Remove once CMake+ninja issues are resolved
+OECMAKE_GENERATOR = "Unix Makefiles"
+
 FILES_${PN}-dev += "${INSTALL_PREFIX}/4a-alsa-core/htdocs"
 
 FILES_${PN} += "${INSTALL_PREFIX}/4a-alsa-core"

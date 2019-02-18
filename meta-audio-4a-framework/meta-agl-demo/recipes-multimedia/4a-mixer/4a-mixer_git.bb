@@ -15,8 +15,7 @@ S  = "${WORKDIR}/git"
 # build-time dependencies
 DEPENDS += "qtquickcontrols2 \
             qtwebsockets \
-            libhomescreen \
-            qlibwindowmanager \
+            qtaglextras \
 "
 
 PROVIDES += "virtual/mixer"

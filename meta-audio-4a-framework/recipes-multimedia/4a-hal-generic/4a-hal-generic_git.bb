@@ -7,7 +7,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "gitsm://gerrit.automotivelinux.org/gerrit/src/4a-hal-generic;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "fbad8c202c86e4cf6503a99161aabf87ab7a7109"
+SRCREV = "974f211eaabb5fc6049c459b4b0f2ac8da617b7e"
 
 DEPENDS += "lua bluez-alsa liburcu libafb-helpers libappcontroller"
 

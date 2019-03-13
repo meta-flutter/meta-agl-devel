@@ -1,6 +1,6 @@
 SUMMARY     = "4A - Softmixer"
 DESCRIPTION = "4A Softmixer (AGL Advanced Audio Agent)"
-HOMEPAGE    = "https://github.com/iotbzh/4a-softmixer/"
+HOMEPAGE    = "https://git.automotivelinux.org/src/4a-softmixer/"
 SECTION     = "apps"
 
 LICENSE = "Apache-2.0"

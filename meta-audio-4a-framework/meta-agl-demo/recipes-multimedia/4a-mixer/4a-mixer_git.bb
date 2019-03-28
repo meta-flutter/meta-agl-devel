@@ -16,6 +16,7 @@ S  = "${WORKDIR}/git"
 DEPENDS += "qtquickcontrols2 \
             qtwebsockets \
             qtaglextras \
+            libafb-helpers-qt \
 "
 
 PROVIDES += "virtual/mixer"

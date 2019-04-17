@@ -8,6 +8,6 @@ books:
     author: "AGL"
     version: master
     chapters:
-    - url: ../README.md
+    - url: ../meta-agl-devel.md
       destination: meta-agl-devel.md
       name: meta-agl-devel

@@ -14,7 +14,7 @@ require gn-utils.inc
 
 inherit gettext
 
-DEPENDS = "virtual/gettext wayland wayland-native pixman freetype fontconfig openssl pango cairo icu libxkbcommon libexif dbus pciutils udev libcap alsa-lib virtual/egl elfutils-native libdrm atk gperf-native gconf nss nss-native nspr nspr-native"
+DEPENDS = "virtual/gettext wayland wayland-native pixman freetype fontconfig openssl pango cairo icu libxkbcommon libexif dbus pciutils udev libcap alsa-lib virtual/egl elfutils-native libdrm atk gperf-native gconf nss nss-native nspr nspr-native bison-native"
 
 PROVIDES = "${BROWSER_APPLICATION}"
 

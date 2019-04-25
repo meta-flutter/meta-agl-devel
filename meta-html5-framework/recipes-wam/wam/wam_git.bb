@@ -12,9 +12,9 @@ PR="r0"
 PROVIDES += "virtual/webruntime"
 RPROVIDES_${PN} += "virtual/webruntime"
 
-SRC_URI = "git://github.com/webosose/${PN}.git;branch=@2.chromium68.5.agl.flounder;protocol=https"
+SRC_URI = "git://github.com/webosose/${PN}.git;branch=@6.agl.guppy;protocol=https"
 S = "${WORKDIR}/git"
-SRCREV = "fe79cfcf55eff8fc6709ec4845fe6d5a3e9b9e5a"
+SRCREV = "ed37e18d3b7acaecc5e40c2548b6dbda98a4f755"
 
 EXTRA_QMAKEVARS_PRE += "CONFIG_BUILD+=agl_service"
 EXTRA_QMAKEVARS_PRE += "PREFIX=/usr"

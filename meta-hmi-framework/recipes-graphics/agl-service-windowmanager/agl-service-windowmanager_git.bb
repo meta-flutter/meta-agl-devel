@@ -16,7 +16,7 @@ inherit cmake aglwgt
 SRC_URI = "git://gerrit.automotivelinux.org/gerrit/apps/agl-service-windowmanager;protocol=https;branch=${AGL_BRANCH} \
            file://weston-ready.conf \
 "
-SRCREV = "73e37e8234d6362defcff350fc88b77dcc43fabd"
+SRCREV = "b6644e5cffa84e40d62e38f4ee0c14e64e0faf48"
 PV = "1.0+git${SRCPV}"
 S = "${WORKDIR}/git"
 

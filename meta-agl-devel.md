@@ -112,7 +112,7 @@ environment using the `aglsetup.sh` script.
 
 For information on how to use the `aglsetup.sh` script to initialize
 your build environment, see the
-"[Initializing Your Build Environment](../../../../getting_started/en/dev/reference/image-workflow-initialize-build-environment.html)"
+"[Initializing Your Build Environment](../getting_started/reference/getting-started/image-workflow-initialize-build-environment.html)"
 section.
 
 Once you have included the AGL feature, you can build your image.
@@ -133,7 +133,7 @@ environment using the `aglsetup.sh` script.
 
 For information on how to use the `aglsetup.sh` script to initialize
 your build environment, see the
-"[Initializing Your Build Environment](../../../../getting_started/en/dev/reference/image-workflow-initialize-build-environment.html)"
+"[Initializing Your Build Environment](../getting_started/reference/getting-started/image-workflow-initialize-build-environment.html)"
 section.
 
 Once you have included the AGL feature, you can build your image.

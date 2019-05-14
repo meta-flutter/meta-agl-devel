@@ -6,7 +6,7 @@ SECTION     = "apps"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e385f6075dcdf3ad6ff0056fca58a129"
 
-DEPENDS += "lua"
+DEPENDS += "lua libafb-helpers libappcontroller"
 
 SRC_URI = "gitsm://gerrit.automotivelinux.org/gerrit/src/4a-hal-unicens;protocol=https;branch=${AGL_BRANCH}"
 SRCREV = "9228c9da5b85f0fdd6b01f0309e57b846618be63"

@@ -1,0 +1,1562 @@
+From 3d186f7b97c508cc16955a96a69ee5d6c9db57dc Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Thu, 23 May 2019 18:59:05 +0300
+Subject: [PATCH 1/2] extensions: implement Endpoint & ClientEndpoint
+ interfaces
+
+The ClientEndpoint interface allows session managers to register
+endpoint objects on pipewire.
+The Endpoint interface allows other clients to interact with
+endpoints provided by the session manager.
+---
+ src/extensions/client-endpoint.h              | 106 ++++
+ src/extensions/endpoint.h                     | 237 +++++++++
+ src/extensions/meson.build                    |   2 +
+ src/modules/meson.build                       |  12 +
+ src/modules/module-endpoint.c                 | 137 +++++
+ src/modules/module-endpoint/endpoint-impl.c   | 428 ++++++++++++++++
+ src/modules/module-endpoint/endpoint-impl.h   |  52 ++
+ src/modules/module-endpoint/protocol-native.c | 472 ++++++++++++++++++
+ src/pipewire/pipewire.c                       |   2 +
+ src/pipewire/type.h                           |   3 +-
+ 10 files changed, 1450 insertions(+), 1 deletion(-)
+ create mode 100644 src/extensions/client-endpoint.h
+ create mode 100644 src/extensions/endpoint.h
+ create mode 100644 src/modules/module-endpoint.c
+ create mode 100644 src/modules/module-endpoint/endpoint-impl.c
+ create mode 100644 src/modules/module-endpoint/endpoint-impl.h
+ create mode 100644 src/modules/module-endpoint/protocol-native.c
+
+diff --git a/src/extensions/client-endpoint.h b/src/extensions/client-endpoint.h
+new file mode 100644
+index 00000000..0389893c
+--- /dev/null
++++ b/src/extensions/client-endpoint.h
+@@ -0,0 +1,106 @@
++/* PipeWire
++ *
++ * Copyright © 2019 Collabora Ltd.
++ *   @author George Kiagiadakis <george.kiagiadakis@collabora.com>
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++
++#ifndef PIPEWIRE_EXT_CLIENT_ENDPOINT_H
++#define PIPEWIRE_EXT_CLIENT_ENDPOINT_H
++
++#include "endpoint.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++struct pw_client_endpoint_proxy;
++
++#define PW_VERSION_CLIENT_ENDPOINT			0
++#define PW_EXTENSION_MODULE_CLIENT_ENDPOINT		PIPEWIRE_MODULE_PREFIX "module-endpoint"
++
++#define PW_CLIENT_ENDPOINT_PROXY_METHOD_UPDATE		0
++#define PW_CLIENT_ENDPOINT_PROXY_METHOD_NUM		1
++
++struct pw_client_endpoint_proxy_methods {
++#define PW_VERSION_CLIENT_ENDPOINT_PROXY_METHODS	0
++	uint32_t version;
++
++	/**
++	 * Update endpoint info
++	 */
++	int (*update) (void *object,
++#define PW_CLIENT_ENDPOINT_UPDATE_PARAMS		(1 << 0)
++#define PW_CLIENT_ENDPOINT_UPDATE_PARAMS_INCREMENTAL	(1 << 1)
++#define PW_CLIENT_ENDPOINT_UPDATE_INFO			(1 << 2)
++			uint32_t change_mask,
++			uint32_t n_params,
++			const struct spa_pod **params,
++			const struct pw_endpoint_info *info);
++};
++
++static inline int
++pw_client_endpoint_proxy_update(struct pw_client_endpoint_proxy *p,
++				uint32_t change_mask,
++				uint32_t n_params,
++				const struct spa_pod **params,
++				struct pw_endpoint_info *info)
++{
++	return pw_proxy_do((struct pw_proxy*)p,
++			   struct pw_client_endpoint_proxy_methods, update,
++			   change_mask, n_params, params, info);
++}
++
++#define PW_CLIENT_ENDPOINT_PROXY_EVENT_SET_PARAM	0
++#define PW_CLIENT_ENDPOINT_PROXY_EVENT_NUM		1
++
++struct pw_client_endpoint_proxy_events {
++#define PW_VERSION_CLIENT_ENDPOINT_PROXY_EVENTS	0
++	uint32_t version;
++
++	/**
++	 * Set a parameter on the endpoint
++	 *
++	 * \param id the parameter id to set
++	 * \param flags extra parameter flags
++	 * \param param the parameter to set
++	 */
++	void (*set_param) (void *object, uint32_t id, uint32_t flags,
++			   const struct spa_pod *param);
++};
++
++static inline void
++pw_client_endpoint_proxy_add_listener(struct pw_client_endpoint_proxy *p,
++				struct spa_hook *listener,
++				const struct pw_client_endpoint_proxy_events *events,
++				void *data)
++{
++	pw_proxy_add_proxy_listener((struct pw_proxy*)p, listener, events, data);
++}
++
++#define pw_client_endpoint_resource_set_param(r,...)	\
++	pw_resource_notify(r,struct pw_client_endpoint_proxy_events,set_param,__VA_ARGS__)
++
++#ifdef __cplusplus
++}  /* extern "C" */
++#endif
++
++#endif /* PIPEWIRE_EXT_CLIENT_ENDPOINT_H */
+diff --git a/src/extensions/endpoint.h b/src/extensions/endpoint.h
+new file mode 100644
+index 00000000..3b84dd49
+--- /dev/null
++++ b/src/extensions/endpoint.h
+@@ -0,0 +1,237 @@
++/* PipeWire
++ *
++ * Copyright © 2019 Collabora Ltd.
++ *   @author George Kiagiadakis <george.kiagiadakis@collabora.com>
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++
++#ifndef PIPEWIRE_EXT_ENDPOINT_H
++#define PIPEWIRE_EXT_ENDPOINT_H
++
++#include <spa/utils/defs.h>
++#include <spa/utils/type-info.h>
++#include <pipewire/proxy.h>
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++struct pw_endpoint_proxy;
++
++#define PW_VERSION_ENDPOINT			0
++#define PW_EXTENSION_MODULE_ENDPOINT		PIPEWIRE_MODULE_PREFIX "module-endpoint"
++
++/* extending enum spa_param_type */
++enum endpoint_param_type {
++	PW_ENDPOINT_PARAM_EnumControl = 0x1000,
++	PW_ENDPOINT_PARAM_Control,
++	PW_ENDPOINT_PARAM_EnumStream,
++};
++
++enum endpoint_param_object_type {
++	PW_ENDPOINT_OBJECT_ParamControl = PW_TYPE_FIRST + SPA_TYPE_OBJECT_START + 0x1001,
++	PW_ENDPOINT_OBJECT_ParamStream,
++};
++
++/** properties for PW_ENDPOINT_OBJECT_ParamControl */
++enum endpoint_param_control {
++	PW_ENDPOINT_PARAM_CONTROL_START,	/**< object id, one of enum endpoint_param_type */
++	PW_ENDPOINT_PARAM_CONTROL_id,		/**< control id (Int) */
++	PW_ENDPOINT_PARAM_CONTROL_stream_id,	/**< stream id (Int) */
++	PW_ENDPOINT_PARAM_CONTROL_name,		/**< control name (String) */
++	PW_ENDPOINT_PARAM_CONTROL_type,		/**< control type (Range) */
++	PW_ENDPOINT_PARAM_CONTROL_value,	/**< control value */
++};
++
++/** properties for PW_ENDPOINT_OBJECT_ParamStream */
++enum endpoint_param_stream {
++	PW_ENDPOINT_PARAM_STREAM_START,		/**< object id, one of enum endpoint_param_type */
++	PW_ENDPOINT_PARAM_STREAM_id,		/**< stream id (Int) */
++	PW_ENDPOINT_PARAM_STREAM_name,		/**< stream name (String) */
++};
++
++static const struct spa_type_info endpoint_param_type_info[] = {
++	{ PW_ENDPOINT_PARAM_EnumControl, SPA_TYPE_Int, SPA_TYPE_INFO_PARAM_ID_BASE "EnumControl", NULL },
++	{ PW_ENDPOINT_PARAM_Control, SPA_TYPE_Int, SPA_TYPE_INFO_PARAM_ID_BASE "Control", NULL },
++	{ PW_ENDPOINT_PARAM_EnumStream, SPA_TYPE_Int, SPA_TYPE_INFO_PARAM_ID_BASE "EnumStream", NULL },
++	{ 0, 0, NULL, NULL },
++};
++
++#define PW_ENDPOINT_TYPE_INFO_ParamControl		SPA_TYPE_INFO_PARAM_BASE "ParamControl"
++#define PW_ENDPOINT_TYPE_INFO_PARAM_CONTROL_BASE	PW_ENDPOINT_TYPE_INFO_ParamControl ":"
++
++static const struct spa_type_info endpoint_param_control_info[] = {
++	{ PW_ENDPOINT_PARAM_CONTROL_START, SPA_TYPE_Id, PW_ENDPOINT_TYPE_INFO_PARAM_CONTROL_BASE, spa_type_param, },
++	{ PW_ENDPOINT_PARAM_CONTROL_id, SPA_TYPE_Int, PW_ENDPOINT_TYPE_INFO_PARAM_CONTROL_BASE "id", NULL },
++	{ PW_ENDPOINT_PARAM_CONTROL_stream_id, SPA_TYPE_Int, PW_ENDPOINT_TYPE_INFO_PARAM_CONTROL_BASE "streamId", NULL },
++	{ PW_ENDPOINT_PARAM_CONTROL_name, SPA_TYPE_String, PW_ENDPOINT_TYPE_INFO_PARAM_CONTROL_BASE "name", NULL },
++	{ PW_ENDPOINT_PARAM_CONTROL_type, SPA_TYPE_Pod, PW_ENDPOINT_TYPE_INFO_PARAM_CONTROL_BASE "type", NULL },
++	{ PW_ENDPOINT_PARAM_CONTROL_value, SPA_TYPE_Struct, PW_ENDPOINT_TYPE_INFO_PARAM_CONTROL_BASE "labels", NULL },
++	{ 0, 0, NULL, NULL },
++};
++
++#define PW_ENDPOINT_TYPE_INFO_ParamStream		SPA_TYPE_INFO_PARAM_BASE "ParamStream"
++#define PW_ENDPOINT_TYPE_INFO_PARAM_STREAM_BASE		PW_ENDPOINT_TYPE_INFO_ParamStream ":"
++
++static const struct spa_type_info endpoint_param_stream_info[] = {
++	{ PW_ENDPOINT_PARAM_STREAM_START, SPA_TYPE_Id, PW_ENDPOINT_TYPE_INFO_PARAM_STREAM_BASE, spa_type_param, },
++	{ PW_ENDPOINT_PARAM_STREAM_id, SPA_TYPE_Int, PW_ENDPOINT_TYPE_INFO_PARAM_STREAM_BASE "id", NULL },
++	{ PW_ENDPOINT_PARAM_STREAM_name, SPA_TYPE_String, PW_ENDPOINT_TYPE_INFO_PARAM_STREAM_BASE "name", NULL },
++	{ 0, 0, NULL, NULL },
++};
++
++static const struct spa_type_info endpoint_param_object_type_info[] = {
++	{ PW_ENDPOINT_OBJECT_ParamControl, SPA_TYPE_Object, SPA_TYPE_INFO_OBJECT_BASE "ParamControl", endpoint_param_control_info, },
++	{ PW_ENDPOINT_OBJECT_ParamStream, SPA_TYPE_Object, SPA_TYPE_INFO_OBJECT_BASE "ParamStream", endpoint_param_stream_info },
++	{ 0, 0, NULL, NULL },
++};
++
++struct pw_endpoint_info {
++	uint32_t id;				/**< id of the global */
++#define PW_ENDPOINT_CHANGE_MASK_PARAMS		(1 << 0)
++#define PW_ENDPOINT_CHANGE_MASK_PROPS		(1 << 1)
++	uint32_t change_mask;			/**< bitfield of changed fields since last call */
++	uint32_t n_params;			/**< number of items in \a params */
++	struct spa_param_info *params;		/**< parameters */
++	struct spa_dict *props;			/**< extra properties */
++};
++
++#define PW_ENDPOINT_PROXY_METHOD_SUBSCRIBE_PARAMS	0
++#define PW_ENDPOINT_PROXY_METHOD_ENUM_PARAMS		1
++#define PW_ENDPOINT_PROXY_METHOD_SET_PARAM		2
++#define PW_ENDPOINT_PROXY_METHOD_NUM			3
++
++struct pw_endpoint_proxy_methods {
++#define PW_VERSION_ENDPOINT_PROXY_METHODS		0
++	uint32_t version;
++
++	/**
++	 * Subscribe to parameter changes
++	 *
++	 * Automatically emit param events for the given ids when
++	 * they are changed.
++	 *
++	 * \param ids an array of param ids
++	 * \param n_ids the number of ids in \a ids
++	 */
++	int (*subscribe_params) (void *object, uint32_t *ids, uint32_t n_ids);
++
++	/**
++	 * Enumerate endpoint parameters
++	 *
++	 * Start enumeration of endpoint parameters. For each param, a
++	 * param event will be emited.
++	 *
++	 * \param seq a sequence number to place in the reply
++	 * \param id the parameter id to enum or SPA_ID_INVALID for all
++	 * \param start the start index or 0 for the first param
++	 * \param num the maximum number of params to retrieve
++	 * \param filter a param filter or NULL
++	 */
++	int (*enum_params) (void *object, int seq,
++			    uint32_t id, uint32_t start, uint32_t num,
++			    const struct spa_pod *filter);
++
++	/**
++	 * Set a parameter on the endpoint
++	 *
++	 * \param id the parameter id to set
++	 * \param flags extra parameter flags
++	 * \param param the parameter to set
++	 */
++	int (*set_param) (void *object, uint32_t id, uint32_t flags,
++			  const struct spa_pod *param);
++};
++
++static inline int
++pw_endpoint_proxy_subscribe_params(struct pw_endpoint_proxy *p, uint32_t *ids, uint32_t n_ids)
++{
++	return pw_proxy_do((struct pw_proxy*)p, struct pw_endpoint_proxy_methods,
++			   subscribe_params, ids, n_ids);
++}
++
++static inline int
++pw_endpoint_proxy_enum_params(struct pw_endpoint_proxy *p, int seq,
++				uint32_t id, uint32_t start, uint32_t num,
++				const struct spa_pod *filter)
++{
++	return pw_proxy_do((struct pw_proxy*)p, struct pw_endpoint_proxy_methods,
++			    enum_params, seq, id, start, num, filter);
++}
++
++static inline int
++pw_endpoint_proxy_set_param(struct pw_endpoint_proxy *p, uint32_t id,
++			    uint32_t flags, const struct spa_pod *param)
++{
++	return pw_proxy_do((struct pw_proxy*)p, struct pw_endpoint_proxy_methods,
++			   set_param, id, flags, param);
++}
++
++#define PW_ENDPOINT_PROXY_EVENT_INFO		0
++#define PW_ENDPOINT_PROXY_EVENT_PARAM		1
++#define PW_ENDPOINT_PROXY_EVENT_NUM		2
++
++struct pw_endpoint_proxy_events {
++#define PW_VERSION_ENDPOINT_PROXY_EVENTS	0
++	uint32_t version;
++
++	/**
++	 * Notify endpoint info
++	 *
++	 * \param info info about the endpoint
++	 */
++	void (*info) (void *object, const struct pw_endpoint_info * info);
++
++	/**
++	 * Notify an endpoint param
++	 *
++	 * Event emited as a result of the enum_params method.
++	 *
++	 * \param seq the sequence number of the request
++	 * \param id the param id
++	 * \param index the param index
++	 * \param next the param index of the next param
++	 * \param param the parameter
++	 */
++	void (*param) (void *object, int seq, uint32_t id,
++		       uint32_t index, uint32_t next,
++		       const struct spa_pod *param);
++};
++
++static inline void
++pw_endpoint_proxy_add_listener(struct pw_endpoint_proxy *p,
++				struct spa_hook *listener,
++				const struct pw_endpoint_proxy_events *events,
++				void *data)
++{
++	pw_proxy_add_proxy_listener((struct pw_proxy*)p, listener, events, data);
++}
++
++#define pw_endpoint_resource_info(r,...)	\
++	pw_resource_notify(r,struct pw_endpoint_proxy_events,info,__VA_ARGS__)
++#define pw_endpoint_resource_param(r,...)	\
++	pw_resource_notify(r,struct pw_endpoint_proxy_events,param,__VA_ARGS__)
++
++#ifdef __cplusplus
++}  /* extern "C" */
++#endif
++
++#endif /* PIPEWIRE_EXT_ENDPOINT_H */
+diff --git a/src/extensions/meson.build b/src/extensions/meson.build
+index a7f5d3cb..9f690caf 100644
+--- a/src/extensions/meson.build
++++ b/src/extensions/meson.build
+@@ -1,5 +1,7 @@
+ pipewire_ext_headers = [
++  'client-endpoint.h',
+   'client-node.h',
++  'endpoint.h',
+   'protocol-native.h',
+ ]
+ 
+diff --git a/src/modules/meson.build b/src/modules/meson.build
+index 98bc3864..572f1b6b 100644
+--- a/src/modules/meson.build
++++ b/src/modules/meson.build
+@@ -37,6 +37,18 @@ pipewire_module_client_node = shared_library('pipewire-module-client-node',
+   dependencies : [mathlib, dl_lib, pipewire_dep],
+ )
+ 
++pipewire_module_endpoint = shared_library('pipewire-module-endpoint',
++  [ 'module-endpoint.c',
++    'module-endpoint/endpoint-impl.c',
++    'module-endpoint/protocol-native.c',
++  ],
++  c_args : pipewire_module_c_args,
++  include_directories : [configinc, spa_inc],
++  install : true,
++  install_dir : modules_install_dir,
++  dependencies : [mathlib, dl_lib, pipewire_dep],
++)
++
+ pipewire_module_link_factory = shared_library('pipewire-module-link-factory',
+   [ 'module-link-factory.c' ],
+   c_args : pipewire_module_c_args,
+diff --git a/src/modules/module-endpoint.c b/src/modules/module-endpoint.c
+new file mode 100644
+index 00000000..d830de1b
+--- /dev/null
++++ b/src/modules/module-endpoint.c
+@@ -0,0 +1,137 @@
++/* PipeWire
++ *
++ * Copyright © 2019 Collabora Ltd.
++ *   @author George Kiagiadakis <george.kiagiadakis@collabora.com>
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++
++#include "config.h"
++
++#include "module-endpoint/endpoint-impl.h"
++
++struct pw_protocol *pw_protocol_native_ext_endpoint_init(struct pw_core *core);
++
++static const struct spa_dict_item module_props[] = {
++	{ PW_MODULE_PROP_AUTHOR, "George Kiagiadakis <george.kiagiadakis@collabora.com>" },
++	{ PW_MODULE_PROP_DESCRIPTION, "Allows clients to interract with session manager endpoints" },
++	{ PW_MODULE_PROP_VERSION, PACKAGE_VERSION },
++};
++
++struct factory_data {
++	struct pw_factory *this;
++	struct pw_properties *properties;
++
++	struct pw_module *module;
++	struct spa_hook module_listener;
++};
++
++static void *create_object(void *_data,
++			   struct pw_resource *resource,
++			   uint32_t type,
++			   uint32_t version,
++			   struct pw_properties *properties,
++			   uint32_t new_id)
++{
++	void *result;
++	struct pw_resource *endpoint_resource;
++	struct pw_global *parent;
++	struct pw_client *client = pw_resource_get_client(resource);
++
++	endpoint_resource = pw_resource_new(client, new_id, PW_PERM_RWX, type, version, 0);
++	if (endpoint_resource == NULL)
++		goto no_mem;
++
++	parent = pw_client_get_global(client);
++
++	result = pw_client_endpoint_new(endpoint_resource, parent, properties);
++	if (result == NULL)
++		goto no_mem;
++
++	return result;
++
++      no_mem:
++	pw_log_error("can't create endpoint");
++	pw_resource_error(resource, -ENOMEM, "can't create endpoint: no memory");
++	if (properties)
++		pw_properties_free(properties);
++	return NULL;
++}
++
++static const struct pw_factory_implementation impl_factory = {
++	PW_VERSION_FACTORY_IMPLEMENTATION,
++	.create_object = create_object,
++};
++
++static void module_destroy(void *data)
++{
++	struct factory_data *d = data;
++
++	spa_hook_remove(&d->module_listener);
++
++	if (d->properties)
++		pw_properties_free(d->properties);
++
++	pw_factory_destroy(d->this);
++}
++
++static const struct pw_module_events module_events = {
++	PW_VERSION_MODULE_EVENTS,
++	.destroy = module_destroy,
++};
++
++static int module_init(struct pw_module *module, struct pw_properties *properties)
++{
++	struct pw_core *core = pw_module_get_core(module);
++	struct pw_factory *factory;
++	struct factory_data *data;
++
++	factory = pw_factory_new(core,
++				 "client-endpoint",
++				 PW_TYPE_INTERFACE_ClientEndpoint,
++				 PW_VERSION_CLIENT_ENDPOINT,
++				 NULL,
++				 sizeof(*data));
++	if (factory == NULL)
++		return -ENOMEM;
++
++	data = pw_factory_get_user_data(factory);
++	data->this = factory;
++	data->module = module;
++	data->properties = properties;
++
++	pw_log_debug("module-endpoint %p: new", module);
++
++	pw_factory_set_implementation(factory, &impl_factory, data);
++	pw_factory_register(factory, NULL, pw_module_get_global(module), NULL);
++
++	pw_protocol_native_ext_endpoint_init(core);
++
++	pw_module_add_listener(module, &data->module_listener, &module_events, data);
++	pw_module_update_properties(module, &SPA_DICT_INIT_ARRAY(module_props));
++
++	return 0;
++}
++
++SPA_EXPORT
++int pipewire__module_init(struct pw_module *module, const char *args)
++{
++	return module_init(module, NULL);
++}
+diff --git a/src/modules/module-endpoint/endpoint-impl.c b/src/modules/module-endpoint/endpoint-impl.c
+new file mode 100644
+index 00000000..252eeca1
+--- /dev/null
++++ b/src/modules/module-endpoint/endpoint-impl.c
+@@ -0,0 +1,428 @@
++/* PipeWire
++ *
++ * Copyright © 2019 Collabora Ltd.
++ *   @author George Kiagiadakis <george.kiagiadakis@collabora.com>
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++
++#include "endpoint-impl.h"
++#include <pipewire/private.h>
++#include <spa/pod/filter.h>
++#include <spa/pod/compare.h>
++
++struct pw_endpoint {
++	struct pw_core *core;
++	struct pw_global *global;
++	struct pw_global *parent;
++
++	struct pw_client_endpoint *client_ep;
++
++	uint32_t n_params;
++	struct spa_pod **params;
++
++	struct pw_endpoint_info info;
++	struct pw_properties *props;
++};
++
++struct pw_client_endpoint {
++	struct pw_resource *owner_resource;
++	struct spa_hook owner_resource_listener;
++
++	struct pw_endpoint endpoint;
++};
++
++struct resource_data {
++	struct pw_endpoint *endpoint;
++	struct pw_client_endpoint *client_ep;
++
++	struct spa_hook resource_listener;
++
++	uint32_t n_subscribe_ids;
++	uint32_t subscribe_ids[32];
++};
++
++static int
++endpoint_enum_params (void *object, int seq,
++		      uint32_t id, uint32_t start, uint32_t num,
++		      const struct spa_pod *filter)
++{
++	struct pw_resource *resource = object;
++	struct resource_data *data = pw_resource_get_user_data(resource);
++	struct pw_endpoint *this = data->endpoint;
++	struct spa_pod *result;
++	struct spa_pod *param;
++	uint8_t buffer[1024];
++	struct spa_pod_builder b = { 0 };
++	uint32_t index;
++	uint32_t next = start;
++	uint32_t count = 0;
++
++	while (true) {
++		index = next++;
++		if (index >= this->n_params)
++			break;
++
++		param = this->params[index];
++
++		if (param == NULL || !spa_pod_is_object_id(param, id))
++			continue;
++
++		spa_pod_builder_init(&b, buffer, sizeof(buffer));
++		if (spa_pod_filter(&b, &result, param, filter) != 0)
++			continue;
++
++		pw_log_debug("endpoint %p: %d param %u", this, seq, index);
++
++		pw_endpoint_resource_param(resource, seq, id, index, next, result);
++
++		if (++count == num)
++			break;
++	}
++	return 0;
++}
++
++static int
++endpoint_subscribe_params (void *object, uint32_t *ids, uint32_t n_ids)
++{
++	struct pw_resource *resource = object;
++	struct resource_data *data = pw_resource_get_user_data(resource);
++	uint32_t i;
++
++	n_ids = SPA_MIN(n_ids, SPA_N_ELEMENTS(data->subscribe_ids));
++	data->n_subscribe_ids = n_ids;
++
++	for (i = 0; i < n_ids; i++) {
++		data->subscribe_ids[i] = ids[i];
++		pw_log_debug("endpoint %p: resource %d subscribe param %u",
++			data->endpoint, resource->id, ids[i]);
++		endpoint_enum_params(resource, 1, ids[i], 0, UINT32_MAX, NULL);
++	}
++	return 0;
++}
++
++static int
++endpoint_set_param (void *object, uint32_t id, uint32_t flags,
++		    const struct spa_pod *param)
++{
++	struct pw_resource *resource = object;
++	struct resource_data *data = pw_resource_get_user_data(resource);
++	struct pw_client_endpoint *client_ep = data->client_ep;
++
++	pw_client_endpoint_resource_set_param(client_ep->owner_resource,
++						id, flags, param);
++
++	return 0;
++}
++
++static const struct pw_endpoint_proxy_methods endpoint_methods = {
++	PW_VERSION_ENDPOINT_PROXY_METHODS,
++	.subscribe_params = endpoint_subscribe_params,
++	.enum_params = endpoint_enum_params,
++	.set_param = endpoint_set_param,
++};
++
++static void
++endpoint_unbind(void *data)
++{
++	struct pw_resource *resource = data;
++	spa_list_remove(&resource->link);
++}
++
++static const struct pw_resource_events resource_events = {
++	PW_VERSION_RESOURCE_EVENTS,
++	.destroy = endpoint_unbind,
++};
++
++static int
++endpoint_bind(void *_data, struct pw_client *client, uint32_t permissions,
++	      uint32_t version, uint32_t id)
++{
++	struct pw_endpoint *this = _data;
++	struct pw_global *global = this->global;
++	struct pw_resource *resource;
++	struct resource_data *data;
++
++	resource = pw_resource_new(client, id, permissions, global->type, version, sizeof(*data));
++	if (resource == NULL)
++		goto no_mem;
++
++	data = pw_resource_get_user_data(resource);
++	data->endpoint = this;
++	data->client_ep = this->client_ep;
++	pw_resource_add_listener(resource, &data->resource_listener, &resource_events, resource);
++
++	pw_resource_set_implementation(resource, &endpoint_methods, resource);
++
++	pw_log_debug("endpoint %p: bound to %d", this, resource->id);
++
++	spa_list_append(&global->resource_list, &resource->link);
++
++	this->info.change_mask = PW_ENDPOINT_CHANGE_MASK_PARAMS |
++				 PW_ENDPOINT_CHANGE_MASK_PROPS;
++	pw_endpoint_resource_info(resource, &this->info);
++	this->info.change_mask = 0;
++
++	return 0;
++
++      no_mem:
++	pw_log_error("can't create node resource");
++	return -ENOMEM;
++}
++
++static int
++pw_endpoint_init(struct pw_endpoint *this,
++		 struct pw_core *core,
++		 struct pw_client *owner,
++		 struct pw_global *parent,
++		 struct pw_properties *properties)
++{
++	struct pw_properties *props = NULL;
++
++	pw_log_debug("endpoint %p: new", this);
++
++	this->core = core;
++	this->parent = parent;
++
++	props = properties ? properties : pw_properties_new(NULL, NULL);
++	if (!props)
++		goto no_mem;
++
++	this->props = pw_properties_copy (props);
++	if (!this->props)
++		goto no_mem;
++
++	this->global = pw_global_new (core,
++			PW_TYPE_INTERFACE_Endpoint,
++			PW_VERSION_ENDPOINT,
++			props, endpoint_bind, this);
++	if (!this->global)
++		goto no_mem;
++
++	this->info.id = this->global->id;
++	this->info.props = &this->props->dict;
++
++	return pw_global_register(this->global, owner, parent);
++
++      no_mem:
++	pw_log_error("can't create endpoint - out of memory");
++	if (props && !properties)
++		pw_properties_free(props);
++	if (this->props)
++		pw_properties_free(this->props);
++	return -ENOMEM;
++}
++
++static void
++pw_endpoint_clear(struct pw_endpoint *this)
++{
++	uint32_t i;
++
++	pw_log_debug("endpoint %p: destroy", this);
++
++	pw_global_destroy(this->global);
++
++	for (i = 0; i < this->n_params; i++)
++		free(this->params[i]);
++	free(this->params);
++
++	free(this->info.params);
++
++	if (this->props)
++		pw_properties_free(this->props);
++}
++
++static void
++endpoint_notify_subscribed(struct pw_endpoint *this,
++			   uint32_t index, uint32_t next)
++{
++	struct pw_global *global = this->global;
++	struct pw_resource *resource;
++	struct resource_data *data;
++	struct spa_pod *param = this->params[index];
++	uint32_t id;
++	uint32_t i;
++
++	if (!param || !spa_pod_is_object (param))
++		return;
++
++	id = SPA_POD_OBJECT_ID (param);
++
++	spa_list_for_each(resource, &global->resource_list, link) {
++		data = pw_resource_get_user_data(resource);
++		for (i = 0; i < data->n_subscribe_ids; i++) {
++			if (data->subscribe_ids[i] == id) {
++				pw_endpoint_resource_param(resource, 1, id,
++					index, next, param);
++			}
++		}
++	}
++}
++
++static int
++client_endpoint_update(void *object,
++	uint32_t change_mask,
++	uint32_t n_params,
++	const struct spa_pod **params,
++	const struct pw_endpoint_info *info)
++{
++	struct pw_client_endpoint *cliep = object;
++	struct pw_endpoint *this = &cliep->endpoint;
++
++	if (change_mask & PW_CLIENT_ENDPOINT_UPDATE_PARAMS) {
++		uint32_t i;
++
++		pw_log_debug("endpoint %p: update %d params", this, n_params);
++
++		for (i = 0; i < this->n_params; i++)
++			free(this->params[i]);
++		this->n_params = n_params;
++		this->params = realloc(this->params, this->n_params * sizeof(struct spa_pod *));
++
++		for (i = 0; i < this->n_params; i++) {
++			this->params[i] = params[i] ? spa_pod_copy(params[i]) : NULL;
++			endpoint_notify_subscribed(this, i, i+1);
++		}
++	}
++	else if (change_mask & PW_CLIENT_ENDPOINT_UPDATE_PARAMS_INCREMENTAL) {
++		uint32_t i, j;
++		const struct spa_pod_prop *pold, *pnew;
++
++		pw_log_debug("endpoint %p: update %d params incremental", this, n_params);
++
++		for (i = 0; i < this->n_params; i++) {
++			/* we only support incremental updates for controls */
++			if (!spa_pod_is_object_id (this->params[i], PW_ENDPOINT_PARAM_Control))
++				continue;
++
++			for (j = 0; j < n_params; j++) {
++				if (!spa_pod_is_object_id (params[j], PW_ENDPOINT_PARAM_Control)) {
++					pw_log_warn ("endpoint %p: ignoring incremental update "
++						"on non-control param", this);
++					continue;
++				}
++
++				pold = spa_pod_object_find_prop (
++					(const struct spa_pod_object *) this->params[i],
++					NULL, PW_ENDPOINT_PARAM_CONTROL_id);
++				pnew = spa_pod_object_find_prop (
++					(const struct spa_pod_object *) params[j],
++					NULL, PW_ENDPOINT_PARAM_CONTROL_id);
++
++				if (pold && pnew && spa_pod_compare (&pold->value, &pnew->value) == 0) {
++					free (this->params[i]);
++					this->params[i] = spa_pod_copy (params[j]);
++					endpoint_notify_subscribed(this, i, UINT32_MAX);
++				}
++			}
++		}
++	}
++
++	if (change_mask & PW_CLIENT_ENDPOINT_UPDATE_INFO) {
++		struct pw_global *global = this->global;
++		struct pw_resource *resource;
++
++		if (info->change_mask & PW_ENDPOINT_CHANGE_MASK_PARAMS) {
++			size_t size = info->n_params * sizeof(struct spa_param_info);
++			free(this->info.params);
++			this->info.params = malloc(size);
++			this->info.n_params = info->n_params;
++			memcpy(this->info.params, info->params, size);
++		}
++
++		if (info->change_mask & PW_ENDPOINT_CHANGE_MASK_PROPS) {
++			pw_properties_update(this->props, info->props);
++		}
++
++		this->info.change_mask = info->change_mask;
++		spa_list_for_each(resource, &global->resource_list, link) {
++			pw_endpoint_resource_info(resource, &this->info);
++		}
++		this->info.change_mask = 0;
++	}
++
++	return 0;
++}
++
++static struct pw_client_endpoint_proxy_methods client_endpoint_methods = {
++	PW_VERSION_CLIENT_ENDPOINT_PROXY_METHODS,
++	.update = client_endpoint_update,
++};
++
++static void
++client_endpoint_resource_destroy(void *data)
++{
++	struct pw_client_endpoint *this = data;
++
++	pw_log_debug("client-endpoint %p: destroy", this);
++
++	pw_endpoint_clear(&this->endpoint);
++
++	this->owner_resource = NULL;
++	spa_hook_remove(&this->owner_resource_listener);
++	free(this);
++}
++
++static const struct pw_resource_events owner_resource_events = {
++	PW_VERSION_RESOURCE_EVENTS,
++	.destroy = client_endpoint_resource_destroy,
++};
++
++struct pw_client_endpoint *
++pw_client_endpoint_new(struct pw_resource *owner_resource,
++			struct pw_global *parent,
++			struct pw_properties *properties)
++{
++	struct pw_client_endpoint *this;
++	struct pw_client *owner = pw_resource_get_client(owner_resource);
++	struct pw_core *core = pw_client_get_core(owner);
++
++	this = calloc(1, sizeof(struct pw_client_endpoint));
++	if (this == NULL)
++		return NULL;
++
++	pw_log_debug("client-endpoint %p: new", this);
++
++	if (pw_endpoint_init(&this->endpoint, core, owner, parent, properties) < 0)
++		goto error_no_endpoint;
++	this->endpoint.client_ep = this;
++
++	this->owner_resource = owner_resource;
++	pw_resource_add_listener(this->owner_resource,
++				 &this->owner_resource_listener,
++				 &owner_resource_events,
++				 this);
++	pw_resource_set_implementation(this->owner_resource,
++				       &client_endpoint_methods,
++				       this);
++
++	return this;
++
++      error_no_endpoint:
++	pw_resource_destroy(owner_resource);
++	free(this);
++	return NULL;
++}
++
++void
++pw_client_endpoint_destroy(struct pw_client_endpoint *this)
++{
++	pw_resource_destroy(this->owner_resource);
++}
+diff --git a/src/modules/module-endpoint/endpoint-impl.h b/src/modules/module-endpoint/endpoint-impl.h
+new file mode 100644
+index 00000000..059aa904
+--- /dev/null
++++ b/src/modules/module-endpoint/endpoint-impl.h
+@@ -0,0 +1,52 @@
++/* PipeWire
++ *
++ * Copyright © 2019 Collabora Ltd.
++ *   @author George Kiagiadakis <george.kiagiadakis@collabora.com>
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++
++#ifndef PIPEWIRE_ENDPOINT_IMPL_H
++#define PIPEWIRE_ENDPOINT_IMPL_H
++
++#include <pipewire/pipewire.h>
++#include <extensions/endpoint.h>
++#include <extensions/client-endpoint.h>
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++struct pw_endpoint;
++struct pw_client_endpoint;
++
++struct pw_client_endpoint *
++pw_client_endpoint_new(struct pw_resource *resource,
++			struct pw_global *parent,
++			struct pw_properties *properties);
++
++void
++pw_client_endpoint_destroy(struct pw_client_endpoint *endpoint);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* PIPEWIRE_ENDPOINT_IMPL_H */
+diff --git a/src/modules/module-endpoint/protocol-native.c b/src/modules/module-endpoint/protocol-native.c
+new file mode 100644
+index 00000000..a41d3119
+--- /dev/null
++++ b/src/modules/module-endpoint/protocol-native.c
+@@ -0,0 +1,472 @@
++/* PipeWire
++ *
++ * Copyright © 2019 Collabora Ltd.
++ *   @author George Kiagiadakis <george.kiagiadakis@collabora.com>
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++
++#include <pipewire/pipewire.h>
++#include <spa/pod/parser.h>
++
++#include <extensions/client-endpoint.h>
++#include <extensions/endpoint.h>
++#include <extensions/protocol-native.h>
++
++static void
++serialize_pw_endpoint_info(struct spa_pod_builder *b,
++			   const struct pw_endpoint_info *info)
++{
++	struct spa_pod_frame f;
++	uint32_t i, n_props;
++
++	n_props = info->props ? info->props->n_items : 0;
++
++	spa_pod_builder_push_struct(b, &f);
++	spa_pod_builder_add(b,
++		SPA_POD_Id(info->id),
++		SPA_POD_Int(info->change_mask),
++		SPA_POD_Int(info->n_params),
++		SPA_POD_Int(n_props),
++		NULL);
++
++	for (i = 0; i < info->n_params; i++) {
++		spa_pod_builder_add(b,
++			SPA_POD_Id(info->params[i].id),
++			SPA_POD_Int(info->params[i].flags), NULL);
++	}
++
++	for (i = 0; i < n_props; i++) {
++		spa_pod_builder_add(b,
++			SPA_POD_String(info->props->items[i].key),
++			SPA_POD_String(info->props->items[i].value),
++			NULL);
++	}
++
++	spa_pod_builder_pop(b, &f);
++}
++
++/* macro because of alloca() */
++#define deserialize_pw_endpoint_info(p, f, info) \
++do { \
++	if (spa_pod_parser_push_struct(p, f) < 0 || \
++	    spa_pod_parser_get(p, \
++	    		SPA_POD_Id(&(info)->id), \
++			SPA_POD_Int(&(info)->change_mask), \
++			SPA_POD_Int(&(info)->n_params), \
++			SPA_POD_Int(&(info)->props->n_items), \
++			NULL) < 0) \
++		return -EINVAL; \
++	\
++	if ((info)->n_params > 0) \
++		(info)->params = alloca((info)->n_params * sizeof(struct spa_param_info)); \
++	if ((info)->props->n_items > 0) \
++		(info)->props->items = alloca((info)->props->n_items * sizeof(struct spa_dict_item)); \
++	\
++	for (i = 0; i < (info)->n_params; i++) { \
++		if (spa_pod_parser_get(p, \
++				SPA_POD_Id(&(info)->params[i].id), \
++				SPA_POD_Int(&(info)->params[i].flags), \
++				NULL) < 0) \
++			return -EINVAL; \
++	} \
++	\
++	for (i = 0; i < (info)->props->n_items; i++) { \
++		if (spa_pod_parser_get(p, \
++				SPA_POD_String(&(info)->props->items[i].key), \
++				SPA_POD_String(&(info)->props->items[i].value), \
++				NULL) < 0) \
++			return -EINVAL; \
++	} \
++	\
++	spa_pod_parser_pop(p, f); \
++} while(0)
++
++static int
++endpoint_marshal_subscribe_params(void *object, uint32_t *ids, uint32_t n_ids)
++{
++	struct pw_proxy *proxy = object;
++	struct spa_pod_builder *b;
++
++	b = pw_protocol_native_begin_proxy(proxy,
++		PW_ENDPOINT_PROXY_METHOD_SUBSCRIBE_PARAMS, NULL);
++
++	spa_pod_builder_add_struct(b,
++			SPA_POD_Array(sizeof(uint32_t), SPA_TYPE_Id, n_ids, ids));
++
++	return pw_protocol_native_end_proxy(proxy, b);
++}
++
++static int
++endpoint_demarshal_subscribe_params(void *object, const struct pw_protocol_native_message *msg)
++{
++	struct pw_resource *resource = object;
++	struct spa_pod_parser prs;
++	uint32_t csize, ctype, n_ids;
++	uint32_t *ids;
++
++	spa_pod_parser_init(&prs, msg->data, msg->size);
++	if (spa_pod_parser_get_struct(&prs,
++				SPA_POD_Array(&csize, &ctype, &n_ids, &ids)) < 0)
++		return -EINVAL;
++
++	if (ctype != SPA_TYPE_Id)
++		return -EINVAL;
++
++	return pw_resource_do(resource, struct pw_endpoint_proxy_methods,
++			subscribe_params, 0, ids, n_ids);
++}
++
++static int
++endpoint_marshal_enum_params(void *object, int seq, uint32_t id,
++		uint32_t index, uint32_t num, const struct spa_pod *filter)
++{
++	struct pw_proxy *proxy = object;
++	struct spa_pod_builder *b;
++
++	b = pw_protocol_native_begin_proxy(proxy,
++		PW_ENDPOINT_PROXY_METHOD_ENUM_PARAMS, NULL);
++
++	spa_pod_builder_add_struct(b,
++			SPA_POD_Int(seq),
++			SPA_POD_Id(id),
++			SPA_POD_Int(index),
++			SPA_POD_Int(num),
++			SPA_POD_Pod(filter));
++
++	return pw_protocol_native_end_proxy(proxy, b);
++}
++
++static int
++endpoint_demarshal_enum_params(void *object, const struct pw_protocol_native_message *msg)
++{
++	struct pw_resource *resource = object;
++	struct spa_pod_parser prs;
++	uint32_t id, index, num;
++	int seq;
++	struct spa_pod *filter;
++
++	spa_pod_parser_init(&prs, msg->data, msg->size);
++	if (spa_pod_parser_get_struct(&prs,
++				SPA_POD_Int(&seq),
++				SPA_POD_Id(&id),
++				SPA_POD_Int(&index),
++				SPA_POD_Int(&num),
++				SPA_POD_Pod(&filter)) < 0)
++		return -EINVAL;
++
++	return pw_resource_do(resource, struct pw_endpoint_proxy_methods,
++			enum_params, 0, seq, id, index, num, filter);
++}
++
++static int
++endpoint_marshal_set_param(void *object, uint32_t id, uint32_t flags,
++		const struct spa_pod *param)
++{
++	struct pw_proxy *proxy = object;
++	struct spa_pod_builder *b;
++
++	b = pw_protocol_native_begin_proxy(proxy,
++		PW_ENDPOINT_PROXY_METHOD_SET_PARAM, NULL);
++
++	spa_pod_builder_add_struct(b,
++			SPA_POD_Id(id),
++			SPA_POD_Int(flags),
++			SPA_POD_Pod(param));
++	return pw_protocol_native_end_proxy(proxy, b);
++}
++
++static int
++endpoint_demarshal_set_param(void *object, const struct pw_protocol_native_message *msg)
++{
++	struct pw_resource *resource = object;
++	struct spa_pod_parser prs;
++	uint32_t id, flags;
++	struct spa_pod *param;
++
++	spa_pod_parser_init(&prs, msg->data, msg->size);
++	if (spa_pod_parser_get_struct(&prs,
++				SPA_POD_Id(&id),
++				SPA_POD_Int(&flags),
++				SPA_POD_Pod(&param)) < 0)
++		return -EINVAL;
++
++	return pw_resource_do(resource, struct pw_endpoint_proxy_methods,
++			set_param, 0, id, flags, param);
++}
++
++static void
++endpoint_marshal_info(void *object, const struct pw_endpoint_info *info)
++{
++	struct pw_resource *resource = object;
++	struct spa_pod_builder *b;
++
++	b = pw_protocol_native_begin_resource(resource,
++			PW_ENDPOINT_PROXY_EVENT_INFO, NULL);
++	serialize_pw_endpoint_info (b, info);
++	pw_protocol_native_end_resource(resource, b);
++}
++
++static int
++endpoint_demarshal_info(void *object, const struct pw_protocol_native_message *msg)
++{
++	struct pw_proxy *proxy = object;
++	struct spa_pod_parser prs;
++	struct spa_pod_frame f;
++	struct spa_dict props = SPA_DICT_INIT(NULL, 0);
++	struct pw_endpoint_info info = { .props = &props };
++	uint32_t i;
++
++	spa_pod_parser_init(&prs, msg->data, msg->size);
++
++	deserialize_pw_endpoint_info(&prs, &f, &info);
++
++	return pw_proxy_notify(proxy, struct pw_endpoint_proxy_events,
++		info, 0, &info);
++}
++
++static void
++endpoint_marshal_param(void *object, int seq, uint32_t id,
++		uint32_t index, uint32_t next, const struct spa_pod *param)
++{
++	struct pw_resource *resource = object;
++	struct spa_pod_builder *b;
++
++	b = pw_protocol_native_begin_resource(resource,
++			PW_ENDPOINT_PROXY_EVENT_PARAM, NULL);
++
++	spa_pod_builder_add_struct(b,
++			SPA_POD_Int(seq),
++			SPA_POD_Id(id),
++			SPA_POD_Int(index),
++			SPA_POD_Int(next),
++			SPA_POD_Pod(param));
++
++	pw_protocol_native_end_resource(resource, b);
++}
++
++static int
++endpoint_demarshal_param(void *object, const struct pw_protocol_native_message *msg)
++{
++	struct pw_proxy *proxy = object;
++	struct spa_pod_parser prs;
++	uint32_t id, index, next;
++	int seq;
++	struct spa_pod *param;
++
++	spa_pod_parser_init(&prs, msg->data, msg->size);
++	if (spa_pod_parser_get_struct(&prs,
++				SPA_POD_Int(&seq),
++				SPA_POD_Id(&id),
++				SPA_POD_Int(&index),
++				SPA_POD_Int(&next),
++				SPA_POD_Pod(&param)) < 0)
++		return -EINVAL;
++
++	return pw_proxy_notify(proxy, struct pw_endpoint_proxy_events, param, 0,
++			seq, id, index, next, param);
++}
++
++static const struct pw_endpoint_proxy_methods pw_protocol_native_endpoint_method_marshal = {
++	PW_VERSION_ENDPOINT_PROXY_METHODS,
++	&endpoint_marshal_subscribe_params,
++	&endpoint_marshal_enum_params,
++	&endpoint_marshal_set_param,
++};
++
++static const struct pw_protocol_native_demarshal pw_protocol_native_endpoint_method_demarshal[] = {
++	{ &endpoint_demarshal_subscribe_params, 0 },
++	{ &endpoint_demarshal_enum_params, 0 },
++	{ &endpoint_demarshal_set_param, 0 }
++};
++
++static const struct pw_endpoint_proxy_events pw_protocol_native_endpoint_event_marshal = {
++	PW_VERSION_ENDPOINT_PROXY_EVENTS,
++	&endpoint_marshal_info,
++	&endpoint_marshal_param,
++};
++
++static const struct pw_protocol_native_demarshal pw_protocol_native_endpoint_event_demarshal[] = {
++	{ &endpoint_demarshal_info, 0 },
++	{ &endpoint_demarshal_param, 0 }
++};
++
++static const struct pw_protocol_marshal pw_protocol_native_endpoint_marshal = {
++	PW_TYPE_INTERFACE_Endpoint,
++	PW_VERSION_ENDPOINT,
++	PW_ENDPOINT_PROXY_METHOD_NUM,
++	PW_ENDPOINT_PROXY_EVENT_NUM,
++	&pw_protocol_native_endpoint_method_marshal,
++	&pw_protocol_native_endpoint_method_demarshal,
++	&pw_protocol_native_endpoint_event_marshal,
++	&pw_protocol_native_endpoint_event_demarshal,
++};
++
++
++static int
++client_endpoint_marshal_update(
++	void *object,
++	uint32_t change_mask,
++	uint32_t n_params,
++	const struct spa_pod **params,
++	const struct pw_endpoint_info *info)
++{
++	struct pw_proxy *proxy = object;
++	struct spa_pod_builder *b;
++	struct spa_pod_frame f;
++	uint32_t i;
++
++	b = pw_protocol_native_begin_proxy(proxy,
++		PW_CLIENT_ENDPOINT_PROXY_METHOD_UPDATE, NULL);
++
++	spa_pod_builder_push_struct(b, &f);
++	spa_pod_builder_add(b,
++		SPA_POD_Int(change_mask),
++		SPA_POD_Int(n_params), NULL);
++
++	for (i = 0; i < n_params; i++)
++		spa_pod_builder_add(b, SPA_POD_Pod(params[i]), NULL);
++
++	if (change_mask & PW_CLIENT_ENDPOINT_UPDATE_INFO)
++		serialize_pw_endpoint_info(b, info);
++
++	spa_pod_builder_pop(b, &f);
++
++	return pw_protocol_native_end_proxy(proxy, b);
++}
++
++static int
++client_endpoint_demarshal_update(void *object,
++	const struct pw_protocol_native_message *msg)
++{
++	struct pw_resource *resource = object;
++	struct spa_pod_parser prs;
++	struct spa_pod_frame f[2];
++	uint32_t change_mask, n_params;
++	const struct spa_pod **params = NULL;
++	struct spa_dict props = SPA_DICT_INIT(NULL, 0);
++	struct pw_endpoint_info info = { .props = &props };
++	uint32_t i;
++
++	spa_pod_parser_init(&prs, msg->data, msg->size);
++	if (spa_pod_parser_push_struct(&prs, &f[0]) < 0 ||
++	    spa_pod_parser_get(&prs,
++			SPA_POD_Int(&change_mask),
++			SPA_POD_Int(&n_params), NULL) < 0)
++		return -EINVAL;
++
++	if (n_params > 0)
++		params = alloca(n_params * sizeof(struct spa_pod *));
++	for (i = 0; i < n_params; i++)
++		if (spa_pod_parser_get(&prs,
++				SPA_POD_PodObject(&params[i]), NULL) < 0)
++			return -EINVAL;
++
++	if (change_mask & PW_CLIENT_ENDPOINT_UPDATE_INFO)
++		deserialize_pw_endpoint_info(&prs, &f[1], &info);
++
++	pw_resource_do(resource, struct pw_client_endpoint_proxy_methods,
++		update, 0, change_mask, n_params, params, &info);
++	return 0;
++}
++
++static void
++client_endpoint_marshal_set_param (void *object,
++	uint32_t id, uint32_t flags,
++	const struct spa_pod *param)
++{
++	struct pw_resource *resource = object;
++	struct spa_pod_builder *b;
++
++	b = pw_protocol_native_begin_resource(resource,
++		PW_CLIENT_ENDPOINT_PROXY_EVENT_SET_PARAM, NULL);
++
++	spa_pod_builder_add_struct(b,
++				SPA_POD_Id(id),
++				SPA_POD_Int(flags),
++				SPA_POD_Pod(param));
++
++	pw_protocol_native_end_resource(resource, b);
++}
++
++static int
++client_endpoint_demarshal_set_param(void *object,
++	const struct pw_protocol_native_message *msg)
++{
++	struct pw_proxy *proxy = object;
++	struct spa_pod_parser prs;
++	uint32_t id, flags;
++	const struct spa_pod *param = NULL;
++
++	spa_pod_parser_init(&prs, msg->data, msg->size);
++	if (spa_pod_parser_get_struct(&prs,
++			SPA_POD_Id(&id),
++			SPA_POD_Int(&flags),
++			SPA_POD_PodObject(&param)) < 0)
++		return -EINVAL;
++
++	pw_proxy_notify(proxy, struct pw_client_endpoint_proxy_events,
++			set_param, 0, id, flags, param);
++	return 0;
++}
++
++static const struct pw_client_endpoint_proxy_methods pw_protocol_native_client_endpoint_method_marshal = {
++	PW_VERSION_CLIENT_ENDPOINT_PROXY_METHODS,
++	&client_endpoint_marshal_update,
++};
++
++static const struct pw_protocol_native_demarshal pw_protocol_native_client_endpoint_method_demarshal[] = {
++	{ &client_endpoint_demarshal_update, 0 }
++};
++
++static const struct pw_client_endpoint_proxy_events pw_protocol_native_client_endpoint_event_marshal = {
++	PW_VERSION_CLIENT_ENDPOINT_PROXY_EVENTS,
++	&client_endpoint_marshal_set_param,
++};
++
++static const struct pw_protocol_native_demarshal pw_protocol_native_client_endpoint_event_demarshal[] = {
++	{ &client_endpoint_demarshal_set_param, 0 }
++};
++
++static const struct pw_protocol_marshal pw_protocol_native_client_endpoint_marshal = {
++	PW_TYPE_INTERFACE_ClientEndpoint,
++	PW_VERSION_CLIENT_ENDPOINT,
++	PW_CLIENT_ENDPOINT_PROXY_METHOD_NUM,
++	PW_CLIENT_ENDPOINT_PROXY_EVENT_NUM,
++	&pw_protocol_native_client_endpoint_method_marshal,
++	&pw_protocol_native_client_endpoint_method_demarshal,
++	&pw_protocol_native_client_endpoint_event_marshal,
++	&pw_protocol_native_client_endpoint_event_demarshal,
++};
++
++struct pw_protocol *pw_protocol_native_ext_endpoint_init(struct pw_core *core)
++{
++	struct pw_protocol *protocol;
++
++	protocol = pw_core_find_protocol(core, PW_TYPE_INFO_PROTOCOL_Native);
++
++	if (protocol == NULL)
++		return NULL;
++
++	pw_protocol_add_marshal(protocol, &pw_protocol_native_client_endpoint_marshal);
++	pw_protocol_add_marshal(protocol, &pw_protocol_native_endpoint_marshal);
++
++	return protocol;
++}
+diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
+index a8752438..bbbf9420 100644
+--- a/src/pipewire/pipewire.c
++++ b/src/pipewire/pipewire.c
+@@ -647,6 +647,8 @@ static const struct spa_type_info type_info[] = {
+ 	{ PW_TYPE_INTERFACE_Module, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "Module", NULL },
+ 	{ PW_TYPE_INTERFACE_ClientNode, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "ClientNode", NULL },
+ 	{ PW_TYPE_INTERFACE_Device, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "Device", NULL },
++	{ PW_TYPE_INTERFACE_Endpoint, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "Endpoint", NULL},
++	{ PW_TYPE_INTERFACE_ClientEndpoint, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "ClientEndpoint", NULL},
+ 	{ SPA_ID_INVALID, SPA_ID_INVALID, "spa_types", spa_types },
+ 	{ 0, 0, NULL, NULL },
+ };
+diff --git a/src/pipewire/type.h b/src/pipewire/type.h
+index a1b205f7..39544913 100644
+--- a/src/pipewire/type.h
++++ b/src/pipewire/type.h
+@@ -48,7 +48,8 @@ enum {
+ 	/* extensions */
+ 	PW_TYPE_INTERFACE_EXTENSIONS = PW_TYPE_INTERFACE_START + 0x1000,
+ 	PW_TYPE_INTERFACE_ClientNode,
+-
++	PW_TYPE_INTERFACE_Endpoint,
++	PW_TYPE_INTERFACE_ClientEndpoint,
+ };
+ 
+ #define PW_TYPE_INFO_BASE		"PipeWire:"
+-- 
+2.20.1
+

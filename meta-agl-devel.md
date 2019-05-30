@@ -31,8 +31,8 @@ The following list provides a summary of these sub-layers:
 * `meta-audio-4a-framework`: A collection of recipes used for the
   first integration of 4A (i.e. Advanced AGL Audio Architecture).
 
-  **NOTE:** Recipes from this layer will be integrated into the
-  `meta-agl` layer in the future.
+* `meta-pipewire`: A collection of recipes used for the integration
+  of the pipewire sound system.
 
 * `meta-audio-soundmanager-framework`: Supports the Soundmanager
   Audio Framework features, which maps to the `agl-audio-soundmanager-framework`

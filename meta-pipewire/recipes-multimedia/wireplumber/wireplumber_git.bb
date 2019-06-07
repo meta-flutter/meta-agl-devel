@@ -17,10 +17,20 @@ SRCREV = "36bc1795ca2626cde5cbd5ec6afae50e5496bd08"
 PV = "0.0+git${SRCPV}"
 S  = "${WORKDIR}/git"
 
+PACKAGES =+ "${PN}-config"
+
 FILES_${PN} += "\
     ${libdir}/wireplumber-*/* \
+"
+RPROVIDES_${PN} += "virtual/pipewire-sessionmanager"
+RDEPENDS_${PN} += "virtual/wireplumber-config"
+
+
+FILES_${PN}-config += "\
     ${sysconfdir}/wireplumber/* \
 "
-CONFFILES_${PN} += "\
+CONFFILES_${PN}-config += "\
     ${sysconfdir}/wireplumber/* \
 "
+
+RPROVIDES_${PN}-config += "virtual/wireplumber-config"

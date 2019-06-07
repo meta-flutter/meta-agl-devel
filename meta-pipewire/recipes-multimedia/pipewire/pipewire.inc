@@ -49,13 +49,6 @@ PACKAGECONFIG[gstreamer] = "-Dgstreamer=true,-Dgstreamer=false,glib-2.0 gstreame
 PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,libxml-parser-perl-native"
 
 do_install_append() {
-    # if we are distributing our own configuration file,
-    # replace the one installed by pipewire
-    if [ -f ${WORKDIR}/pipewire.conf ]
-    then
-        install -m 0644 ${WORKDIR}/pipewire.conf ${D}${sysconfdir}/pipewire/pipewire.conf
-    fi
-
     # only install the alsa config file if the alsa-lib plugin has been built
     # this avoids creating the pipewire-alsa package when the pipewire-alsa
     # feature is not enabled
@@ -66,23 +59,20 @@ do_install_append() {
     fi
 }
 
-PACKAGES += "\
-    lib${PN} \
-    lib${PN}-modules \
+PACKAGES =+ "\
     ${PN}-spa-plugins \
     ${PN}-alsa \
     ${PN}-pulseaudio \
     ${PN}-jack \
+    ${PN}-config \
     gstreamer${GST_VER}-${PN} \
+    lib${PN} \
+    lib${PN}-modules \
 "
 
 FILES_${PN} = "\
     ${bindir}/pipewire* \
-    ${sysconfdir}/pipewire/pipewire.conf \
     ${systemd_user_unitdir}/* \
-"
-CONFFILES_${PN} += "\
-    ${sysconfdir}/pipewire/pipewire.conf \
 "
 
 FILES_lib${PN} = "\
@@ -112,3 +102,14 @@ FILES_gstreamer${GST_VER}-${PN} = "\
 "
 
 RDEPENDS_lib${PN} += "lib${PN}-modules ${PN}-spa-plugins"
+
+# The default pipewire config.
+# Replace in your own package using
+# "virtual/pipewire-config"
+FILES_${PN}-config = "\
+    ${sysconfdir}/pipewire/pipewire.conf \
+"
+CONFFILES_${PN}-config += "\
+    ${sysconfdir}/pipewire/pipewire.conf \
+"
+RPROVIDES_${PN}-config += "virtual/pipewire-config"

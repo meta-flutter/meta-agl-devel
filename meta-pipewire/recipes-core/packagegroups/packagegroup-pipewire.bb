@@ -11,5 +11,4 @@ PACKAGES = "\
 RDEPENDS_${PN} += "\
     pipewire \
     pipewire-alsa \
-    wireplumber \
 "

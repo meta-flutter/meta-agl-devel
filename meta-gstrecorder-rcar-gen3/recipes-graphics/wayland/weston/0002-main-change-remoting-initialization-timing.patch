@@ -1,0 +1,39 @@
+From 0a0103f20437d9ed63b6cec500027a6d7bf6185f Mon Sep 17 00:00:00 2001
+From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+Date: Mon, 20 May 2019 18:31:32 +0900
+Subject: [PATCH] main: change remoting initialization timing
+
+Signed-off-by: Tomohito Esaki <etom@igel.co.jp>
+Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+---
+ compositor/main.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/compositor/main.c b/compositor/main.c
+index 248298e..de7190b 100644
+--- a/compositor/main.c
++++ b/compositor/main.c
+@@ -2018,9 +2018,6 @@ load_drm_backend(struct weston_compositor *c,
+ 	ret = weston_compositor_load_backend(c, WESTON_BACKEND_DRM,
+ 					     &config.base);
+ 
+-	/* remoting */
+-	load_remoting(c, wc);
+-
+ 	free(config.gbm_format);
+ 	free(config.seat_id);
+ 
+@@ -2664,6 +2661,10 @@ int main(int argc, char *argv[])
+ 	if (wet.init_failed)
+ 		goto out;
+ 
++	/* remoting: only support on drm-backend */
++	if (strstr(backend, "drm-backend.so"))
++		load_remoting(wet.compositor, config);
++
+ 	if (idle_time < 0)
+ 		weston_config_section_get_int(section, "idle-time", &idle_time, -1);
+ 	if (idle_time < 0)
+-- 
+2.9.2
+

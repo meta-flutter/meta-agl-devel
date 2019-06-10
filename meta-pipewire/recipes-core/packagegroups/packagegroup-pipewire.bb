@@ -9,6 +9,7 @@ PACKAGES = "\
     "
 
 RDEPENDS_${PN} += "\
+    agl-service-audiomixer \
     pipewire \
     pipewire-alsa \
 "

@@ -3,9 +3,15 @@ AUTHOR = "Jani Hautakangas <jani.hautakangas@lge.com>"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-inherit qmake5
+inherit cmake
 
-DEPENDS = "qtbase glib-2.0 jsoncpp chromium68 wayland-ivi-extension libhomescreen libwindowmanager"
+DEPENDS = "glib-2.0 jsoncpp boost chromium68 wayland-ivi-extension libhomescreen libwindowmanager"
+
+EXTRA_OECMAKE = "\
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=${prefix} \
+    -DPLATFORM_NAME=${@'${DISTRO}'.upper().replace('-', '_')} \
+    -DCHROMIUM_SRC_DIR=${STAGING_INCDIR}/chromium68"
 
 PR="r0"
 
@@ -14,13 +20,7 @@ RPROVIDES_${PN} += "virtual/webruntime"
 
 SRC_URI = "git://github.com/webosose/${PN}.git;branch=@6.agl.guppy;protocol=https"
 S = "${WORKDIR}/git"
-SRCREV = "ed37e18d3b7acaecc5e40c2548b6dbda98a4f755"
-
-EXTRA_QMAKEVARS_PRE += "CONFIG_BUILD+=agl_service"
-EXTRA_QMAKEVARS_PRE += "PREFIX=/usr"
-EXTRA_QMAKEVARS_PRE += "PLATFORM=${@'PLATFORM_' + '${DISTRO}'.upper().replace('-', '_')}"
-EXTRA_QMAKEVARS_PRE += "CHROMIUM_SRC_DIR=${STAGING_INCDIR}/chromium68"
-OE_QMAKE_CXXFLAGS += "-Wno-unused-variable"
+SRCREV = "3e9ce0d4d85a1ea1210e5453906d5bdb084dd305"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/wam

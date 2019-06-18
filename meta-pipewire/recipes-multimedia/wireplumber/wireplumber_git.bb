@@ -12,7 +12,7 @@ inherit meson pkgconfig gobject-introspection
 DEPENDS = "glib-2.0 glib-2.0-native pipewire"
 
 SRC_URI = "git://gitlab.freedesktop.org/gkiagia/wireplumber;protocol=https;branch=master"
-SRCREV = "18f3e764c0c64efa7c53e641434520f84c6aa797"
+SRCREV = "aa5b16f8df38d544e27bc827c267b71da66f514d"
 
 PV = "0.0+git${SRCPV}"
 S  = "${WORKDIR}/git"

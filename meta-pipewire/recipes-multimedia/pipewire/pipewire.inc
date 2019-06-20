@@ -18,6 +18,7 @@ DEPENDS = "dbus"
 
 PACKAGECONFIG ??= "\
     ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'bluez5', d)} \
     alsa audioconvert \
     pipewire-alsa \
 "

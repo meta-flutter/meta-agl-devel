@@ -44,3 +44,4 @@ pkg_postinst_${PN}_append() {
 RDEPENDS_${PN} += "wam-tinyproxy"
 FILES_${PN} += "${sysconfdir}/init ${sysconfdir}/wam ${libdir}/webappmanager/plugins/*.so ${systemd_user_unitdir}"
 
+CXXFLAGS_append_agl-devel = " -DAGL_DEVEL"

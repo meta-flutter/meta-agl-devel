@@ -1,0 +1,28 @@
+From 4e1c70e9b4e8f3ece722f82d49b283a0c6ef0130 Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Mon, 24 Jun 2019 12:19:20 +0300
+Subject: [PATCH] arm: build with -mno-unaligned-access
+
+---
+ meson.build | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/meson.build b/meson.build
+index 81303d27..f3cc6030 100644
+--- a/meson.build
++++ b/meson.build
+@@ -50,6 +50,11 @@ if cc.get_id() == 'gcc'
+ 			language : 'c')
+ endif
+ 
++if host_machine.cpu_family() == 'arm'
++  add_global_arguments('-mno-unaligned-access',
++    language: 'c')
++endif
++
+ sse_args = '-msse'
+ sse2_args = '-msse2'
+ ssse3_args = '-mssse3'
+-- 
+2.20.1
+

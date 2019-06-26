@@ -9,6 +9,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 SRC_URI = " \
  file://pipewire.conf \
+ file://client.env \
+ file://server.env \
  "
 
 do_configure[noexec] = "1"
@@ -19,13 +21,20 @@ do_install_append() {
     # replace the one installed by pipewire
     install -d ${D}/${sysconfdir}/pipewire/
     install -m 0644 ${WORKDIR}/pipewire.conf ${D}${sysconfdir}/pipewire/pipewire.conf
+
+    # install environment variable files
+    install -d ${D}/${sysconfdir}/afm/unit.env.d/
+    install -m 0644 ${WORKDIR}/client.env ${D}/${sysconfdir}/afm/unit.env.d/pipewire
+    install -m 0644 ${WORKDIR}/server.env ${D}${sysconfdir}/pipewire/environment
 }
 
 FILES_${PN} = "\
-    ${sysconfdir}/pipewire/pipewire.conf \
+    ${sysconfdir}/pipewire/* \
+    ${sysconfdir}/afm/unit.env.d/* \
 "
 CONFFILES_${PN} += "\
-    ${sysconfdir}/pipewire/pipewire.conf \
+    ${sysconfdir}/pipewire/* \
+    ${sysconfdir}/afm/unit.env.d/* \
 "
 
 RPROVIDES_${PN} += "virtual/pipewire-config"

@@ -15,6 +15,7 @@ Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%i/bus
 
 User=%i
 Slice=user-%i.slice
+SmackProcessLabel=System::Pipewire
 SupplementaryGroups=audio
 UMask=0077
 CapabilityBoundingSet=

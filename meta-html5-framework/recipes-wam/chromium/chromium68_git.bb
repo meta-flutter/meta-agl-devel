@@ -337,9 +337,6 @@ install_chromium_browser() {
     configure_browser_settings
 }
 
-MKSNAPSHOT_PATH = ""
-MKSNAPSHOT_PATH_arm = "clang_x86_v8_arm/"
-
 install_webruntime() {
     install -d ${D}${libdir}
     install -d ${D}${includedir}/${BPN}

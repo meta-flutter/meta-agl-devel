@@ -5,8 +5,8 @@ SECTION = "apps"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-SRC_URI = "gitsm://github.com/webosose/${PN}.git;branch=flounder;protocol=https"
-SRCREV = "b1d34892e70aee9d1c8f4602c4db28847825fb1a"
+SRC_URI = "gitsm://github.com/webosose/${PN}.git;branch=halibut;protocol=https"
+SRCREV = "7dabb46483ff6a3a4fa5cfe532b91412f185554d"
 
 PV = "1.0+git${SRCPV}"
 S = "${WORKDIR}/git"

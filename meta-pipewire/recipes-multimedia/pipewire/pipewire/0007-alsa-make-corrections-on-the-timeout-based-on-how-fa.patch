@@ -1,0 +1,130 @@
+From 05a3a926df4906cdf60f7978843c637bbf37714a Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Tue, 9 Jul 2019 18:06:18 +0300
+Subject: [PATCH] alsa: make corrections on the timeout based on how fast ALSA
+ consumes samples
+
+This feels a bit hacky, but it actually makes huge difference when pipewire is
+running in qemu.
+
+The idea is that it keeps track of how much samples are in the device
+(fill level) and calculates how many are consumed when a timeout occurs.
+Then it converts that into a time based on the sample rate and compares it to
+the system clock time that elapsed since the last write to the device.
+The division between the two gives a rate (drift) that can be used to shorten
+the timeout window.
+
+So for instance, if the timeout window was 21.3 ms, but the device actually
+consumed an equivalent of 28 ms in samples, the drift will be 21.3/28 = 0.76
+and the next timeout window will be approximately 21.3 * 0.76 = 16.1 ms
+
+To avoid making things worse, the drift is clamped between 0.6 and 1.0.
+Min 0.6 was arbitrarily chosen, but sometimes alsa does report strange numbers,
+causing the drift to be very low, which in turn causes an early wakeup.
+Max 1.0 basically means that we don't care if the device is consuming samples
+slower. In that case, the early wakeup mechanism will throttle pipewire.
+
+Fixes #163
+
+Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/166]
+---
+ spa/plugins/alsa/alsa-utils.c | 31 ++++++++++++++++++++++++++-----
+ spa/plugins/alsa/alsa-utils.h |  2 ++
+ 2 files changed, 28 insertions(+), 5 deletions(-)
+
+diff --git a/spa/plugins/alsa/alsa-utils.c b/spa/plugins/alsa/alsa-utils.c
+index 87582c1c..872969bf 100644
+--- a/spa/plugins/alsa/alsa-utils.c
++++ b/spa/plugins/alsa/alsa-utils.c
+@@ -593,7 +593,21 @@ static int get_status(struct state *state, snd_pcm_sframes_t *delay)
+ 
+ static int update_time(struct state *state, uint64_t nsec, snd_pcm_sframes_t delay, bool slave)
+ {
+-	double err, corr;
++	double err, corr, drift;
++	snd_pcm_sframes_t consumed;
++
++	consumed = state->fill_level - delay;
++	if (state->alsa_started && consumed > 0) {
++		double sysclk_diff = nsec - state->last_time;
++		double devclk_diff = ((double) consumed) * 1e9 / state->rate;
++		drift = sysclk_diff / devclk_diff;
++		drift = SPA_CLAMP(drift, 0.6, 1.0);
++
++		spa_log_trace_fp(state->log, "cons:%ld sclk:%f dclk:%f drift:%f",
++			consumed, sysclk_diff, devclk_diff, drift);
++	} else {
++		drift = 1.0;
++	}
+ 
+ 	if (state->stream == SND_PCM_STREAM_PLAYBACK)
+ 		err = delay - state->last_threshold;
+@@ -650,11 +664,11 @@ static int update_time(struct state *state, uint64_t nsec, snd_pcm_sframes_t del
+ 		state->clock->rate_diff = corr;
+ 	}
+ 
+-	spa_log_trace_fp(state->log, "slave:%d %"PRIu64" %f %ld %f %f %d", slave, nsec,
+-			corr, delay, err, state->threshold * corr,
++	spa_log_trace_fp(state->log, "slave:%d %"PRIu64" %f %ld %f %f %f %d", slave, nsec,
++			corr, delay, err, state->threshold * corr, drift,
+ 			state->threshold);
+ 
+-	state->next_time += state->threshold / corr * 1e9 / state->rate;
++	state->next_time += state->threshold / corr * drift * 1e9 / state->rate;
+ 	state->last_threshold = state->threshold;
+ 
+ 	return 0;
+@@ -783,6 +797,10 @@ again:
+ 		goto again;
+ 
+ 	state->sample_count += total_written;
++	state->fill_level += total_written;
++
++	clock_gettime(CLOCK_MONOTONIC, &state->now);
++	state->last_time = SPA_TIMESPEC_TO_NSEC (&state->now);
+ 
+ 	if (!state->alsa_started && total_written > 0) {
+ 		spa_log_trace(state->log, "snd_pcm_start %lu", written);
+@@ -935,7 +953,7 @@ static int handle_play(struct state *state, uint64_t nsec, snd_pcm_sframes_t del
+ {
+ 	int res;
+ 
+-	if (delay >= state->last_threshold * 2) {
++	if (delay > state->last_threshold * 2) {
+ 		spa_log_trace(state->log, "early wakeup %ld %d", delay, state->threshold);
+ 		state->next_time = nsec + (delay - state->last_threshold) * SPA_NSEC_PER_SEC / state->rate;
+ 		return -EAGAIN;
+@@ -944,6 +962,8 @@ static int handle_play(struct state *state, uint64_t nsec, snd_pcm_sframes_t del
+ 	if ((res = update_time(state, nsec, delay, false)) < 0)
+ 		return res;
+ 
++	state->fill_level = delay;
++
+ 	if (spa_list_is_empty(&state->ready)) {
+ 		struct spa_io_buffers *io = state->io;
+ 
+@@ -1072,6 +1092,7 @@ int spa_alsa_start(struct state *state)
+ 
+ 	state->slaved = is_slaved(state);
+ 	state->last_threshold = state->threshold;
++	state->fill_level = 0;
+ 
+ 	init_loop(state);
+ 	state->safety = 0.0;
+diff --git a/spa/plugins/alsa/alsa-utils.h b/spa/plugins/alsa/alsa-utils.h
+index a862873f..b53890b5 100644
+--- a/spa/plugins/alsa/alsa-utils.h
++++ b/spa/plugins/alsa/alsa-utils.h
+@@ -134,7 +134,9 @@ struct state {
+ 	int64_t sample_time;
+ 	uint64_t next_time;
+ 	uint64_t base_time;
++	uint64_t last_time;
+ 
++	snd_pcm_uframes_t fill_level;
+ 	uint64_t underrun;
+ 	double safety;
+ 
+-- 
+2.20.1
+

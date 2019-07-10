@@ -1,8 +1,10 @@
-From 4e1c70e9b4e8f3ece722f82d49b283a0c6ef0130 Mon Sep 17 00:00:00 2001
+From 2016605938f02835c75928648e99b25f7248aa5b Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Mon, 24 Jun 2019 12:19:20 +0300
 Subject: [PATCH] arm: build with -mno-unaligned-access
 
+Upstream-Status: Inappropriate [workaround]
+See also https://github.com/PipeWire/pipewire/issues/161
 ---
  meson.build | 5 +++++
  1 file changed, 5 insertions(+)

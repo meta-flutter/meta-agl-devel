@@ -1,0 +1,55 @@
+From ddcda9fa6ec49168c5ddd9fbeda748c5fad18fce Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Wed, 10 Jul 2019 14:53:15 +0300
+Subject: [PATCH] audioconvert: do setup internal links and buffers also in
+ convert mode
+
+Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/167]
+---
+ spa/plugins/audioconvert/audioconvert.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/spa/plugins/audioconvert/audioconvert.c b/spa/plugins/audioconvert/audioconvert.c
+index fa8dec97..0af0732d 100644
+--- a/spa/plugins/audioconvert/audioconvert.c
++++ b/spa/plugins/audioconvert/audioconvert.c
+@@ -79,6 +79,8 @@ struct impl {
+ #define MODE_MERGE	1
+ #define MODE_CONVERT	2
+ 	int mode;
++	bool fmt_is_set[2];
++	bool buffers_set[2];
+ 	bool started;
+ 
+ 	struct spa_handle *hnd_fmt[2];
+@@ -791,11 +793,11 @@ impl_node_port_set_param(struct spa_node *node,
+ 	if (id == SPA_PARAM_Format) {
+ 		if (param == NULL)
+ 			clean_convert(this);
+-		else if ((direction == SPA_DIRECTION_OUTPUT && this->mode == MODE_MERGE) ||
+-		    (direction == SPA_DIRECTION_INPUT && this->mode == MODE_SPLIT)) {
++		else if (this->fmt_is_set[SPA_DIRECTION_REVERSE(direction)]) {
+ 			if ((res = setup_convert(this)) < 0)
+ 				return res;
+ 		}
++		this->fmt_is_set[direction] = (param != NULL);
+ 	}
+ 	return res;
+ }
+@@ -824,11 +826,11 @@ impl_node_port_use_buffers(struct spa_node *node,
+ 					direction, port_id, buffers, n_buffers)) < 0)
+ 		return res;
+ 
+-	if ((direction == SPA_DIRECTION_OUTPUT && this->mode == MODE_MERGE) ||
+-	    (direction == SPA_DIRECTION_INPUT && this->mode == MODE_SPLIT)) {
++	if (buffers && this->buffers_set[SPA_DIRECTION_REVERSE(direction)]) {
+ 		if ((res = setup_buffers(this, SPA_DIRECTION_INPUT)) < 0)
+ 			return res;
+ 	}
++	this->buffers_set[direction] = (buffers != NULL);
+ 	return res;
+ }
+ 
+-- 
+2.20.1
+

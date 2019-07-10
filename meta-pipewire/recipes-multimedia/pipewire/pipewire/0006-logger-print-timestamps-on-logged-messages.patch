@@ -1,0 +1,52 @@
+From 352c58357e5922b21d664c1f5a0b89a74f864f41 Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Wed, 3 Jul 2019 17:47:46 +0300
+Subject: [PATCH] logger: print timestamps on logged messages
+
+Timestamps have usec precision and the seconds are limited
+to 9 digits. Usually what matters in these messages is to spot
+delays between printouts and not really what is the absolute
+time of the system.
+
+Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/164]
+---
+ spa/plugins/support/logger.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/spa/plugins/support/logger.c b/spa/plugins/support/logger.c
+index 87ba3c21..2976601c 100644
+--- a/spa/plugins/support/logger.c
++++ b/spa/plugins/support/logger.c
+@@ -27,6 +27,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <stdio.h>
++#include <time.h>
+ #include <sys/eventfd.h>
+ 
+ #include <spa/support/log.h>
+@@ -70,6 +71,9 @@ impl_log_logv(struct spa_log *log,
+ 	const char *prefix = "", *suffix = "";
+ 	int size;
+ 	bool do_trace;
++	struct timespec now;
++
++	clock_gettime(CLOCK_MONOTONIC_RAW, &now);
+ 
+ 	if ((do_trace = (level == SPA_LOG_LEVEL_TRACE && impl->have_source)))
+ 		level++;
+@@ -86,8 +90,9 @@ impl_log_logv(struct spa_log *log,
+ 	}
+ 
+ 	vsnprintf(text, sizeof(text), fmt, args);
+-	size = snprintf(location, sizeof(location), "%s[%s][%s:%i %s()] %s%s\n",
+-		prefix, levels[level], strrchr(file, '/') + 1, line, func, text, suffix);
++	size = snprintf(location, sizeof(location), "%s[%s][%09lu.%06lu][%s:%i %s()] %s%s\n",
++		prefix, levels[level], now.tv_sec & 0x1FFFFFFF, now.tv_nsec / 1000,
++		strrchr(file, '/') + 1, line, func, text, suffix);
+ 
+ 	if (SPA_UNLIKELY(do_trace)) {
+ 		uint32_t index;
+-- 
+2.20.1
+

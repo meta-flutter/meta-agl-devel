@@ -10,6 +10,11 @@ SRC_URI = "gitsm://github.com/PipeWire/pipewire;protocol=https;branch=work \
     file://0007-alsa-make-corrections-on-the-timeout-based-on-how-fa.patch \
     file://0008-audio-dsp-allow-mode-to-be-set-with-a-property.patch \
     file://0009-audioconvert-do-setup-internal-links-and-buffers-als.patch \
+    file://0010-gst-Implement-new-pwaudio-src-sink-elements-based-on.patch \
+    file://0011-gst-pwaudioringbuffer-make-the-buffer-size-sensitive.patch \
+    file://0012-gst-pwaudioringbuffer-request-pause-play-on-the-appr.patch \
+    file://0013-gst-pwaudioringbuffer-wait-only-for-STREAM_STATE_CON.patch \
+    file://0014-gst-pwaudiosink-set-the-default-latency-time-buffer-.patch \
     "
 
 SRCREV = "4be788962e60891237f1f018627bf709ae3981e6"

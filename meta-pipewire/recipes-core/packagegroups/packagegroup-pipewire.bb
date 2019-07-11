@@ -12,4 +12,5 @@ RDEPENDS_${PN} += "\
     agl-service-audiomixer \
     pipewire \
     pipewire-alsa \
+    gstreamer1.0-pipewire \
 "

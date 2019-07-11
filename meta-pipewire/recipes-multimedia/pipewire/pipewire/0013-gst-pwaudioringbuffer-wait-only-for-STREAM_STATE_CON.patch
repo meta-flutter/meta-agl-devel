@@ -1,0 +1,35 @@
+From 1b2bf0f435f2912c32fbd7a6118ed9bfb41f031c Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Thu, 11 Jul 2019 16:34:35 +0300
+Subject: [PATCH] gst/pwaudioringbuffer: wait only for STREAM_STATE_CONFIGURE
+ when starting
+
+The CONFIGURE state is reached when the pw_client_node is exported,
+while the READY state requires the session manager to try and link
+the stream. If the SM does not want to link the stream due to policy,
+the client should not hang there forever.
+
+Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/140]
+---
+ src/gst/gstpwaudioringbuffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/gst/gstpwaudioringbuffer.c b/src/gst/gstpwaudioringbuffer.c
+index 04259927..b92b5feb 100644
+--- a/src/gst/gstpwaudioringbuffer.c
++++ b/src/gst/gstpwaudioringbuffer.c
+@@ -444,9 +444,9 @@ gst_pw_audio_ring_buffer_acquire (GstAudioRingBuffer *buf,
+           params, 1) < 0)
+     goto start_error;
+ 
+-  GST_DEBUG_OBJECT (self->elem, "waiting for stream READY");
++  GST_DEBUG_OBJECT (self->elem, "waiting for stream CONFIGURE");
+ 
+-  if (!wait_for_stream_state (self, PW_STREAM_STATE_READY))
++  if (!wait_for_stream_state (self, PW_STREAM_STATE_CONFIGURE))
+     goto start_error;
+ 
+   pw_thread_loop_unlock (self->main_loop);
+-- 
+2.20.1
+

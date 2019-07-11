@@ -21,6 +21,7 @@ PACKAGECONFIG ??= "\
     ${@bb.utils.filter('DISTRO_FEATURES', 'bluez5', d)} \
     alsa audioconvert \
     pipewire-alsa \
+    gstreamer \
 "
 
 GST_VER = "1.0"

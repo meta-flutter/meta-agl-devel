@@ -20,7 +20,7 @@ RPROVIDES_${PN} += "virtual/webruntime"
 
 SRC_URI = "git://github.com/webosose/${PN}.git;branch=@6.agl.guppy;protocol=https"
 S = "${WORKDIR}/git"
-SRCREV = "574c65bbd26937ad4552a51ad6ec438238af115e"
+SRCREV = "8271e13578b92b192cef1d1ac6577bc3699518a4"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/wam

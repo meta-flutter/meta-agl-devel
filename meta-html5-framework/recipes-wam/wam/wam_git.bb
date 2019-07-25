@@ -18,30 +18,27 @@ PR="r0"
 PROVIDES += "virtual/webruntime"
 RPROVIDES_${PN} += "virtual/webruntime"
 
-SRC_URI = "git://github.com/webosose/${PN}.git;branch=@6.agl.guppy;protocol=https"
+SRC_URI = "\
+    git://github.com/webosose/${PN}.git;branch=@6.agl.guppy;protocol=https \
+    file://WebAppMgr@.service \
+    file://WebAppMgr.env \
+"
 S = "${WORKDIR}/git"
 SRCREV = "8271e13578b92b192cef1d1ac6577bc3699518a4"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/wam
     install -v -m 644 ${S}/files/launch/security_policy.conf ${D}${sysconfdir}/wam/security_policy.conf
-    install -d ${D}${systemd_user_unitdir}
-    install -v -m 644 ${S}/files/launch/WebAppMgr.service ${D}${systemd_user_unitdir}/WebAppMgr.service
+    install -d ${D}${systemd_system_unitdir}
+    install -v -m 644 ${WORKDIR}/WebAppMgr@.service ${D}${systemd_system_unitdir}/WebAppMgr@.service
     install -d ${D}${sysconfdir}/default/
-    install -v -m 644 ${S}/files/launch/WebAppMgr.env ${D}${sysconfdir}/default/WebAppMgr.env
+    install -v -m 644 ${WORKDIR}/WebAppMgr.env ${D}${sysconfdir}/default/WebAppMgr.env
     ln -snf WebAppMgr ${D}${bindir}/web-runtime
-    install -d ${D}${sysconfdir}/systemd/user/default.target.wants
-    ln -sf ${systemd_user_unitdir}/WebAppMgr.service ${D}${sysconfdir}/systemd/user/default.target.wants
-}
-
-pkg_postinst_${PN}_append() {
-    chsmack -a "*" /usr/bin/WebAppMgr
-    chsmack -a "*" /usr/lib/libWebAppMgr.so.1.0.0
-    chsmack -a "*" /usr/lib/libWebAppMgrCore.so.1.0.0
-    chsmack -a "*" /usr/lib/webappmanager/plugins/libwebappmgr-default-plugin.so
+    install -d ${D}${systemd_system_unitdir}/afm-user-session@.target.wants
+    ln -sf ../WebAppMgr@.service ${D}${systemd_system_unitdir}/afm-user-session@.target.wants/
 }
 
 RDEPENDS_${PN} += "wam-tinyproxy"
-FILES_${PN} += "${sysconfdir}/init ${sysconfdir}/wam ${libdir}/webappmanager/plugins/*.so ${systemd_user_unitdir}"
+FILES_${PN} += "${sysconfdir}/init ${sysconfdir}/wam ${libdir}/webappmanager/plugins/*.so ${systemd_system_unitdir}"
 
 CXXFLAGS_append_agl-devel = " -DAGL_DEVEL"

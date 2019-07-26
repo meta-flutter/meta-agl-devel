@@ -1,0 +1,55 @@
+# Basic pipewire integration - do not remove
+load-module C libwireplumber-module-pipewire
+
+# Grants access to security confined clients
+load-module C libwireplumber-module-client-permissions
+
+# Endpoint implementation for standard audio devices
+# using software conversions, mixing and volume controls
+load-module C libwireplumber-module-pw-audio-softdsp-endpoint
+
+# Endpoint that provides high-level volume controls for the AGL mixer
+# The streams specified here are the ones that will appear in the mixer.
+# They must match the stream names in the alsa-udev module,
+# except for "Master", which is treated specially.
+load-module C libwireplumber-module-mixer {
+  "streams": <["Master", "Multimedia", "Speech-Low", "Custom-Low",
+                "Navigation", "Speech-High", "Custom-High",
+                "Communication", "Emergency"]>
+}
+
+# Monitors the ALSA devices that are discovered via udev
+# and creates softdsp-endopints for each one of them
+# The streams specified here are the ones that will be available for linking
+# clients. Currently, they are matched against the client's role string.
+load-module C libwireplumber-module-pw-alsa-udev {
+  "streams": <["Multimedia", "Speech-Low", "Custom-Low",
+                "Navigation", "Speech-High", "Custom-High",
+                "Communication", "Emergency"]>
+}
+
+# Monitors the Audio clients that are discovered via pipewire
+# and creates simple-endpoints for each one of them
+load-module C libwireplumber-module-pw-audio-client
+
+# Implements linking clients to devices and maintains
+# information about the devices to be used.
+# Notes:
+# - Devices must be specified in hw:X,Y format, where X and Y are integers.
+#   Things like hw:Intel,0 or paths are not understood.
+# - Roles and priorities can be arbitrary strings and arbitrary numbers
+# - Roles are matched against the stream names specified in the modules above.
+load-module C libwireplumber-module-simple-policy {
+  "default-playback-device": <"PLAYBACK">,
+  "default-capture-device": <"CAPTURE">,
+  "role-priorities": <{
+    "Multimedia": 1,
+    "Speech-Low": 2,
+    "Custom-Low": 3,
+    "Navigation": 5,
+    "Speech-High:": 7,
+    "Custom-High": 8,
+    "Communication": 9,
+    "Emergency": 10
+  }>
+}

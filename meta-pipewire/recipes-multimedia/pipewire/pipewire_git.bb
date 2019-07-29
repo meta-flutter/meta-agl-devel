@@ -15,6 +15,7 @@ SRC_URI = "gitsm://github.com/PipeWire/pipewire;protocol=https;branch=work \
     file://0012-gst-pwaudioringbuffer-request-pause-play-on-the-appr.patch \
     file://0013-gst-pwaudioringbuffer-wait-only-for-STREAM_STATE_CON.patch \
     file://0014-gst-pwaudiosink-set-the-default-latency-time-buffer-.patch \
+    file://0015-audioconvert-fmtconvert-assume-F32-on-the-other-port.patch \
     "
 
 SRCREV = "4be788962e60891237f1f018627bf709ae3981e6"

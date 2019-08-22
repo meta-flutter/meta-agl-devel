@@ -23,7 +23,7 @@ SRC_URI = "\
     git://github.com/webosose/v8;destsuffix=git/src/v8;rev=${SRCREV_v8} \
     file://v8-qemu-wrapper.patch \
 "
-SRCREV_chromium68 = "259a8b56bc833956f3acd318b7f19b028277beda"
+SRCREV_chromium68 = "6a0470f2d03caaeee3ff854b2423bf4e4b2afbbe"
 SRCREV_v8 = "1e3af71f1ff3735e8a5b639c48dfca63a7b8a647"
 
 # Backport of https://chromium-review.googlesource.com/c/chromium/src/+/1138251/

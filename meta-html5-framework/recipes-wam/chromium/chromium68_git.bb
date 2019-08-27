@@ -23,15 +23,8 @@ SRC_URI = "\
     git://github.com/webosose/v8;destsuffix=git/src/v8;rev=${SRCREV_v8} \
     file://v8-qemu-wrapper.patch \
 "
-SRCREV_chromium68 = "6a0470f2d03caaeee3ff854b2423bf4e4b2afbbe"
+SRCREV_chromium68 = "3169198da53cbb842e504e91473e021a6b07bcc0"
 SRCREV_v8 = "1e3af71f1ff3735e8a5b639c48dfca63a7b8a647"
-
-# Backport of https://chromium-review.googlesource.com/c/chromium/src/+/1138251/
-SRC_URI_append_armv7a = " file://0001-skia-Build-skcms-with-mfp16-format-ieee-on-GCC-ARM-b.patch"
-SRC_URI_append_armv7ve = " file://0001-skia-Build-skcms-with-mfp16-format-ieee-on-GCC-ARM-b.patch"
-
-# Backport of https://chromium-review.googlesource.com/c/chromium/third_party/ffmpeg/+/1390286
-SRC_URI_append_aarch64 = " file://0001-libavcodec-Remove-dynamic-relocs-from-h264idct_neon..patch"
 
 # we don't include SRCPV in PV, so we have to manually include SRCREVs in do_fetch vardeps
 do_fetch[vardeps] += "SRCREV_v8"

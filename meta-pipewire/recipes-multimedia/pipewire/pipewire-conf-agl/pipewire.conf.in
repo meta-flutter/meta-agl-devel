@@ -2,6 +2,7 @@
 # distributed by Automotive Grade Linux
 load-module libpipewire-module-protocol-native
 load-module libpipewire-module-spa-monitor alsa/libspa-alsa alsa-monitor alsa
+#IF_BLUEZ5 load-module libpipewire-module-spa-monitor bluez5/libspa-bluez5 bluez5-monitor bluez5
 load-module libpipewire-module-client-node
 load-module libpipewire-module-access
 load-module libpipewire-module-audio-dsp

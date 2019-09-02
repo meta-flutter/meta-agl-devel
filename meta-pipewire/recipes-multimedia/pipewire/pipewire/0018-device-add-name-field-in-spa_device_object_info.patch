@@ -1,0 +1,39 @@
+From 0e3df7c3612fadf5319efb231fcd16ef16cd6e1a Mon Sep 17 00:00:00 2001
+From: Julian Bouzas <julian.bouzas@collabora.com>
+Date: Thu, 29 Aug 2019 13:58:13 -0400
+Subject: [PATCH] device: add name field in spa_device_object_info
+
+Upstream-Status: Pending
+---
+ spa/include/spa/monitor/device.h | 1 +
+ src/pipewire/device.c            | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/spa/include/spa/monitor/device.h b/spa/include/spa/monitor/device.h
+index 765e96f8..51a467b1 100644
+--- a/spa/include/spa/monitor/device.h
++++ b/spa/include/spa/monitor/device.h
+@@ -59,6 +59,7 @@ struct spa_device_object_info {
+ 
+ 	uint32_t type;
+ 	const struct spa_handle_factory *factory;
++	const char *name;
+ 
+ #define SPA_DEVICE_OBJECT_CHANGE_MASK_FLAGS	(1u<<0)
+ #define SPA_DEVICE_OBJECT_CHANGE_MASK_PROPS	(1u<<1)
+diff --git a/src/pipewire/device.c b/src/pipewire/device.c
+index 11907d13..4cfac06e 100644
+--- a/src/pipewire/device.c
++++ b/src/pipewire/device.c
+@@ -389,7 +389,7 @@ static void device_add(struct pw_device *device, uint32_t id,
+ 		pw_properties_update(props, info->props);
+ 
+ 	node = pw_node_new(device->core,
+-			   device->info.name,
++			   info->name ? info->name : device->info.name,
+ 			   props,
+ 			   sizeof(struct node_data) +
+ 			   spa_handle_factory_get_size(info->factory, info->props));
+-- 
+2.23.0.rc1
+

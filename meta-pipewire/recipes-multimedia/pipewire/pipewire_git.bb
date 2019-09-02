@@ -16,11 +16,17 @@ SRC_URI = "gitsm://github.com/PipeWire/pipewire;protocol=https;branch=work \
     file://0013-gst-pwaudioringbuffer-wait-only-for-STREAM_STATE_CON.patch \
     file://0014-gst-pwaudiosink-set-the-default-latency-time-buffer-.patch \
     file://0015-audioconvert-fmtconvert-assume-F32-on-the-other-port.patch \
+    file://0016-a2dpsink-fix-infinite-loop-when-buffer-could-not-be-.patch \
+    file://0017-bluez5-add-sco-sink-and-sco-src-nodes.patch \
+    file://0018-device-add-name-field-in-spa_device_object_info.patch \
+    file://0019-bluez-add-transport-name-and-use-it-when-emitting-no.patch \
+    file://0020-a2dp-sink-check-if-transport-is-valid-before-releasi.patch \
+    file://0021-gst-pwaudioringbuffer-set-node.latency-to-get-schedu.patch \
     "
 
 SRCREV = "4be788962e60891237f1f018627bf709ae3981e6"
 
-PV = "0.2.90+git${SRCPV}-1"
+PV = "0.2.90+git${SRCPV}+2"
 S  = "${WORKDIR}/git"
 
 RDEPENDS_${PN} += "virtual/pipewire-sessionmanager virtual/pipewire-config"

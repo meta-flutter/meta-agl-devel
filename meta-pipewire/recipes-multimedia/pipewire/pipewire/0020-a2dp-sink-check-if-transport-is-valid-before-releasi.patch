@@ -1,0 +1,36 @@
+From 411fd3d4e7b3f076a14c8eae7be976ce17b686ca Mon Sep 17 00:00:00 2001
+From: Julian Bouzas <julian.bouzas@collabora.com>
+Date: Fri, 30 Aug 2019 08:45:11 -0400
+Subject: [PATCH] a2dp-sink: check if transport is valid before releasing it
+
+Upstream-Status: Pending
+---
+ spa/plugins/bluez5/a2dp-sink.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/spa/plugins/bluez5/a2dp-sink.c b/spa/plugins/bluez5/a2dp-sink.c
+index d6d9e7d6..041d75bb 100644
+--- a/spa/plugins/bluez5/a2dp-sink.c
++++ b/spa/plugins/bluez5/a2dp-sink.c
+@@ -866,7 +866,7 @@ static int do_remove_source(struct spa_loop *loop,
+ 
+ static int do_stop(struct impl *this)
+ {
+-	int res;
++	int res = 0;
+ 
+ 	if (!this->started)
+ 		return 0;
+@@ -877,7 +877,8 @@ static int do_stop(struct impl *this)
+ 
+ 	this->started = false;
+ 
+-	res = spa_bt_transport_release(this->transport);
++	if (this->transport)
++		res = spa_bt_transport_release(this->transport);
+ 
+ 	return res;
+ }
+-- 
+2.23.0.rc1
+

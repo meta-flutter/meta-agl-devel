@@ -1,0 +1,90 @@
+From df485216dde74507e5ecb27b9663ab5107c6c5be Mon Sep 17 00:00:00 2001
+From: Julian Bouzas <julian.bouzas@collabora.com>
+Date: Thu, 29 Aug 2019 13:59:10 -0400
+Subject: [PATCH] bluez: add transport name and use it when emitting nodes
+
+Upstream-Status: Pending
+---
+ spa/plugins/bluez5/bluez5-device.c  |  1 +
+ spa/plugins/bluez5/bluez5-monitor.c | 23 +++++++++++++++++++++++
+ spa/plugins/bluez5/defs.h           |  1 +
+ 3 files changed, 25 insertions(+)
+
+diff --git a/spa/plugins/bluez5/bluez5-device.c b/spa/plugins/bluez5/bluez5-device.c
+index 40a340c9..c4380e7a 100644
+--- a/spa/plugins/bluez5/bluez5-device.c
++++ b/spa/plugins/bluez5/bluez5-device.c
+@@ -84,6 +84,7 @@ static void emit_node (struct impl *this, struct spa_bt_transport *t, const stru
+         info = SPA_DEVICE_OBJECT_INFO_INIT();
+         info.type = SPA_TYPE_INTERFACE_Node;
+         info.factory = factory;
++        info.name = t->name;
+         info.change_mask = SPA_DEVICE_OBJECT_CHANGE_MASK_PROPS;
+ 
+         /* Pass the transport pointer as a property */
+diff --git a/spa/plugins/bluez5/bluez5-monitor.c b/spa/plugins/bluez5/bluez5-monitor.c
+index 2a243715..2914323b 100644
+--- a/spa/plugins/bluez5/bluez5-monitor.c
++++ b/spa/plugins/bluez5/bluez5-monitor.c
+@@ -864,6 +864,26 @@ static void transport_free(struct spa_bt_transport *transport)
+ 	free(transport);
+ }
+ 
++static void transport_update_name(struct spa_bt_transport *t) {
++	switch (t->profile) {
++	case SPA_BT_PROFILE_A2DP_SOURCE:
++	case SPA_BT_PROFILE_A2DP_SINK:
++		snprintf (t->name, 256, "bluez5.a2dp %s", t->device->name);
++		break;
++	case SPA_BT_PROFILE_HSP_HS:
++	case SPA_BT_PROFILE_HFP_HF:
++		snprintf (t->name, 256, "bluez5.headunit %s", t->device->name);
++		break;
++	case SPA_BT_PROFILE_HSP_AG:
++	case SPA_BT_PROFILE_HFP_AG:
++		snprintf (t->name, 256, "bluez5.gateway %s", t->device->name);
++		break;
++	default:
++		snprintf (t->name, 256, "bluez5.unknown %s", t->device->name);
++		break;
++	}
++}
++
+ static int transport_update_props(struct spa_bt_transport *transport,
+ 				  DBusMessageIter *props_iter,
+ 				  DBusMessageIter *invalidated_iter)
+@@ -893,9 +913,11 @@ static int transport_update_props(struct spa_bt_transport *transport,
+ 				switch (spa_bt_profile_from_uuid(value)) {
+ 				case SPA_BT_PROFILE_A2DP_SOURCE:
+ 					transport->profile = SPA_BT_PROFILE_A2DP_SINK;
++					transport_update_name(transport);
+ 					break;
+ 				case SPA_BT_PROFILE_A2DP_SINK:
+ 					transport->profile = SPA_BT_PROFILE_A2DP_SOURCE;
++					transport_update_name(transport);
+ 					break;
+ 				default:
+ 					spa_log_warn(monitor->log, "unknown profile %s", value);
+@@ -1743,6 +1765,7 @@ static DBusHandlerResult profile_new_connection(DBusConnection *conn, DBusMessag
+ 	t->device = d;
+ 	spa_list_append(&t->device->transport_list, &t->device_link);
+ 	t->profile = profile;
++	transport_update_name(t);
+ 
+ 	td = t->user_data;
+ 	td->rfcomm.func = rfcomm_event;
+diff --git a/spa/plugins/bluez5/defs.h b/spa/plugins/bluez5/defs.h
+index 7402cdf4..933a6413 100644
+--- a/spa/plugins/bluez5/defs.h
++++ b/spa/plugins/bluez5/defs.h
+@@ -207,6 +207,7 @@ struct spa_bt_transport {
+ 	struct spa_bt_device *device;
+ 	struct spa_list device_link;
+ 	enum spa_bt_profile profile;
++	char name[256];
+ 	enum spa_bt_transport_state state;
+ 	int codec;
+ 	void *configuration;
+-- 
+2.23.0.rc1
+

@@ -1,0 +1,41 @@
+From 851738e3c5970a699d2313dec1cfeedb9d051d83 Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Tue, 20 Aug 2019 18:33:35 +0300
+Subject: [PATCH] gst: pwaudioringbuffer: set node.latency to get scheduled
+ correctly in capture mode
+
+Upstream-Status: Pending
+---
+ src/gst/gstpwaudioringbuffer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/gst/gstpwaudioringbuffer.c b/src/gst/gstpwaudioringbuffer.c
+index b92b5feb..2314dd77 100644
+--- a/src/gst/gstpwaudioringbuffer.c
++++ b/src/gst/gstpwaudioringbuffer.c
+@@ -403,11 +403,9 @@ gst_pw_audio_ring_buffer_acquire (GstAudioRingBuffer *buf,
+ 
+   /* construct param & props objects */
+ 
++  props = pw_properties_new (NULL, NULL);
+   if (self->props->properties) {
+-    props = pw_properties_new (NULL, NULL);
+     gst_structure_foreach (self->props->properties, copy_properties, props);
+-  } else {
+-    props = NULL;
+   }
+ 
+   spa_pod_builder_init (&b, buffer, sizeof (buffer));
+@@ -425,6 +423,9 @@ gst_pw_audio_ring_buffer_acquire (GstAudioRingBuffer *buf,
+   self->channels = GST_AUDIO_INFO_CHANNELS (&spec->info);
+   self->segoffset = 0;
+ 
++  pw_properties_setf(props, "node.latency", "%u/%u",
++      self->segsize / self->bpf, self->rate);
++
+   /* connect stream */
+ 
+   pw_thread_loop_lock (self->main_loop);
+-- 
+2.23.0.rc1
+

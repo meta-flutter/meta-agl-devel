@@ -42,3 +42,10 @@ RDEPENDS_${PN} += "wam-tinyproxy"
 FILES_${PN} += "${sysconfdir}/init ${sysconfdir}/wam ${libdir}/webappmanager/plugins/*.so ${systemd_system_unitdir}"
 
 CXXFLAGS_append_agl-devel = " -DAGL_DEVEL"
+
+do_install_append_agl-devel() {
+    # Enable remote inspector and dev mode
+    install -d ${D}${localstatedir}/agl-devel/preferences
+    touch ${D}${localstatedir}/agl-devel/preferences/debug_system_apps
+    touch ${D}${localstatedir}/agl-devel/preferences/devmode_enabled
+}

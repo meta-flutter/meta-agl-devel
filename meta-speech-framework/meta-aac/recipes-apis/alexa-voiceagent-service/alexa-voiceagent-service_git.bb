@@ -22,6 +22,7 @@ DEPENDS = " \
 SRC_URI = "git://github.com/alexa/alexa-auto-sdk.git;protocol=https;branch=2.0 \
            file://0001-remove-library-dependency-copying.patch \
            file://0002-update-config.xml.in.patch \
+           file://0003-update-audio-device-configuration.patch \
 "
 SRCREV = "86916d2d8c1702a8be3c88a9012ca56583bcc0c8"
 

@@ -1,4 +1,4 @@
-From 460ce06c9cc6fd7b0106e0ce8a265bbeff4ae406 Mon Sep 17 00:00:00 2001
+From 4d8e0de16717f250d22b24f335df8f27c67f2c52 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 11 Jul 2019 17:07:15 +0300
 Subject: [PATCH] gst/pwaudiosink: set the default latency time (buffer size)
@@ -33,5 +33,5 @@ index 6cb71385..069996c3 100644
  
  static void
 -- 
-2.20.1
+2.23.0
 

@@ -1,37 +1,31 @@
-From 0e9fe3cfb19c751655f16ce4b8c6100269f23ff2 Mon Sep 17 00:00:00 2001
+From 1249a42d1380945fd8dc7924c1ac912570bef501 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Tue, 28 May 2019 11:46:36 +0300
 Subject: [PATCH] pipewire-cli: add support for printing endpoint info & params
 
-Note that you have to run:
-  load-module libpipewire-module-endpoint
-before trying to query any endpoints
-
 Upstream-Status: Pending
 ---
- src/tools/pipewire-cli.c | 78 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
+ src/tools/pipewire-cli.c | 107 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 106 insertions(+), 1 deletion(-)
 
 diff --git a/src/tools/pipewire-cli.c b/src/tools/pipewire-cli.c
-index 521739f6..9511db82 100644
+index 6110d170..0dbc8368 100644
 --- a/src/tools/pipewire-cli.c
 +++ b/src/tools/pipewire-cli.c
-@@ -38,6 +38,8 @@
+@@ -37,6 +37,8 @@
  #include <pipewire/type.h>
  #include <pipewire/permission.h>
  
-+#include <extensions/endpoint.h>
++#include <extensions/session-manager.h>
 +
  static const char WHITESPACE[] = " \t";
  
  struct remote_data;
-@@ -176,8 +178,12 @@ static void print_params(struct spa_param_info *params, uint32_t n_params, char
+@@ -174,8 +176,10 @@ static void print_params(struct spa_param_info *params, uint32_t n_params, char
  		return;
  	}
  	for (i = 0; i < n_params; i++) {
 +		const struct spa_type_info *type_info = spa_type_param;
-+		if (params[i].id >= PW_ENDPOINT_PARAM_EnumControl)
-+			type_info = endpoint_param_type_info;
 +
  		fprintf(stdout, "%c\t  %d (%s) %c%c\n", mark, params[i].id,
 -			spa_debug_type_find_name(spa_type_param, params[i].id),
@@ -39,39 +33,55 @@ index 521739f6..9511db82 100644
  			params[i].flags & SPA_PARAM_INFO_READ ? 'r' : '-',
  			params[i].flags & SPA_PARAM_INFO_WRITE ? 'w' : '-');
  	}
-@@ -641,6 +647,16 @@ static void info_device(struct proxy_data *pd)
+@@ -652,6 +656,40 @@ static void info_device(struct proxy_data *pd)
  	info->change_mask = 0;
  }
  
 +static void info_endpoint(struct proxy_data *pd)
 +{
 +	struct pw_endpoint_info *info = pd->info;
++	const char *direction;
 +
 +	info_global(pd);
-+	print_properties(info->props, MARK_CHANGE(1), true);
-+	print_params(info->params, info->n_params, MARK_CHANGE(0), true);
++	fprintf(stdout, "\tname: %s\n", info->name);
++	fprintf(stdout, "\tmedia-class: %s\n",  info->media_class);
++	switch(info->direction) {
++	case PW_ENDPOINT_DIRECTION_SINK_INPUT:
++		direction = "sink-input";
++		break;
++	case PW_ENDPOINT_DIRECTION_SOURCE_OUTPUT:
++		direction = "source-output";
++		break;
++	case PW_ENDPOINT_DIRECTION_SOURCE:
++		direction = "source";
++		break;
++	case PW_ENDPOINT_DIRECTION_SINK:
++		direction = "sink";
++		break;
++	default:
++		direction = "invalid";
++		break;
++	}
++	fprintf(stdout, "\tdirection: %s\n", direction);
++	fprintf(stdout, "\tflags: 0x%x\n", info->flags);
++	fprintf(stdout, "%c\tstreams: %u\n", MARK_CHANGE(0), info->n_streams);
++	fprintf(stdout, "%c\tsession: %u\n", MARK_CHANGE(0), info->session_id);
++	print_properties(info->props, MARK_CHANGE(2), true);
++	print_params(info->params, info->n_params, MARK_CHANGE(3), true);
 +	info->change_mask = 0;
 +}
 +
  static void core_event_info(void *object, const struct pw_core_info *info)
  {
  	struct proxy_data *pd = object;
-@@ -708,6 +724,9 @@ static void event_param(void *object, int seq, uint32_t id,
- 
- 	if (spa_pod_is_object_type(param, SPA_TYPE_OBJECT_Format))
- 		spa_debug_format(2, NULL, param);
-+	else if (spa_pod_is_object_type(param, PW_ENDPOINT_OBJECT_ParamControl) ||
-+		 spa_pod_is_object_type(param, PW_ENDPOINT_OBJECT_ParamStream))
-+		spa_debug_pod(2, endpoint_param_object_type_info, param);
- 	else
- 		spa_debug_pod(2, NULL, param);
- }
-@@ -842,6 +861,53 @@ static const struct pw_device_proxy_events device_events = {
+@@ -853,6 +891,63 @@ static const struct pw_device_proxy_events device_events = {
  	.param = event_param
  };
  
 +static void endpoint_info_free(struct pw_endpoint_info *info)
 +{
++	free(info->name);
++	free(info->media_class);
 +	free(info->params);
 +	if (info->props)
 +		pw_properties_free ((struct pw_properties *)info->props);
@@ -88,7 +98,15 @@ index 521739f6..9511db82 100644
 +	if (!info) {
 +		info = pd->info = calloc(1, sizeof(*info));
 +		info->id = update->id;
++		info->name = strdup(update->name);
++		info->media_class = strdup(update->media_class);
++		info->direction = update->direction;
++		info->flags = update->flags;
 +	}
++	if (update->change_mask & PW_ENDPOINT_CHANGE_MASK_STREAMS)
++		info->n_streams = update->n_streams;
++	if (update->change_mask & PW_ENDPOINT_CHANGE_MASK_SESSION)
++		info->session_id = update->session_id;
 +	if (update->change_mask & PW_ENDPOINT_CHANGE_MASK_PARAMS) {
 +		info->n_params = update->n_params;
 +		free(info->params);
@@ -120,20 +138,20 @@ index 521739f6..9511db82 100644
  static void
  destroy_proxy (void *data)
  {
-@@ -928,6 +994,12 @@ static bool bind_global(struct remote_data *rd, struct global *global, char **er
+@@ -939,6 +1034,12 @@ static bool bind_global(struct remote_data *rd, struct global *global, char **er
  		destroy = (pw_destroy_t) pw_link_info_free;
  		info_func = info_link;
  		break;
 +	case PW_TYPE_INTERFACE_Endpoint:
 +		events = &endpoint_events;
-+		client_version = PW_VERSION_ENDPOINT;
++		client_version = PW_VERSION_ENDPOINT_PROXY;
 +		destroy = (pw_destroy_t) endpoint_info_free;
 +		info_func = info_endpoint;
 +		break;
  	default:
  		asprintf(error, "unsupported type %s", spa_debug_type_find_name(pw_type_info(), global->type));
  		return false;
-@@ -1201,6 +1273,10 @@ static bool do_enum_params(struct data *data, const char *cmd, char *args, char
+@@ -1213,6 +1314,10 @@ static bool do_enum_params(struct data *data, const char *cmd, char *args, char
  		pw_device_proxy_enum_params((struct pw_device_proxy*)global->proxy, 0,
  			param_id, 0, 0, NULL);
  		break;
@@ -145,5 +163,5 @@ index 521739f6..9511db82 100644
  		asprintf(error, "enum-params not implemented on object %d", atoi(a[0]));
  		return false;
 -- 
-2.20.1
+2.23.0
 

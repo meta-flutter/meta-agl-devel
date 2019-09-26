@@ -1,4 +1,4 @@
-From 1b2bf0f435f2912c32fbd7a6118ed9bfb41f031c Mon Sep 17 00:00:00 2001
+From f4903fe9c356b58737eb33fcfa389e006d18f801 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 11 Jul 2019 16:34:35 +0300
 Subject: [PATCH] gst/pwaudioringbuffer: wait only for STREAM_STATE_CONFIGURE
@@ -15,10 +15,10 @@ Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/140]
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/gst/gstpwaudioringbuffer.c b/src/gst/gstpwaudioringbuffer.c
-index 04259927..b92b5feb 100644
+index 97350f38..3efec6ec 100644
 --- a/src/gst/gstpwaudioringbuffer.c
 +++ b/src/gst/gstpwaudioringbuffer.c
-@@ -444,9 +444,9 @@ gst_pw_audio_ring_buffer_acquire (GstAudioRingBuffer *buf,
+@@ -442,9 +442,9 @@ gst_pw_audio_ring_buffer_acquire (GstAudioRingBuffer *buf,
            params, 1) < 0)
      goto start_error;
  
@@ -31,5 +31,5 @@ index 04259927..b92b5feb 100644
  
    pw_thread_loop_unlock (self->main_loop);
 -- 
-2.20.1
+2.23.0
 

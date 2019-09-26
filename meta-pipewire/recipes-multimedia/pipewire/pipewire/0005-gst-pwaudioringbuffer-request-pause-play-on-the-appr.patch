@@ -1,4 +1,4 @@
-From 1eb1e3a839f97ad4aa43c289f702c587a068a333 Mon Sep 17 00:00:00 2001
+From 9a01115acc2316908afaed004e2f042125b7f5e3 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 11 Jul 2019 16:21:17 +0300
 Subject: [PATCH] gst/pwaudioringbuffer: request pause/play on the appropriate
@@ -20,7 +20,7 @@ Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/140]
  1 file changed, 23 insertions(+), 4 deletions(-)
 
 diff --git a/src/gst/gstpwaudioringbuffer.c b/src/gst/gstpwaudioringbuffer.c
-index 181304e8..04259927 100644
+index 989b2cd7..97350f38 100644
 --- a/src/gst/gstpwaudioringbuffer.c
 +++ b/src/gst/gstpwaudioringbuffer.c
 @@ -202,11 +202,16 @@ on_stream_state_changed (void *data, enum pw_stream_state old,
@@ -72,5 +72,5 @@ index 181304e8..04259927 100644
    }
    pw_thread_loop_signal (self->main_loop, FALSE);
 -- 
-2.20.1
+2.23.0
 

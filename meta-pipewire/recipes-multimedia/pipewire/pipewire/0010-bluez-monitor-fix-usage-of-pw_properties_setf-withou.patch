@@ -1,0 +1,27 @@
+From 6f3335cfc06053e3ea5598058e0a2581e7ffa4af Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Sun, 22 Sep 2019 17:37:49 +0300
+Subject: [PATCH] bluez-monitor: fix usage of pw_properties_setf without a
+ format string
+
+Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/189]
+---
+ src/examples/bluez-monitor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/examples/bluez-monitor.c b/src/examples/bluez-monitor.c
+index 1ae5ffe0..4bdfeb0d 100644
+--- a/src/examples/bluez-monitor.c
++++ b/src/examples/bluez-monitor.c
+@@ -123,7 +123,7 @@ static struct bluez5_node *bluez5_create_node(struct bluez5_object *obj, uint32_
+ 
+ 	pw_properties_setf(node->props, PW_KEY_NODE_NAME, "%s.%s", info->factory_name, str);
+ 	pw_properties_set(node->props, PW_KEY_NODE_DESCRIPTION, str);
+-	pw_properties_setf(node->props, "factory.name", info->factory_name);
++	pw_properties_set(node->props, "factory.name", info->factory_name);
+ 
+ 	node->monitor = monitor;
+ 	node->object = obj;
+-- 
+2.23.0
+

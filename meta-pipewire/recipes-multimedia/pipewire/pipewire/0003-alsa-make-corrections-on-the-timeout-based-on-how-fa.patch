@@ -1,4 +1,4 @@
-From 05a3a926df4906cdf60f7978843c637bbf37714a Mon Sep 17 00:00:00 2001
+From 0c232229f3dc6b0cdf02ef44ae212b256c1828a3 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Tue, 9 Jul 2019 18:06:18 +0300
 Subject: [PATCH] alsa: make corrections on the timeout based on how fast ALSA
@@ -28,17 +28,17 @@ Fixes #163
 
 Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/166]
 ---
- spa/plugins/alsa/alsa-utils.c | 31 ++++++++++++++++++++++++++-----
+ spa/plugins/alsa/alsa-utils.c | 29 +++++++++++++++++++++++++----
  spa/plugins/alsa/alsa-utils.h |  2 ++
- 2 files changed, 28 insertions(+), 5 deletions(-)
+ 2 files changed, 27 insertions(+), 4 deletions(-)
 
 diff --git a/spa/plugins/alsa/alsa-utils.c b/spa/plugins/alsa/alsa-utils.c
-index 87582c1c..872969bf 100644
+index 7cf1d0d2..e8548345 100644
 --- a/spa/plugins/alsa/alsa-utils.c
 +++ b/spa/plugins/alsa/alsa-utils.c
-@@ -593,7 +593,21 @@ static int get_status(struct state *state, snd_pcm_sframes_t *delay)
- 
- static int update_time(struct state *state, uint64_t nsec, snd_pcm_sframes_t delay, bool slave)
+@@ -624,7 +624,21 @@ static int get_status(struct state *state, snd_pcm_uframes_t *delay, snd_pcm_ufr
+ static int update_time(struct state *state, uint64_t nsec, snd_pcm_sframes_t delay,
+ 		snd_pcm_sframes_t target, bool slave)
  {
 -	double err, corr;
 +	double err, corr, drift;
@@ -58,9 +58,9 @@ index 87582c1c..872969bf 100644
 +	}
  
  	if (state->stream == SND_PCM_STREAM_PLAYBACK)
- 		err = delay - state->last_threshold;
-@@ -650,11 +664,11 @@ static int update_time(struct state *state, uint64_t nsec, snd_pcm_sframes_t del
- 		state->clock->rate_diff = corr;
+ 		err = delay - target;
+@@ -677,11 +691,11 @@ static int update_time(struct state *state, uint64_t nsec, snd_pcm_sframes_t del
+ 		state->clock->next_nsec = state->next_time;
  	}
  
 -	spa_log_trace_fp(state->log, "slave:%d %"PRIu64" %f %ld %f %f %d", slave, nsec,
@@ -74,7 +74,7 @@ index 87582c1c..872969bf 100644
  	state->last_threshold = state->threshold;
  
  	return 0;
-@@ -783,6 +797,10 @@ again:
+@@ -812,6 +826,10 @@ again:
  		goto again;
  
  	state->sample_count += total_written;
@@ -85,17 +85,8 @@ index 87582c1c..872969bf 100644
  
  	if (!state->alsa_started && total_written > 0) {
  		spa_log_trace(state->log, "snd_pcm_start %lu", written);
-@@ -935,7 +953,7 @@ static int handle_play(struct state *state, uint64_t nsec, snd_pcm_sframes_t del
- {
- 	int res;
- 
--	if (delay >= state->last_threshold * 2) {
-+	if (delay > state->last_threshold * 2) {
- 		spa_log_trace(state->log, "early wakeup %ld %d", delay, state->threshold);
- 		state->next_time = nsec + (delay - state->last_threshold) * SPA_NSEC_PER_SEC / state->rate;
- 		return -EAGAIN;
-@@ -944,6 +962,8 @@ static int handle_play(struct state *state, uint64_t nsec, snd_pcm_sframes_t del
- 	if ((res = update_time(state, nsec, delay, false)) < 0)
+@@ -981,6 +999,8 @@ static int handle_play(struct state *state, uint64_t nsec,
+ 	if ((res = update_time(state, nsec, delay, target, false)) < 0)
  		return res;
  
 +	state->fill_level = delay;
@@ -103,19 +94,19 @@ index 87582c1c..872969bf 100644
  	if (spa_list_is_empty(&state->ready)) {
  		struct spa_io_buffers *io = state->io;
  
-@@ -1072,6 +1092,7 @@ int spa_alsa_start(struct state *state)
+@@ -1120,6 +1140,7 @@ int spa_alsa_start(struct state *state)
  
- 	state->slaved = is_slaved(state);
+ 	state->threshold = (state->duration * state->rate + state->rate_denom-1) / state->rate_denom;
  	state->last_threshold = state->threshold;
 +	state->fill_level = 0;
  
  	init_loop(state);
  	state->safety = 0.0;
 diff --git a/spa/plugins/alsa/alsa-utils.h b/spa/plugins/alsa/alsa-utils.h
-index a862873f..b53890b5 100644
+index 110d4204..bab0f67b 100644
 --- a/spa/plugins/alsa/alsa-utils.h
 +++ b/spa/plugins/alsa/alsa-utils.h
-@@ -134,7 +134,9 @@ struct state {
+@@ -141,7 +141,9 @@ struct state {
  	int64_t sample_time;
  	uint64_t next_time;
  	uint64_t base_time;
@@ -126,5 +117,5 @@ index a862873f..b53890b5 100644
  	double safety;
  
 -- 
-2.20.1
+2.23.0
 

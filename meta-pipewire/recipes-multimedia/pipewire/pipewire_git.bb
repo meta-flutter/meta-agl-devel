@@ -15,6 +15,8 @@ SRC_URI = "gitsm://github.com/PipeWire/pipewire;protocol=https;branch=work \
     file://0012-extensions-implement-new-session-manager-extension.patch \
     file://0013-pipewire-cli-add-support-for-printing-endpoint-info-.patch \
     file://0014-daemon-config-remote-load-module-session-manager-by-.patch \
+    file://0015-connection-move-remaining-data-and-fds.patch \
+    file://0016-protocol-improve-flushing.patch \
     "
 
 SRCREV = "d3c7acb137134bddff3bc8a8964600252d3fb674"

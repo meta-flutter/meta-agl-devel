@@ -13,4 +13,5 @@ RDEPENDS_${PN} += "\
     pipewire \
     pipewire-alsa \
     gstreamer1.0-pipewire \
+    bluez-alsa-pipewire \
 "

@@ -24,7 +24,7 @@ SRC_URI = "\
     file://WebAppMgr.env \
 "
 S = "${WORKDIR}/git"
-SRCREV = "8271e13578b92b192cef1d1ac6577bc3699518a4"
+SRCREV = "23427000917d2a00f1eaa175893773c0702d48b4"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/wam

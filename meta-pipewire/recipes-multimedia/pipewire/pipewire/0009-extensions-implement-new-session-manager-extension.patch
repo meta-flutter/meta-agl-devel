@@ -1,4 +1,4 @@
-From acbce75de9587917cfa659ebc0e3404b6b1d4c29 Mon Sep 17 00:00:00 2001
+From cc47e191c42b836811c5fca1122505375a4e080b Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 23 May 2019 18:59:05 +0300
 Subject: [PATCH] extensions: implement new session manager extension
@@ -1102,10 +1102,10 @@ index 00000000..a7167510
 +
 +#endif /* PIPEWIRE_EXT_SESSION_MANAGER_KEYS_H */
 diff --git a/src/modules/meson.build b/src/modules/meson.build
-index 9e1e94bd..da2684b6 100644
+index bec6f558..23e8bba3 100644
 --- a/src/modules/meson.build
 +++ b/src/modules/meson.build
-@@ -100,3 +100,20 @@ pipewire_module_adapter = shared_library('pipewire-module-adapter',
+@@ -99,3 +99,20 @@ pipewire_module_adapter = shared_library('pipewire-module-adapter',
    install_dir : modules_install_dir,
    dependencies : [mathlib, dl_lib, rt_lib, pipewire_dep],
  )
@@ -5676,10 +5676,10 @@ index 00000000..ad0b9b1b
 +
 +#endif /* MODULE_SESSION_MANAGER_SESSION_H */
 diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
-index a7012ab2..ec5f1f85 100644
+index c556a1db..06ccccc3 100644
 --- a/src/pipewire/pipewire.c
 +++ b/src/pipewire/pipewire.c
-@@ -575,6 +575,12 @@ static const struct spa_type_info type_info[] = {
+@@ -577,6 +577,12 @@ static const struct spa_type_info type_info[] = {
  	{ PW_TYPE_INTERFACE_Module, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "Module", NULL },
  	{ PW_TYPE_INTERFACE_ClientNode, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "ClientNode", NULL },
  	{ PW_TYPE_INTERFACE_Device, SPA_TYPE_Pointer, PW_TYPE_INFO_INTERFACE_BASE "Device", NULL },

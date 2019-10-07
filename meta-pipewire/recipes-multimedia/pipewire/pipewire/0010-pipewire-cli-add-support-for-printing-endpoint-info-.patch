@@ -1,4 +1,4 @@
-From 1249a42d1380945fd8dc7924c1ac912570bef501 Mon Sep 17 00:00:00 2001
+From 76865803c2db13b753e1261e01de22760c7b398b Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Tue, 28 May 2019 11:46:36 +0300
 Subject: [PATCH] pipewire-cli: add support for printing endpoint info & params

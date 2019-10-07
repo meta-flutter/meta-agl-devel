@@ -1,0 +1,35 @@
+From a95e87cd47de3585d9f4ef77b75c4a077bd95f78 Mon Sep 17 00:00:00 2001
+From: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date: Wed, 2 Oct 2019 21:40:34 +0300
+Subject: [PATCH] audioconvert: always assume that output ports are NOT monitor
+ ports
+
+Otherwise, when we setup audioconvert in merge+split mode,
+it assumes that the splitter's ports are monitor ports and
+belong to the merger.
+
+Upstream-Status: Inappropriate [workaround]
+---
+ spa/plugins/audioconvert/audioconvert.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/spa/plugins/audioconvert/audioconvert.c b/spa/plugins/audioconvert/audioconvert.c
+index 0859bf73..ac4dceef 100644
+--- a/spa/plugins/audioconvert/audioconvert.c
++++ b/spa/plugins/audioconvert/audioconvert.c
+@@ -109,8 +109,12 @@ struct impl {
+ 	unsigned int add_listener:1;
+ };
+ 
++#if 0
+ #define IS_MONITOR_PORT(this,dir,port_id) (dir == SPA_DIRECTION_OUTPUT && port_id > 0 &&	\
+ 		this->mode[SPA_DIRECTION_INPUT] == SPA_PARAM_PORT_CONFIG_MODE_dsp)
++#else
++#define IS_MONITOR_PORT(this,dir,port_id) (false)
++#endif
+ 
+ static void emit_node_info(struct impl *this, bool full)
+ {
+-- 
+2.23.0
+

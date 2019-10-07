@@ -1,4 +1,4 @@
-From f4903fe9c356b58737eb33fcfa389e006d18f801 Mon Sep 17 00:00:00 2001
+From df47442f5396897f8bdba5a37699d21f0e4da85f Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 11 Jul 2019 16:34:35 +0300
 Subject: [PATCH] gst/pwaudioringbuffer: wait only for STREAM_STATE_CONFIGURE

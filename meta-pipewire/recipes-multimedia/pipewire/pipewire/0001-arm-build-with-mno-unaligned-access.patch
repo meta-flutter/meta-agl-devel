@@ -1,4 +1,4 @@
-From e1d8927b7963a9bf2c09e50cd95943c3139313cf Mon Sep 17 00:00:00 2001
+From 9bf3ae655b4cb7a3a91a9c77e006ec72864a6e1a Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Mon, 24 Jun 2019 12:19:20 +0300
 Subject: [PATCH] arm: build with -mno-unaligned-access
@@ -10,10 +10,10 @@ See also https://github.com/PipeWire/pipewire/issues/161
  1 file changed, 5 insertions(+)
 
 diff --git a/meson.build b/meson.build
-index aa60db35..5cd61fde 100644
+index 74455378..c0bb7470 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -50,6 +50,11 @@ if cc.get_id() == 'gcc'
+@@ -52,6 +52,11 @@ if cc.get_id() == 'gcc'
  			language : 'c')
  endif
  

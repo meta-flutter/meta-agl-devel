@@ -3,4 +3,4 @@
 # agl-voiceagent-alexa is configured.
 BBMASK += "meta-aac/recipes-support/curl/curl_%.bbappend"
 
-PREFERRED_RPROVIDER_virtual/voiceagent = "alexa-voiceagent-service"
+PREFERRED_RPROVIDER_virtual/voice-high-config = "alexa-voice-high-config"

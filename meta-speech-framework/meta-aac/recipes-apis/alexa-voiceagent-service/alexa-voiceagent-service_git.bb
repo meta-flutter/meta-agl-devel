@@ -20,6 +20,7 @@ DEPENDS = " \
 "
 
 SRC_URI = "git://github.com/alexa/alexa-auto-sdk.git;protocol=https;branch=2.0 \
+           file://alexa.json \
            file://0001-remove-library-dependency-copying.patch \
            file://0002-update-config.xml.in.patch \
            file://0003-update-audio-device-configuration.patch \
@@ -38,8 +39,14 @@ EXTRA_OECMAKE += "-DAAC_HOME=${RECIPE_SYSROOT}/${AAC_PREFIX}"
 # README.md in alexa-auto-sdk upstream as of version 2.0.
 EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Debug"
 
+do_install_append() {
+    install -D -m 0644 ${WORKDIR}/alexa.json ${D}${sysconfdir}/xdg/AGL/voiceagents/alexa.json
+}
+
+PACKAGES =+ "${PN}-conf"
+
+FILES_${PN}-conf = "${sysconfdir}/xdg/AGL/voiceagents/*"
+
 # NOTE: curl and opus are from the base SDK libraries, sqlite3 from the
 #       core module
-RDEPENDS_${PN} += "libcurl libopus libsqlite3"
-
-RPROVIDES_${PN} += "virtual/voiceagent"
+RDEPENDS_${PN} += "libcurl libopus libsqlite3 ${PN}-conf"

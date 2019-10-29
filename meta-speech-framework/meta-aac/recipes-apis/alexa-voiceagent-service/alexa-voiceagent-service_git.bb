@@ -35,10 +35,6 @@ S = "${WORKDIR}/git/platforms/agl/alexa-voiceagent-service"
 inherit cmake aglwgt
 
 EXTRA_OECMAKE += "-DAAC_HOME=${RECIPE_SYSROOT}/${AAC_PREFIX}"
-# Build in debug mode (hopefully temporarily) to avoid crash tracked
-# in SPEC-2873.  This also matches the build instructions given in the
-# README.md in alexa-auto-sdk upstream as of version 2.0.
-EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Debug"
 
 do_install_append() {
     install -D -m 0644 ${WORKDIR}/alexa.json ${D}${sysconfdir}/xdg/AGL/voiceagents/alexa.json

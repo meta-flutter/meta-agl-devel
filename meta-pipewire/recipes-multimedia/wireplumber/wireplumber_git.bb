@@ -1,6 +1,6 @@
 SUMMARY     = "Session / Policy Manager for PipeWire"
-HOMEPAGE    = "https://gitlab.freedesktop.org/gkiagia/wireplumber"
-BUGTRACKER  = "https://gitlab.freedesktop.org/gkiagia/wireplumber/issues"
+HOMEPAGE    = "https://gitlab.freedesktop.org/pipewire/wireplumber"
+BUGTRACKER  = "https://gitlab.freedesktop.org/pipewire/wireplumber/issues"
 AUTHOR      = "George Kiagiadakis <george.kiagiadakis@collabora.com>"
 SECTION     = "multimedia"
 
@@ -11,8 +11,8 @@ inherit meson pkgconfig gobject-introspection
 
 DEPENDS = "glib-2.0 glib-2.0-native pipewire"
 
-SRC_URI = "git://gitlab.freedesktop.org/gkiagia/wireplumber;protocol=https;branch=master"
-SRCREV = "69f1cac79c244167caa437e8b85e0824ce3121a0"
+SRC_URI = "git://gitlab.freedesktop.org/pipewire/wireplumber.git;protocol=https;branch=master"
+SRCREV = "b94cc897aca95997f3b841ee8df0f5e3782dc76c"
 
 PV = "0.1.90+git${SRCPV}"
 S  = "${WORKDIR}/git"

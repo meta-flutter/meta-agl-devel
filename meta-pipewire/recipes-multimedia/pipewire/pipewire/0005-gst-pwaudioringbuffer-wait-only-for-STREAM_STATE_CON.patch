@@ -1,4 +1,4 @@
-From df47442f5396897f8bdba5a37699d21f0e4da85f Mon Sep 17 00:00:00 2001
+From ea2ba0fcf561fecd7e62e80e2c34bf6bd23f917b Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 11 Jul 2019 16:34:35 +0300
 Subject: [PATCH] gst/pwaudioringbuffer: wait only for STREAM_STATE_CONFIGURE
@@ -9,7 +9,8 @@ while the READY state requires the session manager to try and link
 the stream. If the SM does not want to link the stream due to policy,
 the client should not hang there forever.
 
-Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/140]
+Upstream-Status: Denied
+See https://gitlab.freedesktop.org/pipewire/pipewire/merge_requests/140
 ---
  src/gst/gstpwaudioringbuffer.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
@@ -31,5 +32,5 @@ index 97350f38..3efec6ec 100644
  
    pw_thread_loop_unlock (self->main_loop);
 -- 
-2.23.0
+2.24.0
 

@@ -1,10 +1,11 @@
-From 23e8913172cb50d8023aaa7522e196d087f9c785 Mon Sep 17 00:00:00 2001
+From 3357a7d5bfb32a26f6c4fd3df2ea3a8f04f20770 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Tue, 20 Aug 2019 18:33:35 +0300
 Subject: [PATCH] gst: pwaudioringbuffer: set node.latency to get scheduled
  correctly in capture mode
 
-Upstream-Status: Pending
+Upstream-Status: Denied
+See https://gitlab.freedesktop.org/pipewire/pipewire/merge_requests/140
 ---
  src/gst/gstpwaudioringbuffer.c | 7 ++++---
  1 file changed, 4 insertions(+), 3 deletions(-)
@@ -37,5 +38,5 @@ index 3efec6ec..8136b815 100644
  
    pw_thread_loop_lock (self->main_loop);
 -- 
-2.23.0
+2.24.0
 

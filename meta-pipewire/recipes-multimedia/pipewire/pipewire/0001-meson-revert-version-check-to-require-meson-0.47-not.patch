@@ -1,4 +1,4 @@
-From 6b65e729e7609b75f10cbb8e9db736f6273ea01b Mon Sep 17 00:00:00 2001
+From 8d448cc2d3bd141742ede4636d2208f4dedc16f6 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Sun, 22 Sep 2019 17:59:19 +0300
 Subject: [PATCH] meson: revert version check to require meson 0.47, not 0.50
@@ -13,7 +13,7 @@ Upstream-Status: Inappropriate [workaround]
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index c0bb7470..07117cbb 100644
+index 2734b0d2..c9da6b4d 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1,7 +1,7 @@
@@ -26,5 +26,5 @@ index c0bb7470..07117cbb 100644
                        'c_std=gnu99',
                        'buildtype=debugoptimized' ])
 -- 
-2.23.0
+2.24.0
 

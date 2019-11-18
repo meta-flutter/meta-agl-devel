@@ -1,4 +1,4 @@
-From d2cd5c499528dcd0b6c25a4050a6b4d76c4aa459 Mon Sep 17 00:00:00 2001
+From 1027efb2ced95a9548007ccc2f07805d48073846 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 11 Jul 2019 16:21:17 +0300
 Subject: [PATCH] gst/pwaudioringbuffer: request pause/play on the appropriate
@@ -14,7 +14,8 @@ freezes, so the pipeline stops progressing.
 
 This is similar to the pulseaudio cork/uncork mechanism.
 
-Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/140]
+Upstream-Status: Denied
+See https://gitlab.freedesktop.org/pipewire/pipewire/merge_requests/140
 ---
  src/gst/gstpwaudioringbuffer.c | 27 +++++++++++++++++++++++----
  1 file changed, 23 insertions(+), 4 deletions(-)
@@ -72,5 +73,5 @@ index 989b2cd7..97350f38 100644
    }
    pw_thread_loop_signal (self->main_loop, FALSE);
 -- 
-2.23.0
+2.24.0
 

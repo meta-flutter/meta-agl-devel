@@ -1,4 +1,4 @@
-From e2426512322768a2d386740845c80e282aba5a6a Mon Sep 17 00:00:00 2001
+From 4696c0071d7a713d3e415f7d0cf29364a2b19aa2 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Tue, 19 Feb 2019 18:23:19 +0200
 Subject: [PATCH] gst: Implement new pwaudio{src,sink} elements, based on
@@ -14,7 +14,8 @@ These are much more reliable elements to use for audio data.
 Both elements share a common ringbuffer that actually implements
 the pipewire integration.
 
-Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/140]
+Upstream-Status: Denied
+See https://gitlab.freedesktop.org/pipewire/pipewire/merge_requests/140
 ---
  src/gst/gstpipewire.c          |   8 +-
  src/gst/gstpwaudioringbuffer.c | 542 +++++++++++++++++++++++++++++++++
@@ -1245,5 +1246,5 @@ index ad0e0801..0e922347 100644
  
  pipewire_gst_c_args = [
 -- 
-2.23.0
+2.24.0
 

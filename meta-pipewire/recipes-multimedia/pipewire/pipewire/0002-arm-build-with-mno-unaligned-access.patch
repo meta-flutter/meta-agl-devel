@@ -1,16 +1,16 @@
-From 9bf3ae655b4cb7a3a91a9c77e006ec72864a6e1a Mon Sep 17 00:00:00 2001
+From c55e7b8e0028686afb74f4444b88c9e1dd6605c9 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Mon, 24 Jun 2019 12:19:20 +0300
 Subject: [PATCH] arm: build with -mno-unaligned-access
 
 Upstream-Status: Inappropriate [workaround]
-See also https://github.com/PipeWire/pipewire/issues/161
+See also https://gitlab.freedesktop.org/pipewire/pipewire/issues/161
 ---
  meson.build | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/meson.build b/meson.build
-index 74455378..c0bb7470 100644
+index c9da6b4d..5c121339 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -52,6 +52,11 @@ if cc.get_id() == 'gcc'
@@ -26,5 +26,5 @@ index 74455378..c0bb7470 100644
  sse2_args = '-msse2'
  ssse3_args = '-mssse3'
 -- 
-2.23.0
+2.24.0
 

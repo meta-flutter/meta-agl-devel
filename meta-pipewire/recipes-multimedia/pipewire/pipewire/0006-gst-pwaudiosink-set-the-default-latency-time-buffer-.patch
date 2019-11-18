@@ -1,4 +1,4 @@
-From 30622ed39774d3a2d3133effbc73caac5fb12596 Mon Sep 17 00:00:00 2001
+From cc5ad0de4afb4c283e3c6b373b5fd891f9c19381 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Thu, 11 Jul 2019 17:07:15 +0300
 Subject: [PATCH] gst/pwaudiosink: set the default latency time (buffer size)
@@ -9,7 +9,8 @@ This is to solve underrun issues that seem to appear with the default
 Hopefully in the future we will have a better mechanism to pick
 the appropriate latency instead of hardcoding it here.
 
-Upstream-Status: Submitted [https://github.com/PipeWire/pipewire/pull/140]
+Upstream-Status: Denied
+See https://gitlab.freedesktop.org/pipewire/pipewire/merge_requests/140
 ---
  src/gst/gstpwaudiosink.c | 7 +++++++
  1 file changed, 7 insertions(+)
@@ -33,5 +34,5 @@ index 6cb71385..069996c3 100644
  
  static void
 -- 
-2.23.0
+2.24.0
 

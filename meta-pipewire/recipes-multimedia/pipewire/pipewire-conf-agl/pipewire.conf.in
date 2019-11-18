@@ -10,7 +10,7 @@ load-module libpipewire-module-protocol-native
 load-module libpipewire-module-spa-node-factory
 load-module libpipewire-module-client-node
 load-module libpipewire-module-client-device
-load-module libpipewire-module-access
+load-module libpipewire-module-access same-sec-label-mode=1
 load-module libpipewire-module-adapter
 load-module libpipewire-module-link-factory
 load-module libpipewire-module-session-manager

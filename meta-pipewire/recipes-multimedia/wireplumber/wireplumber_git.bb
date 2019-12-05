@@ -11,11 +11,21 @@ inherit meson pkgconfig gobject-introspection
 
 DEPENDS = "glib-2.0 glib-2.0-native pipewire"
 
-SRC_URI = "git://gitlab.freedesktop.org/pipewire/wireplumber.git;protocol=https;branch=master"
-SRCREV = "59ab08ff0c9ff8b80dba93b8928db99f1a222ac4"
+SRC_URI = "\
+    git://gitlab.freedesktop.org/pipewire/wireplumber.git;protocol=https;branch=master \
+    https://raw.githubusercontent.com/skystrife/cpptoml/fededad7169e538ca47e11a9ee9251bc361a9a65/include/cpptoml.h \
+    file://0001-Build-cpptoml-without-a-cmake-subproject.patch \
+"
+SRCREV = "8bdadd5a71510afce3254976605a2860fedc2a0b"
+SRC_URI[sha256sum] = "3e4e1d315fa1229921c7a4297ead08775b5bb1220c18a7eac62db9ca7e79df0d"
 
 PV = "0.1.90+git${SRCPV}"
 S  = "${WORKDIR}/git"
+
+do_configure_prepend() {
+    mkdir -p ${WORKDIR}/git/subprojects/cpptoml/include
+    cp -f ${WORKDIR}/cpptoml.h ${WORKDIR}/git/subprojects/cpptoml/include/
+}
 
 PACKAGES =+ "${PN}-config"
 

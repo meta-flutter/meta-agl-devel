@@ -1,4 +1,4 @@
-From 7bde580db9b67c503de90211d344b15b933fecbe Mon Sep 17 00:00:00 2001
+From 19fad1a4fa8bdc4f02aac4e169e7ff9cab18bdcd Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Tue, 19 Nov 2019 17:09:07 +0200
 Subject: [PATCH] module-access: add same-sec-label-mode

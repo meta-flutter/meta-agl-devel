@@ -1,4 +1,4 @@
-From 4696c0071d7a713d3e415f7d0cf29364a2b19aa2 Mon Sep 17 00:00:00 2001
+From 1b1f884a165ed7b2147affbdddf85a641d4cf180 Mon Sep 17 00:00:00 2001
 From: George Kiagiadakis <george.kiagiadakis@collabora.com>
 Date: Tue, 19 Feb 2019 18:23:19 +0200
 Subject: [PATCH] gst: Implement new pwaudio{src,sink} elements, based on
@@ -18,14 +18,14 @@ Upstream-Status: Denied
 See https://gitlab.freedesktop.org/pipewire/pipewire/merge_requests/140
 ---
  src/gst/gstpipewire.c          |   8 +-
- src/gst/gstpwaudioringbuffer.c | 542 +++++++++++++++++++++++++++++++++
+ src/gst/gstpwaudioringbuffer.c | 565 +++++++++++++++++++++++++++++++++
  src/gst/gstpwaudioringbuffer.h |  83 +++++
- src/gst/gstpwaudiosink.c       | 200 ++++++++++++
+ src/gst/gstpwaudiosink.c       | 207 ++++++++++++
  src/gst/gstpwaudiosink.h       |  48 +++
  src/gst/gstpwaudiosrc.c        | 200 ++++++++++++
  src/gst/gstpwaudiosrc.h        |  48 +++
  src/gst/meson.build            |   6 +
- 8 files changed, 1134 insertions(+), 1 deletion(-)
+ 8 files changed, 1164 insertions(+), 1 deletion(-)
  create mode 100644 src/gst/gstpwaudioringbuffer.c
  create mode 100644 src/gst/gstpwaudioringbuffer.h
  create mode 100644 src/gst/gstpwaudiosink.c
@@ -66,10 +66,10 @@ index 4040264b..68fd446f 100644
  }
 diff --git a/src/gst/gstpwaudioringbuffer.c b/src/gst/gstpwaudioringbuffer.c
 new file mode 100644
-index 00000000..989b2cd7
+index 00000000..babf2d83
 --- /dev/null
 +++ b/src/gst/gstpwaudioringbuffer.c
-@@ -0,0 +1,542 @@
+@@ -0,0 +1,565 @@
 +/* PipeWire
 + *
 + * Copyright © 2018 Wim Taymans
@@ -274,24 +274,41 @@ index 00000000..989b2cd7
 +    enum pw_stream_state state, const char *error)
 +{
 +  GstPwAudioRingBuffer *self = GST_PW_AUDIO_RING_BUFFER (data);
++  GstMessage *msg;
 +
 +  GST_DEBUG_OBJECT (self->elem, "got stream state: %s",
 +      pw_stream_state_as_string (state));
 +
 +  switch (state) {
++    case PW_STREAM_STATE_ERROR:
++      GST_ELEMENT_ERROR (self->elem, RESOURCE, FAILED,
++          ("stream error: %s", error), (NULL));
++      break;
 +    case PW_STREAM_STATE_UNCONNECTED:
 +      GST_ELEMENT_ERROR (self->elem, RESOURCE, FAILED,
 +          ("stream disconnected unexpectedly"), (NULL));
 +      break;
 +    case PW_STREAM_STATE_CONNECTING:
-+    case PW_STREAM_STATE_CONFIGURE:
-+    case PW_STREAM_STATE_READY:
-+    case PW_STREAM_STATE_PAUSED:
-+    case PW_STREAM_STATE_STREAMING:
 +      break;
-+    case PW_STREAM_STATE_ERROR:
-+      GST_ELEMENT_ERROR (self->elem, RESOURCE, FAILED,
-+          ("stream error: %s", error), (NULL));
++    case PW_STREAM_STATE_PAUSED:
++      if (old == PW_STREAM_STATE_STREAMING) {
++        if (GST_STATE (self->elem) != GST_STATE_PAUSED &&
++            GST_STATE_TARGET (self->elem) != GST_STATE_PAUSED) {
++          GST_DEBUG_OBJECT (self->elem, "requesting GST_STATE_PAUSED");
++          msg = gst_message_new_request_state (GST_OBJECT (self->elem),
++              GST_STATE_PAUSED);
++          gst_element_post_message (self->elem, msg);
++        }
++      }
++      break;
++    case PW_STREAM_STATE_STREAMING:
++      if (GST_STATE (self->elem) != GST_STATE_PLAYING &&
++          GST_STATE_TARGET (self->elem) != GST_STATE_PLAYING) {
++        GST_DEBUG_OBJECT (self->elem, "requesting GST_STATE_PLAYING");
++        msg = gst_message_new_request_state (GST_OBJECT (self->elem),
++            GST_STATE_PLAYING);
++        gst_element_post_message (self->elem, msg);
++      }
 +      break;
 +  }
 +  pw_thread_loop_signal (self->main_loop, FALSE);
@@ -312,12 +329,15 @@ index 00000000..989b2cd7
 +}
 +
 +static void
-+on_stream_format_changed (void *data, const struct spa_pod *format)
++on_stream_param_changed (void *data, uint32_t id, const struct spa_pod *format)
 +{
 +  GstPwAudioRingBuffer *self = GST_PW_AUDIO_RING_BUFFER (data);
 +  const struct spa_pod *params[1];
 +  struct spa_pod_builder b = { NULL };
 +  uint8_t buffer[512];
++
++  if (format == NULL || id != SPA_PARAM_Format)
++    return;
 +
 +  spa_pod_builder_init (&b, buffer, sizeof (buffer));
 +  params[0] = spa_pod_builder_add_object (&b,
@@ -329,7 +349,7 @@ index 00000000..989b2cd7
 +      SPA_PARAM_BUFFERS_align,   SPA_POD_Int(16));
 +
 +  GST_DEBUG_OBJECT (self->elem, "doing finish format, buffer size:%d", self->segsize);
-+  pw_stream_finish_format (self->stream, 0, params, 1);
++  pw_stream_update_params (self->stream, params, 1);
 +}
 +
 +static void
@@ -354,7 +374,7 @@ index 00000000..989b2cd7
 +
 +  b = pw_stream_dequeue_buffer (self->stream);
 +  if (!b) {
-+    GST_WARNING_OBJECT (self->elem, "no pipewire buffer available");
++    GST_INFO_OBJECT (self->elem, "no pipewire buffer available");
 +    return;
 +  }
 +
@@ -418,7 +438,7 @@ index 00000000..989b2cd7
 +static const struct pw_stream_events stream_events = {
 +  PW_VERSION_STREAM_EVENTS,
 +  .state_changed = on_stream_state_changed,
-+  .format_changed = on_stream_format_changed,
++  .param_changed = on_stream_param_changed,
 +  .process = on_stream_process,
 +};
 +
@@ -455,11 +475,9 @@ index 00000000..989b2cd7
 +
 +  /* construct param & props objects */
 +
++  props = pw_properties_new (NULL, NULL);
 +  if (self->props->properties) {
-+    props = pw_properties_new (NULL, NULL);
 +    gst_structure_foreach (self->props->properties, copy_properties, props);
-+  } else {
-+    props = NULL;
 +  }
 +
 +  spa_pod_builder_init (&b, buffer, sizeof (buffer));
@@ -475,6 +493,11 @@ index 00000000..989b2cd7
 +  self->bpf = GST_AUDIO_INFO_BPF (&spec->info);
 +  self->rate = GST_AUDIO_INFO_RATE (&spec->info);
 +  self->segoffset = 0;
++
++  pw_properties_setf(props, PW_KEY_NODE_LATENCY, "%u/%u",
++      self->segsize / self->bpf, self->rate);
++  GST_DEBUG_OBJECT (self->elem, "segsize:%u, bpf:%u, node.latency = %s",
++      self->segsize, self->bpf, pw_properties_get (props, PW_KEY_NODE_LATENCY));
 +
 +  /* connect stream */
 +
@@ -495,9 +518,9 @@ index 00000000..989b2cd7
 +          params, 1) < 0)
 +    goto start_error;
 +
-+  GST_DEBUG_OBJECT (self->elem, "waiting for stream READY");
++  GST_DEBUG_OBJECT (self->elem, "waiting for stream CONFIGURE");
 +
-+  if (!wait_for_stream_state (self, PW_STREAM_STATE_READY))
++  if (!wait_for_stream_state (self, PW_STREAM_STATE_PAUSED))
 +    goto start_error;
 +
 +  pw_thread_loop_unlock (self->main_loop);
@@ -703,10 +726,10 @@ index 00000000..f47f668a
 +#endif
 diff --git a/src/gst/gstpwaudiosink.c b/src/gst/gstpwaudiosink.c
 new file mode 100644
-index 00000000..6cb71385
+index 00000000..069996c3
 --- /dev/null
 +++ b/src/gst/gstpwaudiosink.c
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,207 @@
 +/* PipeWire
 + *
 + * Copyright © 2018 Wim Taymans
@@ -766,6 +789,13 @@ index 00000000..6cb71385
 +gst_pw_audio_sink_init (GstPwAudioSink * self)
 +{
 +  self->props.fd = -1;
++
++  /* Bump the default buffer size up to 21.3 ms, which is the default on most
++   * sound cards, in hope to match the alsa buffer size on the pipewire server.
++   * This may not always happen, but it still sounds better than the 10ms
++   * default latency. This is temporary until we have a better mechanism to
++   * select the appropriate latency */
++  GST_AUDIO_BASE_SINK (self)->latency_time = 21333;
 +}
 +
 +static void

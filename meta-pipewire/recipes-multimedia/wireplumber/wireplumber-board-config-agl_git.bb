@@ -31,7 +31,7 @@ do_compile[noexec] = "1"
 #
 # To list all device node properties, you can run (on the target):
 #  export XDG_RUNTIME_DIR=/run/user/1001
-#  wireplumber-cli
+#  wireplumber-cli device-node-props
 #
 # Another way to figure out some of these properties is by parsing the
 # aplay/arecord output. For example, this line is interpreted as follows:

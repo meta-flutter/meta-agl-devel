@@ -16,7 +16,7 @@ SRC_URI = "\
     https://raw.githubusercontent.com/skystrife/cpptoml/fededad7169e538ca47e11a9ee9251bc361a9a65/include/cpptoml.h \
     file://0001-Build-cpptoml-without-a-cmake-subproject.patch \
 "
-SRCREV = "cda1a8c49889715c9e4275d2329691e7046519e4"
+SRCREV = "152611dd3ffb60ab026edd52c0a6a4aa44207016"
 SRC_URI[sha256sum] = "3e4e1d315fa1229921c7a4297ead08775b5bb1220c18a7eac62db9ca7e79df0d"
 
 PV = "0.1.90+git${SRCPV}"

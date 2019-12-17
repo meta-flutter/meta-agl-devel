@@ -1,0 +1,8 @@
+[match-endpoint]
+priority = 75
+direction = "source"
+name = "bluealsa*"
+media_class = "Stream/Output/Audio"
+
+[endpoint-link]
+keep = true

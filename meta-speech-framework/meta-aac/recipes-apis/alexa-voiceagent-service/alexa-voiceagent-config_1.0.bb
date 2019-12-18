@@ -10,6 +10,8 @@ SRC_URI = "file://AlexaAutoCoreEngineConfig.json.in"
 
 inherit allarch
 
+ALEXA_WAKEWORD ??= "false"
+
 do_compile () {
 
     if test x"${ALEXA_CLIENTID}" == x"" ; then
@@ -28,7 +30,7 @@ do_compile () {
 
 do_install () {
     #replace
-    sed -e "s/@@ALEXA_CLIENTID@@/${ALEXA_CLIENTID}/" -e "s/@@ALEXA_SERIALNUMBER@@/${ALEXA_SERIALNUMBER}/" -e "s/@@ALEXA_PRODUCTID@@/${ALEXA_PRODUCTID}/" ${WORKDIR}/AlexaAutoCoreEngineConfig.json.in > ${WORKDIR}/AlexaAutoCoreEngineConfig.json
+    sed -e "s/@@ALEXA_CLIENTID@@/${ALEXA_CLIENTID}/" -e "s/@@ALEXA_SERIALNUMBER@@/${ALEXA_SERIALNUMBER}/" -e "s/@@ALEXA_PRODUCTID@@/${ALEXA_PRODUCTID}/" -e "s/@@WAKEWORD@@/${ALEXA_WAKEWORD}/" ${WORKDIR}/AlexaAutoCoreEngineConfig.json.in > ${WORKDIR}/AlexaAutoCoreEngineConfig.json
 
     # install
     install -D -m 644 ${WORKDIR}/AlexaAutoCoreEngineConfig.json ${D}${sysconfdir}/xdg/AGL/AlexaAutoCoreEngineConfig.json

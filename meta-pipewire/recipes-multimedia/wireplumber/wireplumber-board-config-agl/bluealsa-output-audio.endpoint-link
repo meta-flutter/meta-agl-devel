@@ -3,6 +3,9 @@ priority = 75
 direction = "source"
 name = "bluealsa*"
 media_class = "Stream/Output/Audio"
+properties = [
+    { name = "bluealsa.profile", value = "sco" },
+]
 
 [endpoint-link]
 keep = true

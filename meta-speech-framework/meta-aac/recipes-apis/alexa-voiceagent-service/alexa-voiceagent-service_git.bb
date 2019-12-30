@@ -17,6 +17,7 @@ DEPENDS = " \
 	aac-module-navigation \
 	aac-module-phone-control \
 	aac-module-gstreamer \
+	${@bb.utils.contains("ALEXA_WAKEWORD", "true", "aac-module-amazonlite pryon-lite", "", d)} \
 "
 
 SRC_URI = "git://github.com/alexa/alexa-auto-sdk.git;protocol=https;branch=2.0 \
@@ -36,6 +37,8 @@ inherit cmake aglwgt
 
 EXTRA_OECMAKE += "-DAAC_HOME=${RECIPE_SYSROOT}/${AAC_PREFIX}"
 
+ALEXA_WAKEWORD ??= "false"
+
 do_install_append() {
     install -D -m 0644 ${WORKDIR}/alexa.json ${D}${sysconfdir}/xdg/AGL/voiceagents/alexa.json
 }
@@ -46,4 +49,10 @@ FILES_${PN}-conf = "${sysconfdir}/xdg/AGL/voiceagents/*"
 
 # NOTE: curl and opus are from the base SDK libraries, sqlite3 from the
 #       core module
-RDEPENDS_${PN} += "libcurl libopus libsqlite3 ${PN}-conf"
+RDEPENDS_${PN} += " \
+	libcurl \
+	libopus \
+	libsqlite3 \
+	${PN}-conf \
+	${@bb.utils.contains("ALEXA_WAKEWORD", "true", "pryon-lite", "", d)} \
+"

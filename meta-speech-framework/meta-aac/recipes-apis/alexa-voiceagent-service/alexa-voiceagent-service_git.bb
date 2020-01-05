@@ -56,4 +56,5 @@ RDEPENDS_${PN} += " \
 	libsqlite3 \
 	${PN}-conf \
 	${@bb.utils.contains("ALEXA_WAKEWORD", "true", "pryon-lite", "", d)} \
+	gstreamer1.0-plugins-bad-hls \
 "

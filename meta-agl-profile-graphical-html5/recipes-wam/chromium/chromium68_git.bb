@@ -19,8 +19,8 @@ DEPENDS = "virtual/gettext wayland wayland-native pixman freetype glib-2.0 fontc
 PROVIDES = "${BROWSER_APPLICATION}"
 
 SRC_URI = "\
-    git://github.com/webosose/${PN};branch=@39.agl.guppy;protocol=https;rev=${SRCREV_chromium68} \
-    git://github.com/webosose/v8;destsuffix=git/src/v8;rev=${SRCREV_v8} \
+    git://github.com/webosose/${PN};branch=@39.agl.guppy;protocol=https;rev=${SRCREV_chromium68};name=chromium68 \
+    git://github.com/webosose/v8;destsuffix=git/src/v8;rev=${SRCREV_v8};name=v8 \
     file://v8-qemu-wrapper.patch \
 "
 SRCREV_chromium68 = "5ebefe83ead91ce6fd2ac8ff9699b848a83ee0ff"

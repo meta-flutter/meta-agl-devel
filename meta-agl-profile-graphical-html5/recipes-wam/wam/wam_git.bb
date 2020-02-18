@@ -25,7 +25,7 @@ SRC_URI = "\
     file://trunc-webapp-roles.patch \
 "
 S = "${WORKDIR}/git"
-SRCREV = "a9e009347be183b1b880243151a2242f2f6c59b9"
+SRCREV = "060043b40ffc9fafcf94eec832c2158e81c74f32"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/wam
@@ -39,7 +39,6 @@ do_install_append() {
     ln -sf ../WebAppMgr@.service ${D}${systemd_system_unitdir}/afm-user-session@.target.wants/
 }
 
-RDEPENDS_${PN} += "wam-tinyproxy"
 FILES_${PN} += "${sysconfdir}/init ${sysconfdir}/wam ${libdir}/webappmanager/plugins/*.so ${systemd_system_unitdir}"
 
 CXXFLAGS_append_agl-devel = " -DAGL_DEVEL"

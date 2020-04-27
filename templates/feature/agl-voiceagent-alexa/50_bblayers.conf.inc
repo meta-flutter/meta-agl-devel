@@ -11,4 +11,4 @@ BBFILES += "${METADIR}/external/alexa-auto-sdk/extensions/experimental/gstreamer
 
 # For now, tweak the layer's compatibility to allow using with zeus,
 # since we know it works without major issues.
-LAYERSERIES_COMPAT_aac_append = " zeus"
+LAYERSERIES_COMPAT_aac_append = " dunfell"

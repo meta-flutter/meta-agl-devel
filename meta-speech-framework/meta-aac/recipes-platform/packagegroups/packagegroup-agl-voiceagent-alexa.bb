@@ -5,11 +5,19 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
-PACKAGES = "\
-	packagegroup-agl-voiceagent-alexa \
-"
+ALLOW_EMPTY_${PN} = "1"
 
-RDEPENDS_${PN} += " \
-	alexa-voiceagent-service \
-	${@bb.utils.contains("DISTRO_FEATURES", "agl-demo-preload", "virtual/alexa-voiceagent-config", "",d)} \
-"
+PROVIDES = "${PACKAGES}"
+PACKAGES = "\
+    packagegroup-agl-voiceagent-alexa \
+    packagegroup-agl-voiceagent-alexa-test \
+    packagegroup-agl-voiceagent-alexa-devel \
+    "
+
+RDEPENDS_${PN} = " \
+    alexa-voiceagent-service \
+    "
+
+# Empty for now, no test/dbg/coverage widgets
+RDEPENDS_${PN}-test = ""
+RDEPENDS_${PN}-devel = ""

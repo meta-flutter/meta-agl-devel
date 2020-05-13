@@ -13,8 +13,3 @@ PREFERRED_RPROVIDER_virtual/voice-high-config = "alexa-voice-high-config"
 FEATURE_PACKAGES_agl-voiceagent-alexa = "packagegroup-agl-voiceagent-alexa"
 
 IMAGE_FEATURES += "agl-voiceagent-alexa"
-
-# Add local packagegroups to agl-test-wgt and agl-devel-wgt image feature
-# package lists
-FEATURE_PACKAGES_agl-test-wgt_append = " packagegroup-agl-voiceagent-alexa-test"
-FEATURE_PACKAGES_agl-devel-wgt_append = " packagegroup-agl-voiceagent-alexa-devel"

@@ -17,8 +17,8 @@ SRC_URI = "\
     file://00-stream-output-audio.endpoint \
     file://01-hw00-audio-sink.endpoint \
     file://01-hw00-audio-source.endpoint \
-    file://30-ak4613-audio-sink.endpoint \
-    file://30-ak4613-audio-source.endpoint \
+    file://30-rcarsound-audio-sink.endpoint \
+    file://30-rcarsound-audio-source.endpoint \
     file://30-dra7xx-audio-sink.endpoint \
     file://30-dra7xx-audio-source.endpoint \
     file://30-rpi3-audio-sink.endpoint \

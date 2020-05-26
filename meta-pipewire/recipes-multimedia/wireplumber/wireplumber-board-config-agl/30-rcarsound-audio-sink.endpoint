@@ -2,7 +2,7 @@
 priority = 30
 properties = [
   { name = "media.class", value = "Audio/Sink" },
-  { name = "api.alsa.card.id", value = "ak4613" },
+  { name = "api.alsa.card.id", value = "rcarsound" },
 ]
 
 [endpoint]

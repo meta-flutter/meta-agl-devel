@@ -25,7 +25,7 @@ SRC_URI = "\
     file://trunc-webapp-roles.patch \
 "
 S = "${WORKDIR}/git"
-SRCREV = "9f6fa59d3fb3cdef983e1f24b0cd8b68271f4dd5"
+SRCREV = "d012dbe03f23dd87a4e77bd3eec1fe9d227a5085"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/wam

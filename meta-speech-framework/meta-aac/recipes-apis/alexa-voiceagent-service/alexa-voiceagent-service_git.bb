@@ -28,6 +28,7 @@ SRC_URI = "git://github.com/alexa/alexa-auto-sdk.git;protocol=https;branch=2.0 \
            file://0004-update-config-and-database-paths.patch \
            file://0005-fix-segmentation-fault-for-release-build-mode.patch \
            file://0006-fix-event-argument-json.patch \
+           file://0007-add-autobuild-scripts.patch \
 "
 SRCREV = "86916d2d8c1702a8be3c88a9012ca56583bcc0c8"
 

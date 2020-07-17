@@ -4,7 +4,7 @@ HOMEPAGE = "https://gerrit.automotivelinux.org/gerrit/apps/agl-service-voice-hig
 SECTION = "apps"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://License.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 DEPENDS = "json-c systemd af-binder libafb-helpers libappcontroller nlohmann-json glib-2.0"
 

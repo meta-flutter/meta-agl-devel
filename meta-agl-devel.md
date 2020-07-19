@@ -27,7 +27,8 @@ The following list provides a summary of these sub-layers:
 * `meta-speech-framework`: Provides libraries and software packages needed by
   for speech recognition.
 
-* `meta-agl-jailhouse`:
+* `meta-agl-jailhouse`: Provides Jailhouse partitioning hypervisor and
+  supporting packages.
 
 * `templates`: Feature templates that support the `meta-agl-devel` layer.
 

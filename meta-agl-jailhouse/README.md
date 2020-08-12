@@ -33,8 +33,7 @@ This layer depends on:
 ## Supported targets
 
 * Raspberry Pi 4
-    * Currently only the 1 GB RAM variant. The other ones will work too,
-    but will be limited to 1 GB of memory.
+    * All (1G-8G) memory variants. But note that there is 256M reserved for Jailhouse and 256MiB for GPU in AGL, so the smaller variants are not recommended.
 
 * QEMU x86-64
     * Work in progress. Requires KVM. Nested virtualization must be enabled on the host. Currently, the right configuration of QEMU and Jailhouse to work out-of-box is being worked on.

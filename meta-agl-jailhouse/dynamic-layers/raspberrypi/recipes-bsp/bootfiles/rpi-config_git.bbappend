@@ -21,6 +21,10 @@ do_deploy_append_raspberrypi4() {
     echo "# Enable CAN (Waveshare RS485 CAN HAT)" >> ${DEPLOYDIR}/bcm2835-bootfiles/config.txt
     echo "dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25,spimaxfrequency=1000000" >> ${DEPLOYDIR}/bcm2835-bootfiles/config.txt
 
+    # memory reserved for Jailhouse
+    echo "dtoverlay=jailhouse-memory" >> ${DEPLOYDIR}/bcm2835-bootfiles/config.txt
+    echo "dtoverlay=jailhouse-memory,start=0xe0000000,size=0x200000" >> ${DEPLOYDIR}/bcm2835-bootfiles/config.txt
+
 
 }
 

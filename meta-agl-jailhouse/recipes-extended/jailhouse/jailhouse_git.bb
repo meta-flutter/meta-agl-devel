@@ -38,6 +38,10 @@ JH_CELL_FILES ?= "*.cell"
 EXTRA_OEMAKE = "ARCH=${JH_ARCH} CROSS_COMPILE=${TARGET_PREFIX} CC="${CC}" KDIR=${STAGING_KERNEL_BUILDDIR}"
 
 do_configure() {
+		
+	# copy ${WORKDIR}/qemu-agl.c ${S}/configs/x86/ <--- folder where the cells are defined in the source tree to be compiled
+	cp ${WORKDIR}/qemu-agl.c ${S}/configs/${JH_ARCH}
+	
 	sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' ${B}/tools/${BPN}-*
 }
 
@@ -55,6 +59,8 @@ do_install() {
 	oe_runmake PIP=: PYTHON=python3 PYTHON_PIP_USEABLE=yes DESTDIR=${D} install
 
 	install -d ${D}${CELL_DIR}
+
+	
 	install -m 0644 ${B}/configs/${JH_ARCH}/${JH_CELL_FILES} ${D}${CELL_DIR}/
 
 	install -d ${D}${INMATES_DIR}

@@ -19,6 +19,13 @@ SRC_URI = "git://github.com/siemens/jailhouse \
            file://0001-configs-arm64-Add-support-for-RPi4-with-more-than-1G.patch \
            "
 
+SRC_URI += "file://qemu-agl.c \
+	    file://agl-apic-demo.c \
+	    file://agl-pci-demo.c \
+	    file://agl-ivshmem-demo.c \
+	    file://agl-linux-x86-demo.c \
+	    "
+
 DEPENDS = "virtual/kernel dtc-native python3-mako-native make-native"
 
 require jailhouse-arch.inc
@@ -41,7 +48,11 @@ do_configure() {
 		
 	# copy ${WORKDIR}/qemu-agl.c ${S}/configs/x86/ <--- folder where the cells are defined in the source tree to be compiled
 	cp ${WORKDIR}/qemu-agl.c ${S}/configs/${JH_ARCH}
-	
+	cp ${WORKDIR}/agl-apic-demo.c ${S}/configs/x86/
+	cp ${WORKDIR}/agl-pci-demo.c ${S}/configs/x86/
+	cp ${WORKDIR}/agl-linux-x86-demo.c ${S}/configs/x86/
+	cp ${WORKDIR}/agl-ivshmem-demo.c ${S}/configs/x86/
+
 	sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' ${B}/tools/${BPN}-*
 }
 

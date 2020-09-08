@@ -10,23 +10,17 @@ Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Scott Murray <scott.murray@konsulko.com>
 
 diff --git a/libs/CMakeLists.txt b/libs/CMakeLists.txt
-index 4732e7b..938e5f3 100644
+index 8a955feb..5b097877 100644
 --- a/libs/CMakeLists.txt
 +++ b/libs/CMakeLists.txt
-@@ -70,22 +70,13 @@ add_avs_library(SpeechEncoder ${AAC_HOME}/lib/libSpeechEncoder.so)
- add_avs_library(OpusEncoderContext ${AAC_HOME}/lib/libOpusEncoderContext.so)
- add_avs_library(SpeechSynthesizer ${AAC_HOME}/lib/libSpeechSynthesizer.so)
+@@ -92,16 +92,11 @@ add_avs_library(SQLiteStorage ${AAC_HOME}/lib/libSQLiteStorage.so)
+ add_avs_library(SystemSoundPlayer ${AAC_HOME}/lib/libSystemSoundPlayer.so)
  add_avs_library(TemplateRuntime ${AAC_HOME}/lib/libTemplateRuntime.so)
--#add_avs_library(curl ${AAC_HOME}/lib/libcurl.so.4.5.0)
+ add_avs_library(ToggleController ${AAC_HOME}/lib/libToggleController.so)
 -add_avs_library(curl ${AAC_HOME}/lib/libcurl.so.4)
--#add_avs_library(nghttp2 ${AAC_HOME}/lib/libnghttp2.so.14.16)
 -add_avs_library(nghttp2 ${AAC_HOME}/lib/libnghttp2.so.14)
--#add_avs_library(opus ${AAC_HOME}/lib/libopus.so.0.6.1)
 -add_avs_library(opus ${AAC_HOME}/lib/libopus.so.0)
--#add_avs_library(sqlite3 ${AAC_HOME}/lib/libsqlite3.so.0.8.6)
 -add_avs_library(sqlite3 ${AAC_HOME}/lib/libsqlite3.so.0)
- add_avs_library(equalizer ${AAC_HOME}/lib/libEqualizer.so)
- add_avs_library(EqualizerImplementations ${AAC_HOME}/lib/libEqualizerImplementations.so)
  
 -if(EXISTS ${AAC_HOME}/lib/libpryon_lite.so.1.13)
 +if(EXISTS ${AAC_HOME}/lib/libAACEAmazonLiteEngine.so)
@@ -36,4 +30,4 @@ index 4732e7b..938e5f3 100644
 -    add_avs_library(pryon_lite ${AAC_HOME}/lib/libpryon_lite.so.1.13)
  endif()
  
- if(EXISTS ${AAC_HOME}/lib/libAACEGStreamerEngine.so)
+ if(EXISTS ${AAC_HOME}/share/cmake/AACESystemAudio.cmake)

@@ -1,0 +1,35 @@
+Workaround for connection deadlock
+
+Change the maximum (effectively infinite) delay in HTTP2Transport's
+connecting state handling code to use the inactivity timeout value,
+which is currently 5 minutes.  This seems to avoid triggering a
+deadlock between the condition variable checking in the
+monitorSharedQueueWhileWaiting method and use of the object's m_mutex
+member in sendPostConnectMessage and onActivity methods.
+At present, my theory is this issue stems from some change or bug
+in the newer g++/libstdc++ coming with dunfell versus the thud release
+that Amazon supports.
+
+Upstream-Status: Inappropriate [other]
+
+Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+
+diff --git a/ACL/src/Transport/HTTP2Transport.cpp b/ACL/src/Transport/HTTP2Transport.cpp
+index f1b5c03..dec7424 100644
+--- a/ACL/src/Transport/HTTP2Transport.cpp
++++ b/ACL/src/Transport/HTTP2Transport.cpp
+@@ -618,7 +618,13 @@ HTTP2Transport::State HTTP2Transport::handleConnecting() {
+         return m_state;
+     }
+ 
+-    return monitorSharedQueueWhileWaiting(State::CONNECTING);
++    // Wait for connection for the same length of time as the post-connection
++    // inactivity monitor timeout (currently 5 minutes).
++    // This seems to avoid triggering an issue where connecting deadlocks when
++    // using the maximum timeout of std::chrono:steady_clock.
++    std::chrono::time_point<std::chrono::steady_clock> timeout =
++        std::chrono::steady_clock::now() + INACTIVITY_TIMEOUT;
++    return monitorSharedQueueWhileWaiting(State::CONNECTING, timeout);
+ }
+ 
+ HTTP2Transport::State HTTP2Transport::handleWaitingToRetryConnecting() {

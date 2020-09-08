@@ -12,27 +12,24 @@ DEPENDS = " \
 	avs-device-sdk \
 	aac-module-core \
 	aac-module-alexa \
+	aac-module-address-book \
+	aac-module-car-control \
 	aac-module-cbl \
 	aac-module-contact-uploader \
 	aac-module-navigation \
 	aac-module-phone-control \
-	aac-module-gstreamer \
+	aac-module-system-audio \
 	${@bb.utils.contains("ALEXA_WAKEWORD", "true", "aac-module-amazonlite pryon-lite", "", d)} \
 "
 
-SRC_URI = "git://github.com/alexa/alexa-auto-sdk.git;protocol=https;branch=2.0 \
+SRC_URI = "git://github.com/alexa/alexa-auto-sdk.git;protocol=https;branch=2.3 \
            file://alexa.json \
            file://0001-remove-library-dependency-copying.patch \
-           file://0002-update-config.xml.in.patch \
-           file://0003-update-audio-device-configuration.patch \
-           file://0004-update-config-and-database-paths.patch \
-           file://0005-fix-segmentation-fault-for-release-build-mode.patch \
-           file://0006-fix-event-argument-json.patch \
            file://0007-add-autobuild-scripts.patch \
 "
-SRCREV = "86916d2d8c1702a8be3c88a9012ca56583bcc0c8"
+SRCREV = "d46f22b453f528868b483e39bc7a057ca68a5199"
 
-PV = "2.0+git${SRCPV}"
+PV = "2.3+git${SRCPV}"
 S = "${WORKDIR}/git/platforms/agl/alexa-voiceagent-service"
 
 inherit cmake aglwgt

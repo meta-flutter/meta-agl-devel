@@ -11,30 +11,41 @@ SRC_URI = "file://AlexaAutoCoreEngineConfig.json.in"
 inherit allarch
 
 ALEXA_WAKEWORD ??= "false"
+ALEXA_LOCALE ??= "en-US"
+ALEXA_TIMEZONE ??= "America/Vancouver"
 
-do_compile () {
-
-    if test x"${ALEXA_CLIENTID}" == x"" ; then
-	bbfatal "ALEXA CLIENTID not defined in your environment e.g. conf/local.conf"
-    fi
-
-    if test x"${ALEXA_SERIALNUMBER}" == x"" ; then
-	bbfatal "ALEXA SERIALNUMBER not defined in your environment e.g. conf/local.conf"
-    fi
-
-    if test x"${ALEXA_PRODUCTID}" == x"" ; then
-	bbfatal "ALEXA PRODUCTID not defined in your environment e.g. conf/local.conf"
-    fi
-
-}
+do_compile[noexec] = "1"
 
 do_install () {
+    if [ -z "${ALEXA_CLIENTID}" ]; then
+	bbfatal "ALEXA_CLIENTID not defined in your environment e.g. conf/local.conf"
+    fi
+    if [ -z "${ALEXA_SERIALNUMBER}" ]; then
+	bbfatal "ALEXA_SERIALNUMBER not defined in your environment e.g. conf/local.conf"
+    fi
+    if [ -z "${ALEXA_PRODUCTID}" ]; then
+	bbfatal "ALEXA_PRODUCTID not defined in your environment e.g. conf/local.conf"
+    fi
+    if [ -z "${ALEXA_MFG_NAME}" ]; then
+	bbfatal "ALEXA_MFG_NAME not defined in your environment e.g. conf/local.conf"
+    fi
+    if [ -z "${ALEXA_DESCRIPTION}" ]; then
+	bbfatal "ALEXA_DESCRIPTION not defined in your environment e.g. conf/local.conf"
+    fi
+
     #replace
-    sed -e "s/@@ALEXA_CLIENTID@@/${ALEXA_CLIENTID}/" -e "s/@@ALEXA_SERIALNUMBER@@/${ALEXA_SERIALNUMBER}/" -e "s/@@ALEXA_PRODUCTID@@/${ALEXA_PRODUCTID}/" -e "s/@@WAKEWORD@@/${ALEXA_WAKEWORD}/" ${WORKDIR}/AlexaAutoCoreEngineConfig.json.in > ${WORKDIR}/AlexaAutoCoreEngineConfig.json
+    sed -e "s|@@ALEXA_CLIENTID@@|${ALEXA_CLIENTID}|" \
+        -e "s|@@ALEXA_SERIALNUMBER@@|${ALEXA_SERIALNUMBER}|" \
+        -e "s|@@ALEXA_PRODUCTID@@|${ALEXA_PRODUCTID}|" \
+        -e "s|@@ALEXA_MFG_NAME@@|${ALEXA_MFG_NAME}|" \
+        -e "s|@@ALEXA_DESCRIPTION@@|${ALEXA_DESCRIPTION}|" \
+        -e "s|@@ALEXA_WAKEWORD@@|${ALEXA_WAKEWORD}|" \
+        -e "s|@@ALEXA_LOCALE@@|${ALEXA_LOCALE}|" \
+        -e "s|@@ALEXA_TIMEZONE@@|${ALEXA_TIMEZONE}|" \
+        ${WORKDIR}/AlexaAutoCoreEngineConfig.json.in > ${WORKDIR}/AlexaAutoCoreEngineConfig.json
 
     # install
     install -D -m 644 ${WORKDIR}/AlexaAutoCoreEngineConfig.json ${D}${sysconfdir}/xdg/AGL/AlexaAutoCoreEngineConfig.json
 }
 
 RPROVIDES_${PN} += "virtual/alexa-voiceagent-config"
-

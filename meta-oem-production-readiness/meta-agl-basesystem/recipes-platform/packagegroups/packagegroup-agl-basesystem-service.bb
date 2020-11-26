@@ -23,4 +23,6 @@ RDEPENDS_${PN} += " \
     ss-resourcemanager \
     ss-taskmanager \
     ss-versionlibrary \
+    vs-positioning \
+    vs-positioningbaselibrary \
 "

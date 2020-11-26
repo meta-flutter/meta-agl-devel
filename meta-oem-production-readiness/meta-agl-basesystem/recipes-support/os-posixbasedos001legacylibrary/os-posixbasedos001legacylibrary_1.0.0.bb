@@ -12,7 +12,3 @@ S = "${WORKDIR}/git/service/other/posix_based_os001_legacy_library"
 inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
-
-FILES_${PN} += " \
-    ${libdir}/* \
-"

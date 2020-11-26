@@ -14,4 +14,3 @@ S = "${WORKDIR}/git/hal/soc_temperature_hal"
 inherit bshalmake
 
 HAL_NAME = "soc_temperature_hal"
-FILES_${PN} += "${libdir}/lib${HAL_NAME}.so"

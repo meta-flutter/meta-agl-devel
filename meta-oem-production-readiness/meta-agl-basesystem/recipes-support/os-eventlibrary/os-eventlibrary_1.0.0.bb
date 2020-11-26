@@ -17,9 +17,6 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
 
-FILES_${PN} += " \
-    ${libdir}/* \
-"
 RDEPENDS_${PN} += " \
     kernel-module-evklib \
 "

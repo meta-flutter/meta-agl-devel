@@ -14,4 +14,3 @@ S = "${WORKDIR}/git/hal/video_in_hal"
 inherit bshalmake
 
 HAL_NAME = "video_in_hal"
-FILES_${PN} += "${libdir}/lib${HAL_NAME}.so"

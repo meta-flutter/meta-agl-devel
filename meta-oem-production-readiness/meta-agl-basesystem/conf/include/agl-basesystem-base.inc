@@ -7,4 +7,4 @@ INCLUDEDIR = "${includedir}/basesystem"
 CONFDIR = "${sysconfdir}/basesystem"
 LOCALDIR = "/var/local/lib/basesystem"
 
-BASESYSTEM_REVISION = "71afcd09b0f210e7da5ae6adc1b914fa02d412ff"
+BASESYSTEM_REVISION = "326b7ba9dbf2762925551e7970836a2964107ec1"

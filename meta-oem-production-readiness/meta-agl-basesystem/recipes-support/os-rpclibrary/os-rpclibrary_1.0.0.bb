@@ -19,10 +19,6 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
 
-FILES_${PN} += " \
-    /usr/lib/basesystem/librpc.so \
-"
-
 RDEPENDS_${PN} += " \
     ns-commonlibrary \
     ns-loglibrary \

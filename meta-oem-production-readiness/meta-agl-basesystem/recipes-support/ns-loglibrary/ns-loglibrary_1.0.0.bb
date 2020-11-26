@@ -12,7 +12,3 @@ S = "${WORKDIR}/git/service/native/log_library"
 inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
-
-FILES_${PN} += " \
-    ${libdir}/* \
-"

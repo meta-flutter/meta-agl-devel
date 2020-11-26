@@ -20,8 +20,6 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
 
-FILES_${PN} += "${libdir}/*"
-
 DIRFILES = "1"
 
 RDEPENDS_${PN} += " \

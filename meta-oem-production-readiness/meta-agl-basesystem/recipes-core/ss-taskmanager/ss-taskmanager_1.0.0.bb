@@ -26,8 +26,6 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
 
-FILES_${PN} += "  /usr/lib/basesystem/*.so"
-
 RDEPENDS_${PN} += " \
     ss-interfaceunified \
     ns-frameworkunified \

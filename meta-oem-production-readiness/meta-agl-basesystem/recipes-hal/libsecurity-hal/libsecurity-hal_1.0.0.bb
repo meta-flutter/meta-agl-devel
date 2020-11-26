@@ -14,4 +14,3 @@ S = "${WORKDIR}/git/hal/security_hal"
 inherit bshalmake
 
 HAL_NAME = "security_hal"
-FILES_${PN} += "${libdir}/lib${HAL_NAME}.so"

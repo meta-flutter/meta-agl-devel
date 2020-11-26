@@ -16,5 +16,3 @@ S = "${WORKDIR}/git/stub/communication_subcpu"
 inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile"
-
-FILES_${PN} += "${libdir}/*"

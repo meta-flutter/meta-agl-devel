@@ -12,5 +12,3 @@ S = "${WORKDIR}/git/stub/memory_gpio_access_library"
 inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile"
-
-FILES_${PN} += "${libdir}/*"

@@ -19,4 +19,5 @@ RDEPENDS_${PN} += " \
     libvehicle-hal \
     libvideo-in-hal \
     libnv-hal \
+    libpositioning-hal \
 "

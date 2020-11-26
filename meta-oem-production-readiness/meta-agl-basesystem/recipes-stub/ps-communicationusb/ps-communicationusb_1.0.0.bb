@@ -14,5 +14,3 @@ S = "${WORKDIR}/git/stub/communication_usb"
 inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile"
-
-FILES_${PN} += "${libdir}/*"

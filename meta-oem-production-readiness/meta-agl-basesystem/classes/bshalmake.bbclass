@@ -6,7 +6,8 @@ bshalmake_do_install (){
     install -D -m 644 ${S}/hal_api/*.h ${D}${includedir}/basesystem
 }
 
+#BaseSystem's .so does not have multiple versions. Therefore, overwrite these variables.
+SOLIBS = ".so"
+FILES_SOLIBSDEV = ""
+
 EXPORT_FUNCTIONS do_install
-
-FILES_${PN}-dev_remove = "${FILES_SOLIBSDEV}"
-

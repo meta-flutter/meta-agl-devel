@@ -17,6 +17,7 @@ The `meta-agl-devel` layer contains the following files and sub-layers:
 ├── LICENSE.MIT
 ├── meta-agl-devel.md
 ├── meta-agl-jailhouse
+├── meta-oem-production-readiness
 ├── meta-speech-framework
 ├── README.md
 └── templates
@@ -29,6 +30,9 @@ The following list provides a summary of these sub-layers:
 
 * `meta-agl-jailhouse`: Provides Jailhouse partitioning hypervisor and
   supporting packages.
+
+* `meta-oem-production-readiness`: Provides libraries and software packages of
+  IVI product readiness
 
 * `templates`: Feature templates that support the `meta-agl-devel` layer.
 

@@ -5,7 +5,4 @@ inherit packagegroup
 
 PACKAGES = "\
         packagegroup-agl-basesystem-apis \
-        "
-
-RDEPENDS_${PN} += " \
-    "
+"

@@ -15,4 +15,6 @@ RDEPENDS_${PN} += " \
     os-rpclibrary \
     os-eventlibrary \
     ps-communication \
+    ns-backupmanager \
+    ss-romaccesslibrary \
 "

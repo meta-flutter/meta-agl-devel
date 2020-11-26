@@ -18,4 +18,5 @@ RDEPENDS_${PN} += " \
     libusb-hal \
     libvehicle-hal \
     libvideo-in-hal \
+    libnv-hal \
 "

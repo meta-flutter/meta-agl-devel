@@ -17,4 +17,10 @@ RDEPENDS_${PN} += " \
     ps-communication \
     ns-backupmanager \
     ss-romaccesslibrary \
+    os-vehicleparameterlibrary \
+    ss-config \
+    ss-interfaceunified \
+    ss-resourcemanager \
+    ss-taskmanager \
+    ss-versionlibrary \
 "

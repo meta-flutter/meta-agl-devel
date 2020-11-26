@@ -14,4 +14,5 @@ RDEPENDS_${PN} += " \
     os-posixbasedos001legacylibrary \
     os-rpclibrary \
     os-eventlibrary \
+    ps-communication \
 "

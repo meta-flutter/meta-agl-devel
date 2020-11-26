@@ -13,4 +13,5 @@ RDEPENDS_${PN} += " \
     ns-loglibrary \
     os-posixbasedos001legacylibrary \
     os-rpclibrary \
+    os-eventlibrary \
 "

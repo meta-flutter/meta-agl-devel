@@ -4,5 +4,18 @@ LICENSE = "Apache-2.0"
 inherit packagegroup
 
 PACKAGES = "\
-    packagegroup-agl-basesystem-hal \
+    packagegroup-bshalmake \
+"
+RDEPENDS_${PN} += " \
+    libboot-hal \
+    libcan-hal \
+    libclock-hal \
+    libdeck-hal \
+    libinput-hal \
+    libpower-hal \
+    libsecurity-hal \
+    libsoctemperature-hal \
+    libusb-hal \
+    libvehicle-hal \
+    libvideo-in-hal \
 "

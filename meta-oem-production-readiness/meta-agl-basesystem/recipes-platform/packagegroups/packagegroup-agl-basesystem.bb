@@ -17,5 +17,5 @@ RDEPENDS_${PN}  += "\
     packagegroup-agl-basesystem-core \
     packagegroup-agl-basesystem-apis \
     packagegroup-agl-basesystem-service \
-    packagegroup-agl-basesystem-hal \
+    packagegroup-bshalmake \
 "

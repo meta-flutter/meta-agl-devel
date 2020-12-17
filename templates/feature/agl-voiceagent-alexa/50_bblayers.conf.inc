@@ -1,4 +1,5 @@
 BBLAYERS =+ " \
+	${METADIR}/meta-agl-devel/meta-speech-framework \
 	${METADIR}/external/alexa-auto-sdk/builder/meta-aac \
 "
 

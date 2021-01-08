@@ -1,0 +1,6 @@
+[Unit]
+Description=DRM Lease Manager
+
+[Service]
+ExecStart=drm-lease-manager
+RuntimeDirectory=drm-lease-manager

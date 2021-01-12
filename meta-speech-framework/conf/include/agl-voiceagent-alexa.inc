@@ -12,4 +12,4 @@ PREFERRED_RPROVIDER_virtual/voice-high-config = "alexa-voice-high-config"
 
 FEATURE_PACKAGES_agl-voiceagent-alexa = "packagegroup-agl-voiceagent-alexa"
 
-IMAGE_FEATURES += "agl-voiceagent-alexa"
+AGL_FEATURES += "agl-voiceagent-alexa"

@@ -1,0 +1,31 @@
+--- meta-aac-amazonlite/recipes-avs/avs-device-sdk/avs-device-sdk_%.bbappend.bak	2021-02-01 16:41:34.464564753 -0500
++++ meta-aac-amazonlite/recipes-avs/avs-device-sdk/avs-device-sdk_%.bbappend	2021-02-01 16:41:54.392457938 -0500
+@@ -3,6 +3,8 @@
+ 
+ SRC_URI += "file://${AMAZONLITE_PACKAGES}/${WRAPPER_NAME}-${WRAPPER_VERSION}.tgz"
+ 
++inherit python3native
++
+ AMAZONLITE_CPP_MODEL_NAME ?= "D.en-US.alexa.cpp"
+ AMAZONLITE_CPP_MODEL_PATH = "${STAGING_DIR_HOST}${datadir}/pryon-lite/models"
+ 
+@@ -19,5 +21,5 @@
+ PACKAGECONFIG += "amazonlite"
+ 
+ do_configure_prepend() {
+-	${WORKDIR}/${WRAPPER_NAME}/apply_adapter.py ${S}
+-}
+\ No newline at end of file
++	${PYTHON} ${WORKDIR}/${WRAPPER_NAME}/apply_adapter.py ${S}
++}
+--- meta-aac-amazonlite/conf/layer.conf.bak	2021-02-01 17:44:07.559285446 -0500
++++ meta-aac-amazonlite/conf/layer.conf	2021-02-01 17:44:42.847875916 -0500
+@@ -9,6 +9,8 @@
+ BBFILE_PATTERN_aac-amazonlite = "^${LAYERDIR}/"
+ BBFILE_PRIORITY_aac-amazonlite = "6"
+ 
++LAYERSERIES_COMPAT_aac-amazonlite = "dunfell"
++
+ AMAZONLITE ?= "ON"
+ AMAZONLITE_PACKAGES = "${LAYERDIR}/packages"
+ 

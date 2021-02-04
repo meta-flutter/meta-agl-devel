@@ -14,9 +14,10 @@ Enable the  `agl-drm-lease` AGL feature when setting up your build environment
 with aglsetup.sh.
 
 This will add the `drm-lease-manager` package to the image, and will add DRM
-lease support to some packages.
+lease support to the following packages:
+ * weston
+ * kmscube
 
-Currently, only the `kmscube` sample application has support for DRM lease.  
 `kmscube` is not included in the image by default. To add the package to the
 image, add the following to your local.conf
 
@@ -36,6 +37,14 @@ Shut down any running window systems (eg. weston or agl-compositor) and run:
 This will create 1 lease for each output connection on the platform.
 The name of each lease will be in the form of `card0-<output name>`
 (eg. `card0-LVDS-1` or `card0-HDMI-A-1`)
+
+## Running weston
+
+weston can be started on any available DRM lease by running with the
+`--drm-lease=<lease name>` option. Eg:
+```
+  # weston --drm-lease=card0-HDMI-A-1
+```
 
 ## Running kmscube sample
 

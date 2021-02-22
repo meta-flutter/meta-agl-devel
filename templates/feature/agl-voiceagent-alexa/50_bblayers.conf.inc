@@ -12,4 +12,4 @@ BBFILES += "${METADIR}/external/alexa-auto-sdk/extensions/experimental/system-au
 
 # For now, tweak the layer's compatibility to allow using with zeus,
 # since we know it works without major issues.
-LAYERSERIES_COMPAT_aac:append = " dunfell"
+LAYERSERIES_COMPAT_aac:append = " kirkstone"

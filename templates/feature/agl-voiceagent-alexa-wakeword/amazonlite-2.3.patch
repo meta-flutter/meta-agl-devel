@@ -24,7 +24,7 @@
  BBFILE_PATTERN_aac-amazonlite = "^${LAYERDIR}/"
  BBFILE_PRIORITY_aac-amazonlite = "6"
  
-+LAYERSERIES_COMPAT_aac-amazonlite = "dunfell"
++LAYERSERIES_COMPAT_aac-amazonlite = "kirkstone"
 +
  AMAZONLITE ?= "ON"
  AMAZONLITE_PACKAGES = "${LAYERDIR}/packages"

@@ -1,0 +1,43 @@
+From 3b72ab4b5399641bb69e29464bcbd14f5f6cb6c0 Mon Sep 17 00:00:00 2001
+From: nerdopolis <bluescreen_avenger@verizon.net>
+Date: Wed, 20 Jan 2021 22:00:18 -0500
+Subject: [PATCH 4/4] launcher-direct: handle seat0 without VTs
+
+This allows launcher-direct to run when seat0 has no TTYs
+This checks for a proper /dev/tty0 device as /dev/tty0
+does not get created by kernels compiled with CONFIG_VT=n
+
+(cherry picked from commit 72db3ac694c0f84f3c193df42e81be8329e52b61)
+Signed-off-by: Damian Hobson-Garcia <dhobsong@igel.co.jp>
+---
+ libweston/launcher-direct.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/libweston/launcher-direct.c b/libweston/launcher-direct.c
+index 71c332a..840a3c5 100644
+--- a/libweston/launcher-direct.c
++++ b/libweston/launcher-direct.c
+@@ -290,6 +290,7 @@ launcher_direct_connect(struct weston_launcher **out, struct weston_compositor *
+ 			int tty, const char *seat_id, bool sync_drm)
+ {
+ 	struct launcher_direct *launcher;
++	struct stat buf;
+ 
+ #ifndef ENABLE_USER_START
+ 	if (geteuid() != 0)
+@@ -303,7 +304,11 @@ launcher_direct_connect(struct weston_launcher **out, struct weston_compositor *
+ 	launcher->base.iface = &launcher_direct_iface;
+ 	launcher->compositor = compositor;
+ 
+-	if (strcmp("seat0", seat_id) == 0) {
++	/* Checking the existance of /dev/tty0 and verifying it's a TTY
++	 * device, as kernels compiled with CONFIG_VT=0 do not create these
++	 * devices. */
++	if (stat("/dev/tty0", &buf) == 0 &&
++	    strcmp("seat0", seat_id) == 0 && major(buf.st_rdev) == TTY_MAJOR) {
+ 		if (setup_tty(launcher, tty) == -1) {
+ 			free(launcher);
+ 			return -1;
+-- 
+2.17.1
+

@@ -1,0 +1,61 @@
+From d086d6e3bc75331048f9f235c03408c68df40457 Mon Sep 17 00:00:00 2001
+From: Leandro Ribeiro <leandro.ribeiro@collabora.com>
+Date: Wed, 3 Jun 2020 10:01:06 -0300
+Subject: [PATCH 3/4] launcher: do not touch VT/tty while using non-default
+ seat
+
+Launcher-direct does not allow us to run using a different
+seat from the default seat0. This happens because VTs are
+only exposed to the default seat, and users that are on
+non-default seat should not touch VTs.
+
+Add check in launcher-direct to skip VT/tty management if user
+is running on a non-default seat.
+
+Signed-off-by: Leandro Ribeiro <leandro.ribeiro@collabora.com>
+(cherry picked from commit 887a7e5717275c0dec007e6128298d5956c70891)
+Signed-off-by: Damian Hobson-Garcia <dhobsong@igel.co.jp>
+---
+ libweston/launcher-direct.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/libweston/launcher-direct.c b/libweston/launcher-direct.c
+index 8e21880..71c332a 100644
+--- a/libweston/launcher-direct.c
++++ b/libweston/launcher-direct.c
+@@ -303,9 +303,13 @@ launcher_direct_connect(struct weston_launcher **out, struct weston_compositor *
+ 	launcher->base.iface = &launcher_direct_iface;
+ 	launcher->compositor = compositor;
+ 
+-	if (setup_tty(launcher, tty) == -1) {
+-		free(launcher);
+-		return -1;
++	if (strcmp("seat0", seat_id) == 0) {
++		if (setup_tty(launcher, tty) == -1) {
++			free(launcher);
++			return -1;
++		}
++	} else {
++		launcher->tty = -1;
+ 	}
+ 
+ 	* (struct launcher_direct **) out = launcher;
+@@ -317,11 +321,11 @@ launcher_direct_destroy(struct weston_launcher *launcher_base)
+ {
+ 	struct launcher_direct *launcher = wl_container_of(launcher_base, launcher, base);
+ 
+-	launcher_direct_restore(&launcher->base);
+-	wl_event_source_remove(launcher->vt_source);
+-
+-	if (launcher->tty >= 0)
++	if (launcher->tty >= 0) {
++		launcher_direct_restore(&launcher->base);
++		wl_event_source_remove(launcher->vt_source);
+ 		close(launcher->tty);
++	}
+ 
+ 	free(launcher);
+ }
+-- 
+2.17.1
+

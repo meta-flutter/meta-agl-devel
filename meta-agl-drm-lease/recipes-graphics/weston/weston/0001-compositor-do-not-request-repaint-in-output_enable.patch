@@ -1,0 +1,36 @@
+From 3b7c9b7458976ea7f1e57796149d4ed4c56d9225 Mon Sep 17 00:00:00 2001
+From: Michael Tretter <m.tretter@pengutronix.de>
+Date: Thu, 23 Aug 2018 16:58:47 +0200
+Subject: [PATCH] compositor: do not request repaint in output_enable
+
+When enabling a weston_output, the compositor damages the entire output,
+to ensure that the entire output is redrawn. However, this triggers a
+repaint, which might happen before anything is actually drawn. The
+result is a black frame before the shell is displayed.
+
+Damage the entire output region, but do not trigger the repaint when
+enabling a weston_output.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+---
+ libweston/compositor.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/libweston/compositor.c b/libweston/compositor.c
+index 6e965372..34d8483c 100644
+--- a/libweston/compositor.c
++++ b/libweston/compositor.c
+@@ -6471,7 +6471,9 @@ weston_output_enable(struct weston_output *output)
+ 	weston_output_init_zoom(output);
+ 
+ 	weston_output_init_geometry(output, x, y);
+-	weston_output_damage(output);
++	pixman_region32_union(&c->primary_plane.damage,
++			      &c->primary_plane.damage,
++			      &output->region);
+ 
+ 	wl_list_init(&output->animation_list);
+ 	wl_list_init(&output->feedback_list);
+-- 
+2.25.1
+

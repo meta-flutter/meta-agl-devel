@@ -1,6 +1,11 @@
 [Unit]
 Description=DRM Lease Manager
+After=basic.target
 
 [Service]
+Type=simple
 ExecStart=drm-lease-manager
 RuntimeDirectory=drm-lease-manager
+
+[Install]
+WantedBy=multi-user.target

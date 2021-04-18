@@ -33,3 +33,6 @@ do_install_ptest() {
     install ${B}/drm-lease-manager/test/lease-server-test ${D}${PTEST_PATH}
     install ${B}/drm-lease-manager/test/lease-manager-test ${D}${PTEST_PATH}
 }
+
+PACKAGES =+ "libdlmclient"
+FILES_libdlmclient = "${libdir}/libdlmclient${SOLIBS}"

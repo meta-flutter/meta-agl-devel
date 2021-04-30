@@ -14,7 +14,7 @@ Then, in the target system, the cell configurations (*.cell) are placed in `/usr
 
 ## Raspberry Pi 4 example
 
-Use this commands to enable Jailhouse and run the GIC demo inmate in a non-root cell. After issuing these commands, the GIC demo will be mesauring jitter of a timer and print the output on the serial console of the RPi.
+Use this commands to enable Jailhouse and run the GIC demo inmate in a non-root cell. After issuing these commands, the GIC demo will be measuring jitter of a timer and print the output on the serial console of the RPi.
 
     jailhouse enable /usr/share/jailhouse/cells/rpi4.cell
     jailhouse cell create /usr/share/jailhouse/cells/rpi4-inmate-demo.cell

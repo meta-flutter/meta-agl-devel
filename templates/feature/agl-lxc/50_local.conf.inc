@@ -1,0 +1,1 @@
+BBMULTICONFIG = "agl-container-guest"

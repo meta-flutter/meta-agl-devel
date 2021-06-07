@@ -1,0 +1,11 @@
+[Unit]
+Description=AGL Cluster Reference GUI
+After=weston@root.service
+Requires=weston@root.service
+
+[Service]
+Environment=XDG_RUNTIME_DIR=/run/user/0
+ExecStart=/opt/apps/cluster
+
+[Install]
+WantedBy=multi-user.target

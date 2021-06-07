@@ -1,0 +1,33 @@
+lxc.rootfs.path = dir:/var/lib/machines/cluster-demo
+lxc.signal.halt = SIGRTMIN+3
+lxc.signal.reboot = SIGTERM
+lxc.uts.name = "cluster"
+lxc.tty.max = 1
+lxc.pty.max = 1
+lxc.cap.drop = sys_module mac_admin mac_override sys_time
+
+lxc.mount.entry = /var/lib/lxc/cluster-demo/system.conf etc/systemd/system.conf.d/10-environment.conf none bind,optional,create=file
+
+lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed
+lxc.mount.entry = shm /dev/shm tmpfs defaults 0 0
+lxc.mount.entry = /sys/kernel/security sys/kernel/security none ro,bind,optional 0 0
+
+lxc.cgroup.devices.allow = c 226:* rwm
+lxc.mount.entry = /dev/dri dev/dri none bind,optional,create=dir
+
+#lxc.mount.entry = /lxc/share lxc/share none bind,optional,create=dir
+lxc.mount.entry = /run/drm-lease-manager/@DRM_LEASE_DEVICE@ var/display/drm-lease-manager/@DRM_LEASE_DEVICE@ none bind,create=file
+
+lxc.cgroup.devices.allow = c 10:* rwm
+lxc.mount.entry = /dev/pvr_sync dev/pvr_sync none bind,optional,create=file
+
+lxc.net.0.type = empty
+
+lxc.environment = QT_QPA_PLATFORM=wayland
+lxc.environment = QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/plugins/
+#lxc.environment = QT_DEBUG_PLUGINS=1
+lxc.environment = QML_IMPORT_PATH=/usr/lib/qml/
+lxc.environment = QML2_IMPORT_PATH=/usr/lib/qml/
+lxc.environment = QT_WAYLAND_SHELL_INTEGRATION=xdg-shell
+
+lxc.start.auto = @LXC_AUTO_START@

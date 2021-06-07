@@ -1,1 +1,1 @@
-IMAGE_INSTALL_append = " drm-lease-manager"
+AGL_FEATURES += "agl-drm-lease"

@@ -14,7 +14,7 @@ QB_MACHINE_qemux86-64 = "-machine q35,kernel_irqchip=split -smp 4"
 QB_CPU_qemux86-64 = "-enable-kvm"
 QB_CPU_KVM_qemux86-64 = "-cpu host,-kvm-pv-eoi,-kvm-pv-ipi,-kvm-asyncpf,-kvm-steal-time,-kvmclock,-invpcid,-hypervisor"
 
-QB_KERNEL_CMDLINE_APPEND_append = " intel_iommu=off memmap=82M\$0x22000000"
+QB_KERNEL_CMDLINE_APPEND_append = " intel_iommu=off memmap=82M$0x22000000"
 
 QB_KERNEL_ROOT = "/dev/vda"
 QB_SERIAL_OPT = "-serial none -serial stdio -serial telnet:localhost:4321,server,nowait"

@@ -1,7 +1,8 @@
 BBMULTICONFIG = "agl-container-guest"
 
-# Disable the meta-virtualization configuration support enabled by
-# agl-virt.  This should be revisited when upgrading past dunfell,
-# as less of the extra configuration may be enabled in the future.
-DISTRO_FEATURES_remove = "virtualization"
+# The meta-virtualization has a sanity-meta-virt check.
+# This checker check 'DISTRO_FEATURES has virtualization', but 
+# in case of linux container is not necessary to the 'virtualization'.
+# This should be revisited when upgrading past dunfell, as less of 
+# the extra configuration may be enabled in the future.
 INHERIT_remove = "sanity-meta-virt"

@@ -8,4 +8,5 @@ IMAGE_INSTALL += " \
     weston-init \
     weston-ini-conf-landscape \
     refgui \
+    pipewire-ic-ipc \
 "

@@ -7,7 +7,9 @@ CONTAINER_IMAGES ?= "agl-container-guest:guest-image-cluster-demo"
 
 IMAGE_INSTALL += " \
     kernel-modules \
-    pipewire pipewire-alsa alsa-utils \
+    alsa-utils \
+    packagegroup-pipewire \
+    pipewire-ic-ipc \
     ${@bb.utils.contains('AGL_FEATURES', 'agl-drm-lease', 'drm-lease-manager', '', d)} \
 "
 

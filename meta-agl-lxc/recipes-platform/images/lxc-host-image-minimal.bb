@@ -15,6 +15,9 @@ IMAGE_LINGUAS = " "
 
 NO_RECOMMENDATIONS = "1"
 
+# Handle modification of IMAGE_LINK_NAME done by ULCB builds with Kingfisher support
+MACHINE_SUFFIX = "${@bb.utils.contains('AGL_FEATURES', 'kingfisher', '-kf', '', d)}"
+
 python __anonymous() {
     for c in (d.getVar('CONTAINER_IMAGES') or "").split():
         (mc, image) = c.split(':')
@@ -35,7 +38,7 @@ install_container_images() {
         name=${image#guest-image-}
         rm -rf  ${IMAGE_ROOTFS}/var/lib/machines/${name}
         install -m 0755 -d ${IMAGE_ROOTFS}/var/lib/machines/${name}
-        src="${TOPDIR}/tmp-${config}/deploy/images/${MACHINE}/${image}-${MACHINE}.tar.bz2"
+        src="${TOPDIR}/tmp-${config}/deploy/images/${MACHINE}/${image}-${MACHINE}${MACHINE_SUFFIX}.tar.bz2"
         bbnote "Installing ${src}"
         tar -C ${IMAGE_ROOTFS}/var/lib/machines/${name} -xf ${src}
     done

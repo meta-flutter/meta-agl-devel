@@ -18,17 +18,25 @@
 struct {
 	struct jailhouse_cell_desc cell;
 	__u64 cpus[1];
+#ifdef CONFIG_QEMU_E1000E_ASSIGNMENT
+	struct jailhouse_memory mem_regions[24];
+#else
 	struct jailhouse_memory mem_regions[20];
+#endif
 	struct jailhouse_cache cache_regions[1];
 	struct jailhouse_irqchip irqchips[1];
-	struct jailhouse_pio pio_regions[1];
+	struct jailhouse_pio pio_regions[2];
+#ifdef CONFIG_QEMU_E1000E_ASSIGNMENT
+	struct jailhouse_pci_device pci_devices[5];
+#else
 	struct jailhouse_pci_device pci_devices[4];
+#endif
 	struct jailhouse_pci_capability pci_caps[6];
 } __attribute__((packed)) config = {
 	.cell = {
 		.signature = JAILHOUSE_CELL_DESC_SIGNATURE,
 		.revision = JAILHOUSE_CONFIG_REVISION,
-		.name = "linux-x86-demo",
+		.name = "agl-linux-x86-demo",
 		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
 			 JAILHOUSE_CELL_VIRTUAL_CONSOLE_PERMITTED,
 
@@ -46,16 +54,17 @@ struct {
 	},
 
 	.mem_regions = {
+
 		/* IVSHMEM shared memory region (virtio-blk front) */
 		{
-			.phys_start = 0x27000000, /* to 0x27001000 */
-			.virt_start = 0x27000000,
+			.phys_start = 0x22000000,
+			.virt_start = 0x22000000,
 			.size = 0x1000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x27001000,/* to 0x270e0000 */
-			.virt_start = 0x27001000,
+			.phys_start = 0x22001000,
+			.virt_start = 0x22001000,
 			.size = 0xdf000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
@@ -64,57 +73,58 @@ struct {
 		{ 0 },
 		/* IVSHMEM shared memory region (virtio-con front) */
 		{
-			.phys_start = 0x270e0000,/* to 0x270e1000 */
-			.virt_start = 0x270e0000,
+			.phys_start = 0x220e0000,
+			.virt_start = 0x220e0000,
 			.size = 0x1000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x270e1000,/*to 0x270f0000 */
-			.virt_start = 0x270e1000,
+			.phys_start = 0x220e1000,
+			.virt_start = 0x220e1000,
 			.size = 0xf000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{ 0 },
 		{ 0 },
+
 		/* IVSHMEM shared memory regions (demo) */
 		{
-			.phys_start = 0x270f0000,/*to 0x270f1000 */
-			.virt_start = 0x270f0000,
+			.phys_start = 0x220f0000,
+			.virt_start = 0x220f0000,
 			.size = 0x1000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x270f1000,/*to 0x270fa000 */
-			.virt_start = 0x270f1000,
+			.phys_start = 0x220f1000,
+			.virt_start = 0x220f1000,
 			.size = 0x9000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x270fa000,/* to 0x270fc000 */
-			.virt_start = 0x270fa000,
+			.phys_start = 0x220fa000,
+			.virt_start = 0x220fa000,
 			.size = 0x2000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x270fc000,/* to 0x270fe000*/
-			.virt_start = 0x270fc000,
+			.phys_start = 0x220fc000,
+			.virt_start = 0x220fc000,
 			.size = 0x2000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x270fe000,/* to 0x27100000 */
-			.virt_start = 0x270fe000,
+			.phys_start = 0x220fe000,
+			.virt_start = 0x220fe000,
 			.size = 0x2000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
 		},
 		/* IVSHMEM shared memory regions (networking) */
-		JAILHOUSE_SHMEM_NET_REGIONS(0x27100000, 1),
+		JAILHOUSE_SHMEM_NET_REGIONS(0x22100000, 1),
 		/* low RAM */ {
-			.phys_start = 0x22600000,/* to 0x22700000*/
+			.phys_start = 0x22600000,
 			.virt_start = 0,
 			.size = 0x00100000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
@@ -122,20 +132,49 @@ struct {
 				JAILHOUSE_MEM_LOADABLE,
 		},
 		/* communication region */ {
-			/*.phys_start = ? */
 			.virt_start = 0x00100000,
 			.size = 0x00001000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_COMM_REGION,
 		},
 		/* high RAM */ {
-			.phys_start = 0x22700000,/*to 0x26e00000 */
+			.phys_start = 0x22700000,
 			.virt_start = 0x00200000,
 			.size = 0x4700000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA |
 				JAILHOUSE_MEM_LOADABLE,
 		},
+#ifdef CONFIG_QEMU_E1000E_ASSIGNMENT
+		/* MemRegion: feb40000-feb7ffff : 0000:00:02.0 */
+		{
+			.phys_start = 0xfeb40000,
+			.virt_start = 0xfeb40000,
+			.size = 0x40000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		},
+		/* MemRegion: feb80000-feb9ffff : e1000e */
+		{
+			.phys_start = 0xfeb80000,
+			.virt_start = 0xfeb80000,
+			.size = 0x20000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		},
+		/* MemRegion: feba0000-febbffff : e1000e */
+		{
+			.phys_start = 0xfeba0000,
+			.virt_start = 0xfeba0000,
+			.size = 0x20000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		},
+		/* MemRegion: febd1000-febd3fff : e1000e */
+		{
+			.phys_start = 0xfebd1000,
+			.virt_start = 0xfebd1000,
+			.size = 0x3000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		},
+#endif
 	},
 
 	.cache_regions = {
@@ -157,9 +196,9 @@ struct {
 	},
 
 	.pio_regions = {
-		PIO_RANGE(0x2f8, 8), /* serial 2 */
-//		PIO_RANGE(0x3f8, 8), /* serial 1 */
-		PIO_RANGE(0xe010, 8), /* OXPCIe952 serial1 */
+		PIO_RANGE(0x2e8, 8), /* serial 2: ttyS3(0x2e8) */
+		PIO_RANGE(0x3e8, 8), /* serial 1: ttyS2(0x3e8) */
+//		PIO_RANGE(0xe010, 8), /* OXPCIe952 serial1 */
 	},
 
 	.pci_devices = {
@@ -209,9 +248,33 @@ struct {
 			.shmem_peers = 2,
 			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_VETH,
 		},
+#ifdef CONFIG_QEMU_E1000E_ASSIGNMENT
+		{ /* e1000e */
+			.type = JAILHOUSE_PCI_TYPE_DEVICE,
+			.domain = 0x0000,
+			.bdf = 0x0010,
+			.bar_mask = {
+				0xfffe0000, 0xfffe0000, 0xffffffe0,
+				0xffffc000, 0x00000000, 0x00000000,
+			},
+			.caps_start = 0,
+			.num_caps = 6,
+			.num_msi_vectors = 1,
+			.msi_64bits = 1,
+			.num_msix_vectors = 5,
+			.msix_region_size = 0x1000,
+			.msix_address = 0xfebd0000,
+		},
+#endif
 	},
 
 	.pci_caps = {
+		{ /* e1000e */
+			.id = PCI_CAP_ID_PM,
+			.start = 0xc8,
+			.len = 8,
+			.flags = JAILHOUSE_PCICAPS_WRITE,
+		},
 		{
 			.id = PCI_CAP_ID_MSI,
 			.start = 0xd0,

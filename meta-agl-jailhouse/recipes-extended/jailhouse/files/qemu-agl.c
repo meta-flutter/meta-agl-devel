@@ -81,7 +81,7 @@ struct {
 			},
 		},
 		.root_cell = {
-			.name = "RootCell",
+			.name = "AGL-Jailhouse-RootCell",
 			.cpu_set_size = sizeof(config.cpus),
 			.num_memory_regions = ARRAY_SIZE(config.mem_regions),
 			.num_irqchips = ARRAY_SIZE(config.irqchips),
@@ -104,35 +104,33 @@ struct {
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 00100000-201fffff : System RAM */
+		/* MemRegion: 000a0000-000bffff : PCI Bus 0000:00 */
+		{
+			.phys_start = 0xa0000,
+			.virt_start = 0xa0000,
+			.size = 0x20000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		},
+		/* MemRegion: 000f0000-000fffff : System ROM */
+		{
+			.phys_start = 0xf0000,
+			.virt_start = 0xf0000,
+			.size = 0x10000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		},
+		/* MemRegion: 00100000-21ffffff : System RAM */
 		{
 			.phys_start = 0x100000,
 			.virt_start = 0x100000,
-			.size = 0x20100000,
+			.size = 0x21f00000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 20200000-21ffffff : Kernel */
-		{
-			.phys_start = 0x20200000,
-			.virt_start = 0x20200000,
-			.size = 0x1e00000,
-			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
-				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
-		},
-		/* MemRegion: 27200000-31ffffff : System RAM */
+		/* MemRegion: 27200000-7ffd7fff : System RAM */
 		{
 			.phys_start = 0x27200000,
 			.virt_start = 0x27200000,
-			.size = 0xae00000,
-			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
-				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
-		},
-		/* MemRegion: 32000000-33ffffff : RAM buffer */
-		{
-			.phys_start = 0x32000000,
-			.virt_start = 0x32000000,
-			.size = 0x2000000,
+			.size = 0x58dd8000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
@@ -178,7 +176,7 @@ struct {
 			.size = 0x40000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
-		/* MemRegion: febd0000-febd3fff : ICH HD audio */
+		/* MemRegion: febd0000-febd3fff : 0000:00:1b.0 */
 		{
 			.phys_start = 0xfebd0000,
 			.virt_start = 0xfebd0000,
@@ -246,8 +244,8 @@ struct {
 		PIO_RANGE(0x60, 0x1),
 		/* Port I/O: 0064-0064 : keyboard */
 		PIO_RANGE(0x64, 0x1),
-		/* Port I/O: 0070-0077 : rtc0 */
-		PIO_RANGE(0x70, 0x8),
+		/* Port I/O: 0070-0071 : rtc0 */
+		PIO_RANGE(0x70, 0x2),
 		/* Port I/O: 0080-008f : dma page reg */
 		/* PIO_RANGE(0x80, 0x10), */
 		/* Port I/O: 00a0-00a1 : pic2 */
@@ -258,10 +256,10 @@ struct {
 		/* PIO_RANGE(0xf0, 0x10), */
 		/* Port I/O: 02f8-02ff : serial */
 		PIO_RANGE(0x2f8, 0x8),
-		/* Port I/O: 0378-037a : parport0 */
-		/* PIO_RANGE(0x378, 0x3), */
 		/* Port I/O: 03c0-03df : vga+ */
 		PIO_RANGE(0x3c0, 0x20),
+		/* Port I/O: 03e8-03ef : serial */
+		/* PIO_RANGE(0x3e8, 0x8), */
 		/* Port I/O: 03f8-03ff : serial */
 		PIO_RANGE(0x3f8, 0x8),
 		/* Port I/O: 0510-051b : QEMU0002:00 */

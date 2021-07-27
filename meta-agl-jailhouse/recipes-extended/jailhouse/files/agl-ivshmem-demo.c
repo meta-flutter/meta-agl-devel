@@ -20,14 +20,14 @@ struct {
 	struct jailhouse_cell_desc cell;
 	__u64 cpus[1];
 	struct jailhouse_memory mem_regions[7];
-	struct jailhouse_pio pio_regions[1];
+	struct jailhouse_pio pio_regions[2];
 	struct jailhouse_pci_device pci_devices[1];
 	struct jailhouse_pci_capability pci_caps[0];
 } __attribute__((packed)) config = {
 	.cell = {
 		.signature = JAILHOUSE_CELL_DESC_SIGNATURE,
 		.revision = JAILHOUSE_CONFIG_REVISION,
-		.name = "ivshmem-demo",
+		.name = "agl-ivshmem-demo",
 		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
 			JAILHOUSE_CELL_VIRTUAL_CONSOLE_PERMITTED,
 
@@ -41,7 +41,7 @@ struct {
 		.console = {
 			.type = JAILHOUSE_CON_TYPE_8250,
 			.flags = JAILHOUSE_CON_ACCESS_PIO,
-			.address = 0x2f8,/* ######## ttyS0 is host -> ttyS1 */
+			.address = 0x3e8, /* ######## ttyS2 is host -> ttyS3 */
 		},
 	},
 
@@ -52,39 +52,39 @@ struct {
 	.mem_regions = {
 		/* IVSHMEM shared memory regions (demo) */
 		{
-			.phys_start = 0x271f0000,
-			.virt_start = 0x271f0000,
+			.phys_start = 0x221f0000,
+			.virt_start = 0x221f0000,
 			.size = 0x1000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x271f1000,
-			.virt_start = 0x271f1000,
+			.phys_start = 0x221f1000,
+			.virt_start = 0x221f1000,
 			.size = 0x9000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x271fa000,
-			.virt_start = 0x271fa000,
+			.phys_start = 0x221fa000,
+			.virt_start = 0x221fa000,
 			.size = 0x2000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x271fc000,
-			.virt_start = 0x271fc000,
+			.phys_start = 0x221fc000,
+			.virt_start = 0x221fc000,
 			.size = 0x2000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
 		},
 		{
-			.phys_start = 0x271fe000,
-			.virt_start = 0x271fe000,
+			.phys_start = 0x221fe000,
+			.virt_start = 0x221fe000,
 			.size = 0x2000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_ROOTSHARED,
 		},
 		/* RAM */ {
-			.phys_start = 0x27200000,/* to 0x27300000 */
+			.phys_start = 0x22f00000,
 			.virt_start = 0,
 			.size = 0x00100000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
@@ -99,8 +99,8 @@ struct {
 	},
 
 	.pio_regions = {
-		PIO_RANGE(0x2f8, 8), /* serial 2 */
-//		PIO_RANGE(0x3f8, 8), /* serial 1 */
+		PIO_RANGE(0x2e8, 8), /* serial 3: ttyS3(0x2e8) */
+		PIO_RANGE(0x3e8, 8), /* serial 2: ttyS2(0x3e8) */
 	},
 
 	.pci_devices = {

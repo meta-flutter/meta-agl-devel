@@ -20,7 +20,7 @@ struct {
 	__u64 cpus[1];
 	struct jailhouse_memory mem_regions[2];
 	struct jailhouse_cache cache_regions[1];
-	struct jailhouse_pio pio_regions[1];//[2]->[1]  stop @0x3f8
+	struct jailhouse_pio pio_regions[3];
 } __attribute__((packed)) config = {
 	.cell = {
 		.signature = JAILHOUSE_CELL_DESC_SIGNATURE,
@@ -38,7 +38,7 @@ struct {
 		.console = {
 			.type = JAILHOUSE_CON_TYPE_8250,
 			.flags = JAILHOUSE_CON_ACCESS_PIO,
-			.address = 0x2f8,    /* ######## ttyS0 is host -> ttyS1 */
+			.address = 0x3e8, /* Serial 2: ttyS2(0x3e8) */
 		},
 	},
 
@@ -47,9 +47,9 @@ struct {
 	},
 
 	.mem_regions = {
-		/* RAM */ { /* JH_memory: 0x22600000-0x271fffff */
-			.phys_start = 0x26e00000 ,   /* agl-linux-x86: 0x22600000-0x26e00000 */
-			.virt_start = 0,             /* agl-ivshmem: 0x26e00000- (end of ivshmem cell) */
+		/* RAM */ {
+			.phys_start = 0x22f00000,
+			.virt_start = 0,
 			.size = 0x00100000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_LOADABLE,
@@ -71,8 +71,8 @@ struct {
 	},
 
 	.pio_regions = {
-		PIO_RANGE(0x2f8, 8), /* serial 2 */
-//		PIO_RANGE(0x3f8, 8), /* serial 1 */
+		PIO_RANGE(0x2e8, 8), /* serial 3: ttyS3(0x2e8) */
+		PIO_RANGE(0x3e8, 8), /* serial 2: ttyS2(0x3e8) */
 		PIO_RANGE(0xe010, 8), /* OXPCIe952 serial */
 	},
 };

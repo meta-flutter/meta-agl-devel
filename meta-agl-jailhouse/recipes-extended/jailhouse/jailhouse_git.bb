@@ -10,21 +10,18 @@ LIC_FILES_CHKSUM = " \
     file://COPYING;md5=9fa7f895f96bde2d47fd5b7d95b6ba4d \
 "
 
-SRCREV = "4ce7658dddfd5a1682a379d5ac46657e93fe1ff0"
+SRCREV = "630001202caec85370fb4f956e581f51109e490c"
 PV = "0.12+git${SRCPV}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = "git://github.com/siemens/jailhouse \
-           file://0001-configs-arm64-Add-support-for-RPi4-with-more-than-1G.patch \
+           file://qemu-agl.c \
+           file://agl-apic-demo.c \
+           file://agl-pci-demo.c \
+           file://agl-ivshmem-demo.c \
+           file://agl-linux-x86-demo.c \
            "
-
-SRC_URI += "file://qemu-agl.c \
-	    file://agl-apic-demo.c \
-	    file://agl-pci-demo.c \
-	    file://agl-ivshmem-demo.c \
-	    file://agl-linux-x86-demo.c \
-	    "
 
 DEPENDS = "virtual/kernel dtc-native python3-mako-native make-native"
 
@@ -42,22 +39,23 @@ DTS_DIR ?= "${JH_DATADIR}/cells/dts"
 
 JH_CELL_FILES ?= "*.cell"
 
-EXTRA_OEMAKE = "ARCH=${JH_ARCH} CROSS_COMPILE=${TARGET_PREFIX} CC="${CC}" KDIR=${STAGING_KERNEL_BUILDDIR}"
+EXTRA_OEMAKE = "ARCH=${JH_ARCH} CROSS_COMPILE=${TARGET_PREFIX} CC="${CC} -mfpmath=387" KDIR=${STAGING_KERNEL_BUILDDIR}"
 
 do_configure() {
 		
-	# copy ${WORKDIR}/qemu-agl.c ${S}/configs/x86/ <--- folder where the cells are defined in the source tree to be compiled
-	cp ${WORKDIR}/qemu-agl.c ${S}/configs/${JH_ARCH}
+	# copy ${WORKDIR}/<cell_config>.c ${S}/configs/x86/ <--- folder where the cells are defined in the source tree to be compiled
+	#cp ${WORKDIR}/qemu-agl.c ${S}/configs/${JH_ARCH}
 	cp ${WORKDIR}/agl-apic-demo.c ${S}/configs/x86/
-	cp ${WORKDIR}/agl-pci-demo.c ${S}/configs/x86/
+	# cp ${WORKDIR}/agl-pci-demo.c ${S}/configs/x86/
 	cp ${WORKDIR}/agl-linux-x86-demo.c ${S}/configs/x86/
 	cp ${WORKDIR}/agl-ivshmem-demo.c ${S}/configs/x86/
+	cp ${WORKDIR}/qemu-agl.c ${S}/configs/x86/
 
 	sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' ${B}/tools/${BPN}-*
 }
 
 do_compile() {
-	oe_runmake
+	oe_runmake V=1
 }
 
 do_install() {
@@ -76,7 +74,6 @@ do_install() {
 
 	install -d ${D}${INMATES_DIR}
 	install -m 0644 ${B}/inmates/demos/${JH_ARCH}/*.bin ${D}${INMATES_DIR}
-
 	if [ ${JH_ARCH}  != "x86" ]; then
 		install -d ${D}${DTS_DIR}
 		install -m 0644 ${B}/configs/${JH_ARCH}/dts/*.dtb ${D}${DTS_DIR}
@@ -88,6 +85,9 @@ FILES_${PN} = "${base_libdir}/firmware ${libexecdir} ${sbindir} ${JH_DATADIR}"
 FILES_pyjailhouse = "${PYTHON_SITEPACKAGES_DIR}"
 FILES_${PN}-tools = "${libexecdir}/${BPN}/${BPN}-* ${JH_DATADIR}/*.tmpl"
 FILES_${PN}-demos = "${JH_DATADIR}/ ${sbindir}/ivshmem-demo"
+
+# Default Linker Hash Style Changed to "sysv"
+TARGET_CC_ARCH += "${LDFLAGS}"
 
 RDEPENDS_${PN}-tools = "pyjailhouse python3-mmap python3-math python3-datetime python3-curses python3-compression python3-mako"
 RDEPENDS_pyjailhouse = "python3-core python3-ctypes python3-fcntl"

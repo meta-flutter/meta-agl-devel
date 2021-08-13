@@ -18,6 +18,7 @@ The `meta-agl-devel` layer contains the following files and sub-layers:
 ├── meta-agl-devel.md
 ├── meta-agl-jailhouse
 ├── meta-agl-lxc
+├── meta-agl-ros2
 ├── meta-oem-production-readiness
 ├── meta-speech-framework
 ├── README.md
@@ -33,6 +34,8 @@ The following list provides a summary of these sub-layers:
   supporting packages.
 
 * `meta-agl-lxc`: Provides LXC container support and example images.
+
+* `meta-agl-ros2`: Provides ROS2 and additional YDLIDAR support.
 
 * `meta-oem-production-readiness`: Provides libraries and software packages of
   IVI product readiness

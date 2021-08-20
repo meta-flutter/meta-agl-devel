@@ -5,4 +5,4 @@ DEPENDS += "gstreamer1.0-plugins-base"
 EXTRA_OECMAKE += "-DUSE_PIPEWIRE=1"
 
 # Pull static library into appropriate package to avoid a QA error
-FILES_${PN}-staticdev += "${AAC_PREFIX}/lib/libaal.a"
+FILES:${PN}-staticdev += "${AAC_PREFIX}/lib/libaal.a"

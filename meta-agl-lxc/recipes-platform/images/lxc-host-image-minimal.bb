@@ -56,5 +56,5 @@ do_rootfs[nostamp] = "1"
 
 ROOTFS_POSTPROCESS_COMMAND += "install_container_images; "
 
-IMAGE_ROOTFS_EXTRA_SPACE_append = "${@bb.utils.contains("DISTRO_FEATURES", "systemd", " + 4096", "" ,d)}"
+IMAGE_ROOTFS_EXTRA_SPACE:append = "${@bb.utils.contains("DISTRO_FEATURES", "systemd", " + 4096", "" ,d)}"
 

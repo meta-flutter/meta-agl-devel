@@ -48,4 +48,4 @@ do_install () {
     install -D -m 644 ${WORKDIR}/AlexaAutoCoreEngineConfig.json ${D}${sysconfdir}/xdg/AGL/AlexaAutoCoreEngineConfig.json
 }
 
-RPROVIDES_${PN} += "virtual/alexa-voiceagent-config"
+RPROVIDES:${PN} += "virtual/alexa-voiceagent-config"

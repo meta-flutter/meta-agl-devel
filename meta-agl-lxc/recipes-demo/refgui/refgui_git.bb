@@ -24,16 +24,16 @@ inherit cmake cmake_qt5 systemd
 APP_DIR = "/opt/apps"
 EXTRA_OECMAKE = "-DAPPS_INST_DIR=${APP_DIR}"
 
-SYSTEMD_SERVICE_${PN} = "cluster.service"
+SYSTEMD_SERVICE:${PN} = "cluster.service"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/cluster.service ${D}${systemd_unitdir}/system/
 }
 
-FILES_${PN} += "${APP_DIR}/"
+FILES:${PN} += "${APP_DIR}/"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     qtbase \
     qtdeclarative \
     qt3d \

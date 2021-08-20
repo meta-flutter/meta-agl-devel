@@ -20,7 +20,7 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     os-posixbasedos001legacylibrary \
     ns-loglibrary \
     ns-commonlibrary \

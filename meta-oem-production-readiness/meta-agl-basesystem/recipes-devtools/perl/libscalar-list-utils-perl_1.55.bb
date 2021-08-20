@@ -18,7 +18,7 @@ S = "${WORKDIR}/Scalar-List-Utils-${PV}"
 
 inherit cpan ptest-perl
 
-do_install_prepend() {
+do_install:prepend() {
     # requires "-T" (taint) command line option
     rm -rf ${B}/t/tainted.t
 }

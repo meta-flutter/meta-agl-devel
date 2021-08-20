@@ -6,7 +6,7 @@ inherit packagegroup
 PACKAGES = "\
     packagegroup-agl-basesystem-apis \
 "
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     agl-service-ns-backupmanager \
     agl-service-ns-notificationpersistent \
     agl-service-ps-communication \

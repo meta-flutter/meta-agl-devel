@@ -29,9 +29,9 @@ do_install() {
     install -m 644 ${S}/99-basesystem.rules ${D}/lib/udev/rules.d/
 }
 
-RDEPENDS_${PN} += "bash"
+RDEPENDS:${PN} += "bash"
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
     launch_sm.service \
     systemd-udev-trigger.service \
     setup_refhw.service \

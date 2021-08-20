@@ -1,5 +1,5 @@
 
-do_deploy_append_raspberrypi4() {
+do_deploy:append:raspberrypi4() {
     # if ARMSTUB is set, it should be set in config.txt by earlier recipes, so replace it
     if [ -n "${ARMSTUB}" ]; then
         sed -i 's/^armstub=.*/armstub=bl31.bin/' ${DEPLOYDIR}/bcm2835-bootfiles/config.txt

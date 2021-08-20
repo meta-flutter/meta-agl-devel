@@ -14,7 +14,7 @@ S = "${WORKDIR}/XML-XPath-${PV}"
 
 inherit cpan ptest-perl
 
-do_install_append_class-native() {
+do_install:append:class-native() {
     # Fix xpath script shebang to work inside native environment
     sed -i 's|#!.*/perl|#!/usr/bin/env perl|' ${D}${bindir}/xpath
 }
@@ -24,7 +24,7 @@ do_install_ptest() {
     install -m 0644 ${S}/examples/test.xml ${D}${PTEST_PATH}/examples/
 }
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     perl-module-carp \
     perl-module-data-dumper \
     perl-module-file-spec \
@@ -38,7 +38,7 @@ RDEPENDS_${PN} += " \
     libscalar-list-utils-perl \
 "
 
-RDEPENDS_${PN}-ptest += " \
+RDEPENDS:${PN}-ptest += " \
     libpath-tiny-perl \
 "
 

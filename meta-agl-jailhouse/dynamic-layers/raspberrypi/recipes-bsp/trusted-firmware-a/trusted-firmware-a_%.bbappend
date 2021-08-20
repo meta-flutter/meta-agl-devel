@@ -6,7 +6,7 @@ TFA_PLATFORM = "rpi4"
 # partition that is generated from the files in DEPLOYDIR
 do_install[noexec] = "1"
 
-FILES_${PN} = ""
+FILES:${PN} = ""
 
 do_deploy() {
     if ${@"true" if d.getVar('TFA_DEBUG') == '1' else "false"}; then

@@ -1,3 +1,3 @@
 inherit bsmake
 
-DEPENDS_append = " agl-basefiles"
+DEPENDS:append = " agl-basefiles"

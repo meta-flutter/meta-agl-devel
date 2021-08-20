@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/linux:"
 
-SRC_URI_append = " file://jailhouse.cfg"
+SRC_URI:append = " file://jailhouse.cfg"
 

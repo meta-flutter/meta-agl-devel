@@ -28,11 +28,11 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.server"
 
-do_compile_prepend() {
+do_compile:prepend() {
     oe_runmake -f Makefile.client
 }
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     ss-interfaceunified \
     ss-resourcemanager \
     ss-romaccesslibrary \

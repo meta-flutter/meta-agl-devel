@@ -6,6 +6,6 @@ inherit packagegroup
 PACKAGES = "\
     packagegroup-agl-basesystem-core \
 "
-RDEPENDS_${PN} += "\
+RDEPENDS:${PN} += "\
     agl-systemd \
 "

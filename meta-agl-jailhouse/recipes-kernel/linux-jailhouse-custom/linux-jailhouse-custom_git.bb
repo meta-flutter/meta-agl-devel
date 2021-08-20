@@ -20,4 +20,4 @@ PV = "5.14-rc2+git${SRCPV}"
 KVER = "5.14"
 
 DEPENDS += "ncurses-native bc-native pkgconfig-native"
-DEPENDS_append_x86-64 = " elfutils-native"
+DEPENDS:append:x86-64 = " elfutils-native"

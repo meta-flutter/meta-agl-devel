@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
             file://0001-backend-drm-Add-method-to-import-DRM-fd.patch \
             file://0002-Add-DRM-lease-support.patch \
             file://0003-launcher-do-not-touch-VT-tty-while-using-non-default.patch \
@@ -9,4 +9,4 @@ SRC_URI_append = " \
             "
 
 PACKAGECONFIG[drm-lease] = "-Ddrm-lease=true,-Ddrm-lease=false,drm-lease-manager"
-PACKAGECONFIG_append = " drm-lease"
+PACKAGECONFIG:append = " drm-lease"

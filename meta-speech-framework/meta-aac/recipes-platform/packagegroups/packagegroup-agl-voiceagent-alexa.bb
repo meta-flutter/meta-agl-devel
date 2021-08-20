@@ -9,6 +9,6 @@ PACKAGES = "\
     packagegroup-agl-voiceagent-alexa \
     "
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     alexa-voiceagent-service \
     "

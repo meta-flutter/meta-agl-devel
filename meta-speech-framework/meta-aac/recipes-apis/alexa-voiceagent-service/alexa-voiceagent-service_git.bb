@@ -38,17 +38,17 @@ EXTRA_OECMAKE += "-DAAC_HOME=${RECIPE_SYSROOT}/${AAC_PREFIX}"
 
 ALEXA_WAKEWORD ??= "false"
 
-do_install_append() {
+do_install:append() {
     install -D -m 0644 ${WORKDIR}/alexa.json ${D}${sysconfdir}/xdg/AGL/voiceagents/alexa.json
 }
 
 PACKAGES =+ "${PN}-conf"
 
-FILES_${PN}-conf = "${sysconfdir}/xdg/AGL/voiceagents/*"
+FILES:${PN}-conf = "${sysconfdir}/xdg/AGL/voiceagents/*"
 
 # NOTE: curl and opus are from the base SDK libraries, sqlite3 from the
 #       core module
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
 	libcurl \
 	libopus \
 	libsqlite3 \

@@ -17,11 +17,11 @@ do_install() {
     install -m 644 -D ${S}/include/* ${D}${includedir}/basesystem/
 }
 
-do_install_class-native() {
+do_install:class-native() {
     install -d ${D}${bindir}
     install -m 755 -D ${S}/bin/launch_xml2cfg.sh ${D}${bindir}/
 }
 
-RDEPENDS_${PN} += "bash"
+RDEPENDS:${PN} += "bash"
 
 BBCLASSEXTEND = "native"

@@ -19,7 +19,7 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.server"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     ns-frameworkunified \
     os-posixbasedos001legacylibrary \
 "

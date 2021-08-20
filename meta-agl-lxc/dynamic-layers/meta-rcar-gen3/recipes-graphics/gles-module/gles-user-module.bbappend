@@ -1,1 +1,1 @@
-RDEPENDS_${PN}_remove_aglcontainerguest = "kernel-module-gles"
+RDEPENDS:${PN}:remove:aglcontainerguest = "kernel-module-gles"

@@ -7,13 +7,13 @@ PACKAGES = "\
     packagegroup-agl-basesystem \
 "
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
-RDEPENDS_${PN} += "\
+RDEPENDS:${PN} += "\
     packagegroup-agl-image-minimal \
 "
 
-RDEPENDS_${PN}  += "\
+RDEPENDS:${PN}  += "\
     packagegroup-agl-basesystem-core \
     packagegroup-agl-basesystem-apis \
     packagegroup-agl-basesystem-service \

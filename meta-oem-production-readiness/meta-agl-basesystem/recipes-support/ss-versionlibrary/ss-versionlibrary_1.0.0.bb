@@ -19,7 +19,7 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.client"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     ns-frameworkunified \
     ss-interfaceunified \
     ss-romaccesslibrary \

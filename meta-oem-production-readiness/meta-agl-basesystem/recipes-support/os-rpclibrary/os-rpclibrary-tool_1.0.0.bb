@@ -14,7 +14,7 @@ SRCREV := "${BASESYSTEM_REVISION}"
 
 S = "${WORKDIR}/git/service/other/rpc_library/tool"
 
-do_compile_prepend () {
+do_compile:prepend () {
     oe_runmake clean
 }
 
@@ -22,7 +22,7 @@ do_install () {
     install -D -m 755 ${S}/rpc_apidef ${D}${bindir}/rpc_apidef
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${bindir}/rpc_apidef \
 "
 

@@ -22,7 +22,7 @@ BSMAKE_FILE = "Makefile.client"
 
 DIRFILES = "1"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     ns-commonlibrary \
     ns-frameworkunified \
     ss-romaccesslibrary \

@@ -7,7 +7,7 @@ PACKAGES = "\
     packagegroup-agl-basesystem-service \
 "
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     ns-commonlibrary \
     ns-frameworkunified \
     ns-loglibrary \

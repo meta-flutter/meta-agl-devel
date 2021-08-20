@@ -33,9 +33,9 @@ inherit agl-basesystem-common perlnative
 
 BSMAKE_FILE = "Makefile.server"
 
-FILES_${PN} += "/usr/share/*"
+FILES:${PN} += "/usr/share/*"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     agl-service-ss-resourcemanager \
     agl-service-ss-loggerservice \
     agl-service-ps-communication \

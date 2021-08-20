@@ -29,7 +29,7 @@ inherit allarch
 
 DRM_LEASE_DEVICE ??= "card0-HDMI-A-1"
 
-DRM_LEASE_DEVICE_qemuall ?= "card0-Virtual-1"
+DRM_LEASE_DEVICE:qemuall ?= "card0-Virtual-1"
 
 LXC_AUTO_START ??= "0"
 
@@ -45,4 +45,4 @@ do_install () {
     done
 }
 
-FILES_${PN} = "${localstatedir}/lib/lxc/"
+FILES:${PN} = "${localstatedir}/lib/lxc/"

@@ -17,16 +17,16 @@ inherit ptest
 
 DEPENDS = "libdrm libcheck fff"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/drm-lease-manager.service ${D}/${systemd_unitdir}/system
     rm -rf ${D}/${localstatedir}
 }
 
-SYSTEMD_SERVICE_${PN} = "drm-lease-manager.service"
+SYSTEMD_SERVICE:${PN} = "drm-lease-manager.service"
 
 EXTRA_OEMESON += "${@bb.utils.contains('PTEST_ENABLED', '1', '-Denable-tests=true', '', d)}"
-RDEPENDS_${PN}-ptest = "libcheck"
+RDEPENDS:${PN}-ptest = "libcheck"
 
 do_install_ptest() {
     install ${B}/libdlmclient/test/libdlmclient-test ${D}${PTEST_PATH}
@@ -35,4 +35,4 @@ do_install_ptest() {
 }
 
 PACKAGES =+ "libdlmclient"
-FILES_libdlmclient = "${libdir}/libdlmclient${SOLIBS}"
+FILES:libdlmclient = "${libdir}/libdlmclient${SOLIBS}"

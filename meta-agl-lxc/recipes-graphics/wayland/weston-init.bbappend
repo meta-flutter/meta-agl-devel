@@ -1,18 +1,18 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
 
 AGL_DEFAULT_WESTONSTART ??= "/usr/bin/weston --config ${sysconfdir}/xdg/weston/weston.ini"
 WESTONARGS ?= "--idle-time=0 --drm-lease=\${DRM_LEASE_DEVICE}"
 
 WESTONSTART ??= "${AGL_DEFAULT_WESTONSTART} ${WESTONARGS}"
-WESTONSTART_append = " ${@bb.utils.contains("DISTRO_FEATURES", "agl-devel", " --debug", "",d)}"
+WESTONSTART:append = " ${@bb.utils.contains("DISTRO_FEATURES", "agl-devel", " --debug", "",d)}"
 
 WIFILES = " \
     file://drm-lease.conf.in \
 "
 
-SRC_URI_append = " ${WIFILES}"
+SRC_URI:append = " ${WIFILES}"
 
-do_install_append() {
+do_install:append() {
     # Process ".in" files
     files=$(echo ${WIFILES} | sed s,file://,,g)
     for f in ${files}; do
@@ -35,6 +35,6 @@ do_install_append() {
     ln -s ../weston@.service ${D}${systemd_system_unitdir}/multi-user.target.wants/weston@root.service
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${systemd_system_unitdir}/ \
 "

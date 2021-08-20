@@ -29,7 +29,7 @@ inherit agl-basesystem-common
 
 BSMAKE_FILE = "Makefile.server"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     ss-config \
     ss-interfaceunified \
     ss-romaccesslibrary \

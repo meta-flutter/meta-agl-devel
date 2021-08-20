@@ -19,7 +19,7 @@ PACKAGECONFIG = "\
     ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
 "
 # only the example client in the guest
-PACKAGECONFIG_aglcontainerguest = "client"
+PACKAGECONFIG:aglcontainerguest = "client"
 
 # systemd integration for the server-side component
 PACKAGECONFIG[systemd] = "-Dsystemd=enabled,-Dsystemd=disabled,systemd"
@@ -29,9 +29,9 @@ PACKAGECONFIG[server] = "-Dserver=true,-Dserver=false,pipewire"
 PACKAGECONFIG[client] = "-Dclient=true,-Dclient=false,"
 
 # server-side systemd service
-SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'pipewire-ic-ipc.service', '', d)}"
+SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'pipewire-ic-ipc.service', '', d)}"
 
-FILES_${PN} += "\
+FILES:${PN} += "\
     ${datadir}/pipewire/* \
     ${libdir}/pipewire-0.3/* \
 "

@@ -1,2 +1,2 @@
-DEPENDS_append_raspberrypi4 = " trusted-firmware-a"
+DEPENDS:append:raspberrypi4 = " trusted-firmware-a"
 

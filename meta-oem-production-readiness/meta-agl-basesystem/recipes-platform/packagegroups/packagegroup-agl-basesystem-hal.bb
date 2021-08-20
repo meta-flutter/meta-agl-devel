@@ -6,7 +6,7 @@ inherit packagegroup
 PACKAGES = "\
     packagegroup-bshalmake \
 "
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     libboot-hal \
     libcan-hal \
     libclock-hal \

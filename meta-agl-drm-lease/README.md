@@ -22,7 +22,7 @@ lease support to the following packages:
 image, add the following to your local.conf
 
 ```
-IMAGE_INSTALL_append = " kmscube"
+IMAGE_INSTALL:append = " kmscube"
 ```
 
 ## Starting the DRM lease manager

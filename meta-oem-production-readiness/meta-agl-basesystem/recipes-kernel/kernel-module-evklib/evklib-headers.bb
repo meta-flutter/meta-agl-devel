@@ -17,7 +17,7 @@ do_install() {
     install -m 644 -D ${S}/agldd/* ${D}${includedir}/basesystem/agldd/
 }
 
-FILES_${PN}-dev += " \
+FILES:${PN}-dev += " \
     ${includedir}/basesystem/agldd/* \
 "
 

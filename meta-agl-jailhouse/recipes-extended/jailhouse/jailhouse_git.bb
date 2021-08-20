@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = " \
 SRCREV = "630001202caec85370fb4f956e581f51109e490c"
 PV = "0.12+git${SRCPV}"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = "git://github.com/siemens/jailhouse \
            file://qemu-agl.c \
@@ -81,18 +81,18 @@ do_install() {
 }
 
 PACKAGE_BEFORE_PN = "kernel-module-jailhouse pyjailhouse ${PN}-tools ${PN}-demos"
-FILES_${PN} = "${base_libdir}/firmware ${libexecdir} ${sbindir} ${JH_DATADIR}"
-FILES_pyjailhouse = "${PYTHON_SITEPACKAGES_DIR}"
-FILES_${PN}-tools = "${libexecdir}/${BPN}/${BPN}-* ${JH_DATADIR}/*.tmpl"
-FILES_${PN}-demos = "${JH_DATADIR}/ ${sbindir}/ivshmem-demo"
+FILES:${PN} = "${base_libdir}/firmware ${libexecdir} ${sbindir} ${JH_DATADIR}"
+FILES:pyjailhouse = "${PYTHON_SITEPACKAGES_DIR}"
+FILES:${PN}-tools = "${libexecdir}/${BPN}/${BPN}-* ${JH_DATADIR}/*.tmpl"
+FILES:${PN}-demos = "${JH_DATADIR}/ ${sbindir}/ivshmem-demo"
 
 # Default Linker Hash Style Changed to "sysv"
 TARGET_CC_ARCH += "${LDFLAGS}"
 
-RDEPENDS_${PN}-tools = "pyjailhouse python3-mmap python3-math python3-datetime python3-curses python3-compression python3-mako"
-RDEPENDS_pyjailhouse = "python3-core python3-ctypes python3-fcntl"
-RDEPENDS_${PN}-demos = "jailhouse"
+RDEPENDS:${PN}-tools = "pyjailhouse python3-mmap python3-math python3-datetime python3-curses python3-compression python3-mako"
+RDEPENDS:pyjailhouse = "python3-core python3-ctypes python3-fcntl"
+RDEPENDS:${PN}-demos = "jailhouse"
 
-RRECOMMENDS_${PN} = "${PN}-tools"
+RRECOMMENDS:${PN} = "${PN}-tools"
 
 KERNEL_MODULE_AUTOLOAD += "jailhouse"

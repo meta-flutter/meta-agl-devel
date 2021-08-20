@@ -15,7 +15,7 @@ S = "${WORKDIR}/Path-Tiny-${PV}"
 
 inherit cpan ptest-perl
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     perl-module-file-spec \
     perl-module-file-temp \
     perl-module-test-more \

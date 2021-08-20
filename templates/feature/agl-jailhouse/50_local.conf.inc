@@ -31,6 +31,9 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "kernel-modules"
 # For a custom jailhouse kernel from git.kiszka.org
 PREFERRED_PROVIDER_virtual/kernel = "linux-jailhouse-custom"
 
+# Add virtio-ivshmem-binaries to the QEmulated system
+IMAGE_INSTALL:append = " packagegroup-agl-jailhouse"
+
 # prevent most external kernel module from being built
 MOST_DRIVERS = ""
 LTTNGUST:forcevariable := ""

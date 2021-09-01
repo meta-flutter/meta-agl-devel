@@ -1,0 +1,2 @@
+MACHINE = "generic-arm64"
+

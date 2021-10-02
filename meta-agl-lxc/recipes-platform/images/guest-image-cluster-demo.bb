@@ -7,6 +7,6 @@ IMAGE_INSTALL += " \
     weston \
     weston-init \
     weston-ini-conf-landscape \
-    refgui \
+    cluster-refgui \
     pipewire-ic-ipc \
 "

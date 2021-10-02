@@ -1,17 +1,17 @@
 DESCRIPTION = "AGL Cluster Reference GUI"
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=d2e73358b6893b535d5dfc7e89dc9d67"
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=5335066555b14d832335aa4660d6c376"
 
 DEPENDS = " \
     qttools-native \
     qtmultimedia \
 "
 
-BRANCH = "main"
-SRC_URI = "git://github.com/agl-ic-eg/refgui;protocol=https;branch=${BRANCH} \
+BRANCH = "master"
+SRC_URI = "git://git.automotivelinux.org/src/cluster-refgui;protocol=https;branch=${BRANCH} \
            file://cluster.service \
 "
-SRCREV = "e52dd81073154838e7f417e33debc8f6794fc683"
+SRCREV = "a16c6201be94a57eb8151a91699084d99694877c"
 
 S = "${WORKDIR}/git"
 

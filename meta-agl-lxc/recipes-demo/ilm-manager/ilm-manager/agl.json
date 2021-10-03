@@ -1,0 +1,60 @@
+{
+	"screen": [
+		{
+			"name": "cluster-screen",
+			"dispname": "HDMI-A-2"
+		},
+		{
+			"name": "ivi-screen",
+			"dispname": "HDMI-A-1"
+		}
+	],
+	"layer": [
+		{
+			"name": "cluster-layer",
+			"id": 1000,
+			"width": 1920,
+			"height": 720,
+			"x": 0,
+			"y": 0,
+			"z": 10,
+			"attach": "cluster-screen"
+		},
+		{
+			"name": "ivi-layer",
+			"id": 2000,
+			"width": 1920,
+			"height": 1080,
+			"x": 0,
+			"y": 0,
+			"z": 10,
+			"attach": "ivi-screen"
+		}
+	],
+	"surface": [
+		{
+			"name": "cluster-app",
+			"id": 10,
+			"x": 0,
+			"y": 0,
+			"z": 100,
+			"attach": "cluster-layer"
+		},
+		{
+			"name": "ivi-app",
+			"id": 2010,
+			"x": 0,
+			"y": 0,
+			"z": 100,
+			"attach": "ivi-layer"
+		},
+		{
+			"name": "xdg-test",
+			"id": 9801,
+			"x": 0,
+			"y": 0,
+			"z": 110,
+			"attach": "ivi-layer"
+		}
+	]
+}

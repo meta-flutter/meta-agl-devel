@@ -16,4 +16,5 @@ SRC_URI += " \
 # IIO SCMI
 SRC_URI += " \
     file://iio-scmi/0001-iio-scmi-Adding-support-for-IIO-SCMI-Based-Sensors.patch \
+    file://iio_scmi.cfg \
 "

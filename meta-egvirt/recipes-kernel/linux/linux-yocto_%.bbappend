@@ -12,3 +12,8 @@ SRC_URI += " \
     file://virtio-scmi/0010-firmware-arm_scmi-Add-virtio-transport.patch \
     file://virtio_scmi.cfg \
 "
+
+# IIO SCMI
+SRC_URI += " \
+    file://iio-scmi/0001-iio-scmi-Adding-support-for-IIO-SCMI-Based-Sensors.patch \
+"

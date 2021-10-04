@@ -10,4 +10,5 @@ SRC_URI += " \
     file://virtio-scmi/0008-firmware-arm_scmi-Add-is_scmi_protocol_device.patch \
     file://virtio-scmi/0009-dt-bindings-arm-Add-virtio-transport-for-SCMI.patch \
     file://virtio-scmi/0010-firmware-arm_scmi-Add-virtio-transport.patch \
+    file://virtio_scmi.cfg \
 "

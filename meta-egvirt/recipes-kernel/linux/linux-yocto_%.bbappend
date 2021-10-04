@@ -13,6 +13,16 @@ SRC_URI += " \
     file://virtio_scmi.cfg \
 "
 
+# SCMI updates
+SRC_URI += " \
+    file://scmi/0001-firmware-arm_scmi-rework-scmi_sensors_protocol_init.patch \
+    file://scmi/0002-firmware-arm_scmi-add-SCMIv3.0-Sensors-descriptors-e.patch \
+    file://scmi/0003-hwmon-scmi-update-hwmon-internal-scale-data-type.patch \
+    file://scmi/0004-firmware-arm_scmi-add-SCMIv3.0-Sensors-timestamped-r.patch \
+    file://scmi/0005-firmware-arm_scmi-add-SCMIv3.0-Sensor-configuration-.patch \
+    file://scmi/0006-firmware-arm_scmi-add-SCMIv3.0-Sensor-notifications.patch \
+"
+
 # IIO SCMI
 SRC_URI += " \
     file://iio-scmi/0001-iio-scmi-Adding-support-for-IIO-SCMI-Based-Sensors.patch \

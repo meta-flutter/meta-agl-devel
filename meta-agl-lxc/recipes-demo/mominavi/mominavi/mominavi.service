@@ -1,0 +1,11 @@
+[Unit]
+Description=mominavi
+After=multi-user.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/mominavi
+ExecStart=/usr/bin/mominavi
+
+[Install]
+WantedBy=multi-user.target

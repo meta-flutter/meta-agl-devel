@@ -1,0 +1,92 @@
+From 9d5366d4765fb60cafa31c2b46cd80d284c847bb Mon Sep 17 00:00:00 2001
+From: Peter Hilber <peter.hilber@opensynergy.com>
+Date: Thu, 5 Nov 2020 22:21:13 +0100
+Subject: [PATCH] firmware: arm_scmi: Add per-device transport private info
+
+The scmi-virtio transport will link a supplier device to the arm-scmi
+device in the link_supplier() op. The transport should then save a
+pointer to the linked device.
+
+To enable this, add a transport private info to the scmi_info. (The
+scmi_info is already reachable through the arm-scmi device driver_data.)
+
+Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Vasyl Vavrychuk <vasyl.vavrychuk@opensynergy.com>
+---
+ drivers/firmware/arm_scmi/common.h |  2 ++
+ drivers/firmware/arm_scmi/driver.c | 35 ++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index 2f55ac71555a..ec9fd7fce3c7 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -262,6 +262,8 @@ extern const struct scmi_desc scmi_mailbox_desc;
+ extern const struct scmi_desc scmi_smc_desc;
+ #endif
+ 
++int scmi_set_transport_info(struct device *dev, void *transport_info);
++void *scmi_get_transport_info(struct device *dev);
+ void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
+ void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
+ 
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 0b70f9ef9477..93ce17bb4079 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -84,6 +84,7 @@ struct scmi_xfers_info {
+  * @rx_idr: IDR object to map protocol id to Rx channel info pointer
+  * @protocols_imp: List of protocols implemented, currently maximum of
+  *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
++ * @transport_info: Transport private info
+  * @node: List head
+  * @users: Number of users of this instance
+  */
+@@ -97,6 +98,7 @@ struct scmi_info {
+ 	struct idr tx_idr;
+ 	struct idr rx_idr;
+ 	u8 *protocols_imp;
++	void *transport_info;
+ 	struct list_head node;
+ 	int users;
+ };
+@@ -315,6 +317,39 @@ void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
+ 	}
+ }
+ 
++/**
++ * scmi_set_transport_info() - Set transport private info
++ *
++ * @dev: SCMI instance device
++ * @transport_info: transport private info
++ *
++ * Return: 0 on success, otherwise error.
++ */
++int scmi_set_transport_info(struct device *dev, void *transport_info)
++{
++	struct scmi_info *info = dev_get_drvdata(dev);
++
++	if (!info)
++		return -EBADR;
++
++	info->transport_info = transport_info;
++	return 0;
++}
++
++/**
++ * scmi_get_transport_info() - Get transport private info
++ *
++ * @dev: SCMI instance device
++ *
++ * Return: transport private info on success, otherwise NULL.
++ */
++void *scmi_get_transport_info(struct device *dev)
++{
++	struct scmi_info *info = dev_get_drvdata(dev);
++
++	return info ? info->transport_info : NULL;
++}
++
+ /**
+  * scmi_xfer_put() - Release a transmit message
+  *

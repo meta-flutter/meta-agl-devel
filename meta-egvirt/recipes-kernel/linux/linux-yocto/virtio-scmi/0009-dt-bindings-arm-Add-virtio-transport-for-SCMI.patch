@@ -1,0 +1,89 @@
+From 592064dd36739ad5f3d885b9880ee1bc2d66e2df Mon Sep 17 00:00:00 2001
+From: Igor Skalkin <igor.skalkin@opensynergy.com>
+Date: Thu, 5 Nov 2020 22:21:15 +0100
+Subject: [PATCH] dt-bindings: arm: Add virtio transport for SCMI
+
+Document the properties for arm,scmi-virtio compatible nodes. The
+backing virtio SCMI device is described in patch [1].
+
+[1] https://lists.oasis-open.org/archives/virtio-comment/202005/msg00096.html
+
+Co-developed-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Igor Skalkin <igor.skalkin@opensynergy.com>
+Signed-off-by: Vasyl Vavrychuk <vasyl.vavrychuk@opensynergy.com>
+---
+ .../devicetree/bindings/arm/arm,scmi.txt      | 35 +++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+index 55deb68230eb..6ded49d82773 100644
+--- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
++++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+@@ -13,6 +13,9 @@ the device tree.
+ Required properties:
+ 
+ The scmi node with the following properties shall be under the /firmware/ node.
++Some properties are specific to a transport type.
++
++shmem-based transports (mailbox, smc/hvc):
+ 
+ - compatible : shall be "arm,scmi" or "arm,scmi-smc" for smc/hvc transports
+ - mboxes: List of phandle and mailbox channel specifiers. It should contain
+@@ -21,6 +24,15 @@ The scmi node with the following properties shall be under the /firmware/ node.
+ 	  supported.
+ - shmem : List of phandle pointing to the shared memory(SHM) area as per
+ 	  generic mailbox client binding.
++
++Virtio transport:
++
++- compatible : shall be "arm,scmi-virtio".
++
++The virtio transport only supports a single device.
++
++Additional required properties:
++
+ - #address-cells : should be '1' if the device has sub-nodes, maps to
+ 	  protocol identifier for a given sub-node.
+ - #size-cells : should be '0' as 'reg' property doesn't have any size
+@@ -42,7 +54,8 @@ Each protocol supported shall have a sub-node with corresponding compatible
+ as described in the following sections. If the platform supports dedicated
+ communication channel for a particular protocol, the 3 properties namely:
+ mboxes, mbox-names and shmem shall be present in the sub-node corresponding
+-to that protocol.
++to that protocol. The virtio transport does not support dedicated communication
++channels.
+ 
+ Clock/Performance bindings for the clocks/OPPs based on SCMI Message Protocol
+ ------------------------------------------------------------
+@@ -106,7 +119,8 @@ Required sub-node properties:
+ [4] Documentation/devicetree/bindings/sram/sram.yaml
+ [5] Documentation/devicetree/bindings/reset/reset.txt
+ 
+-Example:
++Example (mailbox transport):
++----------------------------
+ 
+ sram@50000000 {
+ 	compatible = "mmio-sram";
+@@ -195,3 +209,20 @@ thermal-zones {
+ 		...
+ 	};
+ };
++
++Example (virtio transport):
++---------------------------
++
++virtio_mmio@4b001000 {
++	compatible = "virtio,mmio";
++	...
++};
++
++firmware {
++	...
++	scmi {
++		compatible = "arm,scmi-virtio";
++		...
++
++The rest is similar to the mailbox transport example, when omitting the
++mailbox/shmem-specific properties.

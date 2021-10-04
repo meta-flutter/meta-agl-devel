@@ -1,0 +1,46 @@
+From c4b299105e74f7863b2aa63bd838e7762761629c Mon Sep 17 00:00:00 2001
+From: Peter Hilber <peter.hilber@opensynergy.com>
+Date: Thu, 5 Nov 2020 22:21:14 +0100
+Subject: [PATCH] firmware: arm_scmi: Add is_scmi_protocol_device()
+
+The scmi-virtio transport driver will need to distinguish SCMI protocol
+devices from the SCMI instance device in the chan_setup() and
+chan_free() ops. Add this internal helper to be able to distinguish the
+two.
+
+Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Vasyl Vavrychuk <vasyl.vavrychuk@opensynergy.com>
+---
+ drivers/firmware/arm_scmi/bus.c    | 5 +++++
+ drivers/firmware/arm_scmi/common.h | 2 ++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
+index 1377ec76a45d..4f19faafb2c5 100644
+--- a/drivers/firmware/arm_scmi/bus.c
++++ b/drivers/firmware/arm_scmi/bus.c
+@@ -108,6 +108,11 @@ static struct bus_type scmi_bus_type = {
+ 	.remove = scmi_dev_remove,
+ };
+ 
++bool is_scmi_protocol_device(struct device *dev)
++{
++	return dev->bus == &scmi_bus_type;
++}
++
+ int scmi_driver_register(struct scmi_driver *driver, struct module *owner,
+ 			 const char *mod_name)
+ {
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index ec9fd7fce3c7..13c9ac176b23 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -158,6 +158,8 @@ int scmi_version_get(const struct scmi_handle *h, u8 protocol, u32 *version);
+ void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
+ 				     u8 *prot_imp);
+ 
++bool is_scmi_protocol_device(struct device *dev);
++
+ int scmi_base_protocol_init(struct scmi_handle *h);
+ 
+ int __init scmi_bus_init(void);

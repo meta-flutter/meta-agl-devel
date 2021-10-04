@@ -1,0 +1,11 @@
+[Unit]
+Description=momiplayer
+After=multi-user.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/momiplay
+ExecStart=/usr/bin/momiplay
+
+[Install]
+WantedBy=multi-user.target

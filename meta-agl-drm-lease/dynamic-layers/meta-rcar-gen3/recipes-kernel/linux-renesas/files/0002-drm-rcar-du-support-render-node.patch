@@ -24,9 +24,9 @@ index 6a099b04a161..3e63911e4198 100644
 -	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
 +	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC
 +				| DRIVER_RENDER,
- 	.gem_free_object_unlocked = drm_gem_cma_free_object,
- 	.gem_vm_ops		= &drm_gem_cma_vm_ops,
- 	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
+ 	DRM_GEM_CMA_DRIVER_OPS_WITH_DUMB_CREATE(rcar_du_dumb_create),
+ 	.fops			= &rcar_du_fops,
+ 	.name			= "rcar-du",
 -- 
 2.25.1
 

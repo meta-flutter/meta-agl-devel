@@ -1,0 +1,43 @@
+From 41b693ffea78e5e754ba7c1b7b85a20deff8ba9f Mon Sep 17 00:00:00 2001
+From: Andriy Tryshnivskyy <andriy.tryshnivskyy@opensynergy.com>
+Date: Mon, 25 Oct 2021 13:30:19 +0300
+Subject: [PATCH] iio: core: Introduce IIO_VAL_INT_64.
+
+Introduce IIO_VAL_INT_64 to read 64-bit value for
+channel attribute. Val is used as lower 32 bits.
+
+Signed-off-by: Andriy Tryshnivskyy <andriy.tryshnivskyy@opensynergy.com>
+---
+ drivers/iio/industrialio-core.c | 3 +++
+ include/linux/iio/types.h       | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 261d3b17edc9..71ecb2e66714 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -638,6 +638,9 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+ 	}
+ 	case IIO_VAL_CHAR:
+ 		return scnprintf(buf, len, "%c", (char)vals[0]);
++	case IIO_VAL_INT_64:
++		tmp = (s64)((((u64)vals[1]) << 32) | (u32)vals[0]);
++		return scnprintf(buf, len, "%lld", tmp);
+ 	default:
+ 		return 0;
+ 	}
+diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
+index 1e3ed6f55bca..8d37cc5a3883 100644
+--- a/include/linux/iio/types.h
++++ b/include/linux/iio/types.h
+@@ -23,6 +23,7 @@ enum iio_event_info {
+ #define IIO_VAL_INT_PLUS_NANO 3
+ #define IIO_VAL_INT_PLUS_MICRO_DB 4
+ #define IIO_VAL_INT_MULTIPLE 5
++#define IIO_VAL_INT_64 6 /* 64-bit data, val is lower 32 bits */
+ #define IIO_VAL_FRACTIONAL 10
+ #define IIO_VAL_FRACTIONAL_LOG2 11
+ #define IIO_VAL_CHAR 12
+-- 
+2.17.1
+

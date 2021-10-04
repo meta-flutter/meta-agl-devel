@@ -26,5 +26,7 @@ SRC_URI += " \
 # IIO SCMI
 SRC_URI += " \
     file://iio-scmi/0001-iio-scmi-Adding-support-for-IIO-SCMI-Based-Sensors.patch \
+    file://iio-scmi/0002-iio-core-Introduce-IIO_VAL_INT_64.patch \
+    file://iio-scmi/0003-iio-scmi-Add-reading-raw-attribute.patch \
     file://iio_scmi.cfg \
 "

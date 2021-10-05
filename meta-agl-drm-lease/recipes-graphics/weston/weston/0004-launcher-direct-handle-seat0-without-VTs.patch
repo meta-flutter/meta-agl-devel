@@ -1,7 +1,7 @@
-From 3b72ab4b5399641bb69e29464bcbd14f5f6cb6c0 Mon Sep 17 00:00:00 2001
+From a3c1df8dd097b72de09a6cb851ae797c0cb055b6 Mon Sep 17 00:00:00 2001
 From: nerdopolis <bluescreen_avenger@verizon.net>
 Date: Wed, 20 Jan 2021 22:00:18 -0500
-Subject: [PATCH 4/4] launcher-direct: handle seat0 without VTs
+Subject: [PATCH] launcher-direct: handle seat0 without VTs
 
 This allows launcher-direct to run when seat0 has no TTYs
 This checks for a proper /dev/tty0 device as /dev/tty0
@@ -14,7 +14,7 @@ Signed-off-by: Damian Hobson-Garcia <dhobsong@igel.co.jp>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/libweston/launcher-direct.c b/libweston/launcher-direct.c
-index 71c332a..840a3c5 100644
+index 382ca49..646a91d 100644
 --- a/libweston/launcher-direct.c
 +++ b/libweston/launcher-direct.c
 @@ -290,6 +290,7 @@ launcher_direct_connect(struct weston_launcher **out, struct weston_compositor *
@@ -23,9 +23,9 @@ index 71c332a..840a3c5 100644
  	struct launcher_direct *launcher;
 +	struct stat buf;
  
- #ifndef ENABLE_USER_START
  	if (geteuid() != 0)
-@@ -303,7 +304,11 @@ launcher_direct_connect(struct weston_launcher **out, struct weston_compositor *
+ 		return -EINVAL;
+@@ -301,7 +302,11 @@ launcher_direct_connect(struct weston_launcher **out, struct weston_compositor *
  	launcher->base.iface = &launcher_direct_iface;
  	launcher->compositor = compositor;
  
@@ -39,5 +39,5 @@ index 71c332a..840a3c5 100644
  			free(launcher);
  			return -1;
 -- 
-2.17.1
+2.25.1
 

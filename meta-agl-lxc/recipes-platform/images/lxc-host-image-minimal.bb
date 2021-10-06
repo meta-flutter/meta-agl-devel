@@ -28,7 +28,7 @@ python __anonymous() {
         config = image
         if config.startswith('guest-image-'):
             config = config[len('guest-image-'):]
-        d.appendVar('LXC_CONTAINER_CONFIGS', 'lxc-config-' + config)
+        d.appendVar('LXC_CONTAINER_CONFIGS', ' ' + 'lxc-config-' + config)
 }
 
 install_container_images() {

@@ -1,4 +1,4 @@
-BBMULTICONFIG = "agl-container-guest"
+BBMULTICONFIG = "agl-container-guest agl-container-ivi"
 
 # The meta-virtualization has a sanity-meta-virt check.
 # This checker check 'DISTRO_FEATURES has virtualization', but 

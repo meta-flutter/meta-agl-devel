@@ -3,7 +3,7 @@ LICENSE = "MIT"
 
 require lxc-host-image-minimal.bb
 
-CONTAINER_IMAGES ?= "agl-container-guest:guest-image-cluster-demo \
+CONTAINER_IMAGES ?= "agl-container-cluster:guest-image-cluster-demo \
                      agl-container-ivi:guest-image-ivi-demo \
                     "
 

@@ -22,7 +22,7 @@ python __anonymous() {
     for c in (d.getVar('CONTAINER_IMAGES') or "").split():
         (mc, image) = c.split(':')
         dependency = 'mc::' + mc + ':' + image + ':do_image_complete'
-        d.setVarFlag('do_rootfs', 'mcdepends', dependency)
+        d.appendVarFlag('do_rootfs', 'mcdepends', ' ' + dependency)
 
         # Assume there is a X-lxc-config package for guest-image-X
         config = image

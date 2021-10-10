@@ -1,6 +1,7 @@
 [Unit]
 Description=mominavi
-After=multi-user.target
+After=multi-user.target weston.service
+Requires=multi-user.target weston.service
 
 [Service]
 Type=simple

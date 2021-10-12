@@ -14,4 +14,12 @@ IMAGE_INSTALL += " \
     qtquickcontrols2 \
     qtwayland \
     systemd-netif-config \
+    ttf-dejavu-sans \
+    ttf-dejavu-sans-mono \
+    ttf-dejavu-sans-condensed \
+    ttf-dejavu-serif \
+    ttf-dejavu-serif-condensed \
+    ttf-dejavu-mathtexgyre \
+    ttf-dejavu-common \
+    ca-certificates \
 "

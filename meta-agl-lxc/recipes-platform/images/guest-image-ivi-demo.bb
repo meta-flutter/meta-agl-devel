@@ -13,4 +13,5 @@ IMAGE_INSTALL += " \
     qtquickcontrols \
     qtquickcontrols2 \
     qtwayland \
+    systemd-netif-config \
 "

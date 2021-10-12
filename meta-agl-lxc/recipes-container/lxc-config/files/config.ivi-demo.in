@@ -21,7 +21,8 @@ lxc.mount.entry = /run/drm-lease-manager/@DRM_LEASE_DEVICE@ var/display/drm-leas
 lxc.cgroup.devices.allow = c 10:* rwm
 lxc.mount.entry = /dev/pvr_sync dev/pvr_sync none bind,optional,create=file
 
-lxc.net.0.type = empty
+lxc.net.0.type = phys
+lxc.net.0.link = eth0
 
 lxc.environment = QT_QPA_PLATFORM=wayland
 lxc.environment = QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/plugins/

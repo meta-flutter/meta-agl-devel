@@ -10,6 +10,7 @@ IMAGE_INSTALL += " \
     ilm-manager \
     mominavi \
     momiplay \
+    momiscreen \
     qtquickcontrols \
     qtquickcontrols2 \
     qtwayland \

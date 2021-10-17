@@ -1,25 +1,11 @@
 {
 	"screen": [
 		{
-			"name": "cluster-screen",
-			"dispname": "HDMI-A-2"
-		},
-		{
 			"name": "ivi-screen",
 			"dispname": "HDMI-A-1"
 		}
 	],
 	"layer": [
-		{
-			"name": "cluster-layer",
-			"id": 1000,
-			"width": 1920,
-			"height": 720,
-			"x": 0,
-			"y": 0,
-			"z": 10,
-			"attach": "cluster-screen"
-		},
 		{
 			"name": "ivi-layer",
 			"id": 2000,
@@ -33,15 +19,15 @@
 	],
 	"surface": [
 		{
-			"name": "cluster-app",
-			"id": 10,
+			"name": "momiscreen",
+			"id": 2000,
 			"x": 0,
-			"y": 0,
-			"z": 100,
-			"attach": "cluster-layer"
+			"y": 988,
+			"z": 10,
+			"attach": "ivi-layer"
 		},
 		{
-			"name": "ivi-app",
+			"name": "mominavi",
 			"id": 2010,
 			"x": 0,
 			"y": 0,
@@ -49,11 +35,35 @@
 			"attach": "ivi-layer"
 		},
 		{
+			"name": "momiplay",
+			"id": 2011,
+			"x": 0,
+			"y": 0,
+			"z": 110,
+			"attach": "ivi-layer"
+		},
+		{
+			"name": "momiradio",
+			"id": 2012,
+			"x": 0,
+			"y": 0,
+			"z": 120,
+			"attach": "ivi-layer"
+		},
+		{
+			"name": "momisetting",
+			"id": 2013,
+			"x": 0,
+			"y": 0,
+			"z": 130,
+			"attach": "ivi-layer"
+		},
+		{
 			"name": "xdg-test",
 			"id": 9801,
 			"x": 0,
 			"y": 0,
-			"z": 110,
+			"z": 300,
 			"attach": "ivi-layer"
 		}
 	]

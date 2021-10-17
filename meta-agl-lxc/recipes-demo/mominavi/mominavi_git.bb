@@ -15,11 +15,11 @@ DEPENDS = " \
 
 PV = "0.2.0"
 
-SRC_URI = "git://github.com/AGLExport/mominavi.git;protocol=https \
+SRC_URI = "git://github.com/AGLExport/mominavi.git;protocol=https;branch=master \
            file://mominavi.service \
            file://mominavi \
           "
-SRCREV = "b427b70ecbf474bdd3e0802b7bcf779e77e8d2ef"
+SRCREV = "553776e75da02b27224748756da55d38b6c7241f"
 
 S = "${WORKDIR}/git"
 

@@ -9,12 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ae6497158920d9524cf208c09cc4c984"
 DEPENDS = "libclusteripc"
 
 SRC_URI = "git://git.automotivelinux.org/src/libcluster-api;protocol=https;branch=${AGL_BRANCH}"
-SRCREV = "fa8ad7927ede4f2a825021d13a8024742b8cb225"
+SRCREV = "3ef96b9efb7c80f3f7a731379dcbfa9a21e2ceed"
 
 S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
-
-EXTRA_OECMAKE:append = " \
-        -DCMAKE_SYSROOT=${RECIPE_SYSROOT} \
-"

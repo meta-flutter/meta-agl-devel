@@ -7,7 +7,7 @@ SECTION = "devel"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=4e320231d59c825e45dbfda066af29c9"
 
-SRC_URI = "git://github.com/YDLIDAR/YDLidar-SDK.git;protocol=https"
+SRC_URI = "git://github.com/YDLIDAR/YDLidar-SDK.git;protocol=https;branch=master"
 
 SRCREV = "8b287ed831db0892f51793650b438790442fa09c"
 

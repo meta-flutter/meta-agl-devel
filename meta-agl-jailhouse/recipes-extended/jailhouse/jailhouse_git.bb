@@ -15,7 +15,7 @@ PV = "0.12+git${SRCPV}"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI = "git://github.com/siemens/jailhouse \
+SRC_URI = "git://github.com/siemens/jailhouse;branch=master;protocol=https \
            file://qemu-agl.c \
            file://agl-apic-demo.c \
            file://agl-pci-demo.c \

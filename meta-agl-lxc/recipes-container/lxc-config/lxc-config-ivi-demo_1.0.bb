@@ -4,4 +4,4 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/BSD;md5=3775480a712fc46a6964767
 
 inherit lxc-config
 
-LXC_AUTO_START = "0"
+LXC_AUTO_START ??= "0"

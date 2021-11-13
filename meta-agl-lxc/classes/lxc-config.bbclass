@@ -18,8 +18,12 @@ python __anonymous() {
         bb.error('Recipe name does not start with \'lxc-config-\'')
     config = bpn[11:]
     d.setVar('LXC_CONFIG_NAME', config)
-    src_uri = 'file://config.' + config + \
-              '.in file://system.conf.' + config + '.in'
+    src_uri = 'file://basic.in' \
+              + ' file://mount.in' \
+              + ' file://network.in' \
+              + ' file://environment.in' \
+              + ' file://misc.in' \
+              + ' file://system.conf.' + config + '.in'
     d.setVar('SRC_URI', src_uri)
 }
 
@@ -37,6 +41,12 @@ do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
 do_install () {
+    rm -f ${WORKDIR}/config.${LXC_CONFIG_NAME}.in
+    files="basic.in mount.in network.in environment.in misc.in"
+    for f in ${files}; do
+        cat ${WORKDIR}/$f >> ${WORKDIR}/config.${LXC_CONFIG_NAME}.in
+    done
+
     install -m 0755 -d ${D}/var/lib/lxc/${LXC_CONFIG_NAME}
     for f in config.${LXC_CONFIG_NAME}.in system.conf.${LXC_CONFIG_NAME}.in; do
         sed -e 's|@DRM_LEASE_DEVICE@|${DRM_LEASE_DEVICE}|g' \

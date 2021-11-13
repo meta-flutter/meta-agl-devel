@@ -1,0 +1,4 @@
+# lxc network setting
+lxc.net.0.type = phys
+lxc.net.0.link = eth0
+

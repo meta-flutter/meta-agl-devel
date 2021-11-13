@@ -1,0 +1,3 @@
+# lxc network setting
+lxc.net.0.type = empty
+

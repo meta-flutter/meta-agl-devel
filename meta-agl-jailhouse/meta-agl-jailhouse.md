@@ -224,3 +224,6 @@ In the Non-Root-Linux, the disk will show up as /dev/vda and can be accessed nor
 > $ dd if=/dev/zero of=disk.img bs=1M count=1024
 > 
 > $ mkfs.ext4 disk.img
+
+
+For manually configuring the setup, refer [`meta-agl-jailhouse.md`](meta-agl-jailhouse.md).

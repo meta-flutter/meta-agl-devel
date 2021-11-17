@@ -7,16 +7,16 @@ require recipes-kernel/linux-jailhouse-custom/linux-jailhouse-5.14.inc
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-jailhouse-custom"
 
-SRC_URI = " git://git.kiszka.org/linux.git;branch=queues/jailhouse \
+SRC_URI = " git://git.kiszka.org/linux.git;branch=queues/jailhouse-5.14 \
 	    file://defconfig \
 	  "
 
-SRCREV = "4f96ea3417cc3eb8b96d70f04ac860d8577107a8"
+SRCREV = "3208d0f0bc8afbaa06c4814e37179b7c26fcca35"
 
 S = "${WORKDIR}/git"
 
 # Modify these as desired
-PV = "5.14-rc2+git${SRCPV}"
+PV = "5.14+git${SRCPV}"
 KVER = "5.14"
 
 DEPENDS += "ncurses-native bc-native pkgconfig-native"

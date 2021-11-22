@@ -1,0 +1,33 @@
+From 162f03095b94fe1580653c96094e50ba827f4c0f Mon Sep 17 00:00:00 2001
+From: Vasyl Vavrychuk <vasyl.vavrychuk@opensynergy.com>
+Date: Thu, 3 Jun 2021 07:44:30 +0200
+Subject: [PATCH] drivers/media: Add config option for virtio video.
+
+virtio video driver is implemented as out of tree kernel module, but it
+depends on some of kernel functionality which can not be enabled
+explicitly via config (e.g. VIDEOBUF2_DMA_CONTIG).
+---
+ drivers/media/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index a6d073f2e036..a6146edb0ea3 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -235,6 +235,16 @@ endif
+ 
+ source "drivers/media/firewire/Kconfig"
+ 
++config VIDEO_VIRTIO
++	tristate "Virtio video driver"
++	depends on VIDEO_V4L2
++	select MEDIA_CONTROLLER
++	select VIDEOBUF2_DMA_CONTIG
++	select VIDEOBUF2_DMA_SG
++	select V4L2_MEM2MEM_DEV
++	help
++	  This is the virtual video driver for virtio. Say Y or M.
++
+ endmenu
+ 
+ #

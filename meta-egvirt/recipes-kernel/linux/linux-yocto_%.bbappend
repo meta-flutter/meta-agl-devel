@@ -32,3 +32,9 @@ SRC_URI += " \
     file://iio-scmi/0003-iio-scmi-Add-reading-raw-attribute.patch \
     file://iio_scmi.cfg \
 "
+
+# virtio video
+SRC_URI += " \
+    file://0001-drivers-media-Add-config-option-for-virtio-video.patch \
+    file://virtio_video.cfg \
+"

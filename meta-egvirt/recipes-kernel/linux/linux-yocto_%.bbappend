@@ -1,3 +1,5 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+
 # virtio SCMI
 SRC_URI += " \
     file://virtio-scmi/0001-firmware-arm_scmi-smccc-mailbox-Make-shmem-based-tra.patch \

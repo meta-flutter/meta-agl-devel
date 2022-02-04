@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/felipeerias/flutter_homescreen.git;protocol=https;branch=main"
 
-SRCREV = "283f915354dcc81410b30534c1eda063d0e78888"
+SRCREV = "08bf271f7f1f14153a41005718a2090fa8e783f0"
 
 S = "${WORKDIR}/git"
 

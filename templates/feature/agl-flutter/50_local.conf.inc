@@ -1,8 +1,5 @@
-# Set Flutter Channel
-FLUTTER_CHANNEL = "dev"
-
-# Build engine with runtime=release
-PACKAGECONFIG:pn-flutter-engine = "embedder-for-target disable-desktop-embeddings fontconfig mode-release"
+# Set Flutter SDK tag
+FLUTTER_SDK_TAG = "2.8.0-3.3.pre"
 
 # Include Flutter SDK in SDK
 TOOLCHAIN_HOST_TASK:append = " nativesdk-flutter-sdk"

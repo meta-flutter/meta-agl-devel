@@ -18,3 +18,5 @@ lxc.mount.entry = /dev/input dev/input none bind,optional,create=dir
 lxc.cgroup.devices.allow = c 10:* rwm
 lxc.mount.entry = /dev/pvr_sync dev/pvr_sync none bind,optional,create=file
 
+lxc.mount.entry = /run/pipewire/pipewire-0 var/pipewire-0 none bind,optional,create=file
+

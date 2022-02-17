@@ -24,4 +24,7 @@ IMAGE_INSTALL += " \
     ttf-dejavu-mathtexgyre \
     ttf-dejavu-common \
     ca-certificates \
+    wireplumber \
+    packagegroup-pipewire-base \
+    wireplumber-policy-config-agl \
 "

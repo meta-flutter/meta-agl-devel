@@ -14,3 +14,4 @@ lxc.mount.entry = /run/drm-lease-manager/lease-ivi var/display/drm-lease-manager
 
 lxc.cgroup.devices.allow = c 13:* rwm
 lxc.mount.entry = /dev/input dev/input none bind,optional,create=dir
+lxc.mount.entry = /run/pipewire/pipewire-0 var/pipewire-0 none bind,optional,create=file

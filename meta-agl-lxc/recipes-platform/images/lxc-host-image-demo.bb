@@ -12,6 +12,7 @@ IMAGE_INSTALL += " \
     alsa-utils \
     packagegroup-pipewire \
     pipewire-ic-ipc \
+    wireplumber-config-agl \
     ${@bb.utils.contains('AGL_FEATURES', 'agl-drm-lease', 'drm-lease-manager', '', d)} \
 "
 

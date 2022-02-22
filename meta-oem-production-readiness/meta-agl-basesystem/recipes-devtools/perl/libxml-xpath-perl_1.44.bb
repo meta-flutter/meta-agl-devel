@@ -1,7 +1,7 @@
 SUMMARY = "Perl modules for parsing and evaluating XPath statements"
 HOMEPAGE = "https://metacpan.org/release/XML-XPath"
 SECTION = "libs"
-LICENSE = "Artistic-2.0 & (Artistic-1.0 | GPL-1.0+)"
+LICENSE = "Artistic-2.0 & (Artistic-1.0 | GPL-1.0-or-later)"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b5714f72ee964281c4a38b1f0db4213e \
                     file://${COMMON_LICENSE_DIR}/Artistic-1.0;md5=cda03bbdc3c1951996392b872397b798 \
                     file://${COMMON_LICENSE_DIR}/GPL-1.0;md5=e9e36a9de734199567a4d769498f743d"

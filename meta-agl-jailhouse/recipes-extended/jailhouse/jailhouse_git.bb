@@ -4,7 +4,7 @@ operating systems besides Linux. For this purpose, it configures CPU and device 
 platform in a way that none of these domains, called 'cells' here, can interfere with each other in an unacceptable way."
 HOMEPAGE = "https://github.com/siemens/jailhouse"
 SECTION = "jailhouse"
-LICENSE = "GPL-2.0 & BSD-2-Clause"
+LICENSE = "GPL-2.0-only & BSD-2-Clause"
 
 LIC_FILES_CHKSUM = " \
     file://COPYING;md5=9fa7f895f96bde2d47fd5b7d95b6ba4d \

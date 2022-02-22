@@ -1,6 +1,6 @@
 SUMMARY = "VIRTIO video device driver"
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://virtio_video.h;endline=17;md5=3a04f9e12610bad07c6ec369a8077ba6"
 
 inherit module

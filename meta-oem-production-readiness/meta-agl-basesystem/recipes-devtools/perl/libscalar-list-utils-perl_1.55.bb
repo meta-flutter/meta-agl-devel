@@ -5,7 +5,7 @@ high enough to warrant the use of a keyword, and the size so small such \
 that being individual extensions would be wasteful."
 HOMEPAGE = "https://metacpan.org/release/Scalar-List-Utils"
 SECTION = "libs"
-LICENSE = "Artisticv1 | GPLv1+"
+LICENSE = "Artistic-1.0 | GPL-1.0-or-later"
 
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Artistic-1.0;md5=cda03bbdc3c1951996392b872397b798 \
                     file://${COMMON_LICENSE_DIR}/GPL-1.0;md5=e9e36a9de734199567a4d769498f743d"

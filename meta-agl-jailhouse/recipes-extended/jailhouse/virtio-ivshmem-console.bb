@@ -2,7 +2,7 @@ SUMMARY = "virtio-ivshmem-console built out of the kernel tree"
 DESCRIPTION = "virtio-ivshmem-console built out of the kernel tree."
 HOMEPAGE = "https://kernel.org"
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 PR = "r1"
 

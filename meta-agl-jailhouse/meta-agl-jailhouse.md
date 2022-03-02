@@ -138,6 +138,17 @@ qemux86-64:~# jailhouse enable /usr/share/jailhouse/cells/qemu-agl.cell
 qemux86-64:~# modprobe uio_ivshmem
 
 ```
+---
+**Note**
+
+For the above steps to get working, compile the kernels separately with the following configurations(in the menuconfig):
+
+- One with `UIO_IVSHMEM`(for backend) and,
+- another with `VIRTIO_IVSHMEM`(for frontend).
+
+For the frontend kernel you can also use the minimal Configurations present [here](https://github.com/siemens/jailhouse-images/blob/master/recipes-kernel/linux/files/amd64_defconfig_5.10). You can also build this kernel externally and copy the kernel-image later in the target image.
+
+---
 
 After this check for the PCI device using `lspci -k`, you will see something like this below:
 
@@ -182,6 +193,7 @@ qemux86-64:~# ./virtio-ivshmem-block /dev/uio0 disk.img
 Waiting for peer to be ready...
 
 ```
+> Note: If you can not find the device at `/dev/uio0` then look for other devices like `/dev/uio*`.
 
 After running the backend-service boot or reboot another cell, and backend will show something like this:
 
@@ -213,17 +225,21 @@ device_features_sel: 0
 
 In the Non-Root-Linux, the disk will show up as /dev/vda and can be accessed normally.
 
+---
+**Note**
 
->Note:
->- For the `virtio-ivshmem-block` you can find it in target system at `/usr/bin/`, if not then copy it from here `build/tmp/work-shared/qemux86-64/kernel-source/tools/virtio/virtio-ivshmem-block`.
->
->- For the `disk.img`, It needs to be a raw image. But its size matters as that defines the virtual disk size, but you may even leave it empty and only partition or format it from the front-end guest.
->
-> e.g:
-> 
-> $ dd if=/dev/zero of=disk.img bs=1M count=1024
-> 
-> $ mkfs.ext4 disk.img
+- For the `virtio-ivshmem-block` you can find it in target system at `/usr/bin/`, if not then copy it from here `build/tmp/work-shared/qemux86-64/kernel-source/tools/virtio/virtio-ivshmem-block`.
 
+- For the `disk.img`, It needs to be a raw image. But its size matters as that defines the virtual disk size, but you may even leave it empty and only partition or format it from the front-end guest.
+
+e.g:
+
+```sh
+$ dd if=/dev/zero of=disk.img bs=1M count=1024
+$ mkfs.ext4 disk.img
+```
+this can be accessed via `/dev/vda` in the frontend.
+
+---
 
 For manually configuring the setup, refer [`meta-agl-jailhouse.md`](meta-agl-jailhouse.md).

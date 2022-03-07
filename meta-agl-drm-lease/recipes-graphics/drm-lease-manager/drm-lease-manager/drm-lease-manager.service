@@ -5,6 +5,8 @@ After=basic.target
 [Service]
 Type=simple
 ExecStart=drm-lease-manager
+Group=video
+UMask=0007
 RuntimeDirectory=drm-lease-manager
 
 [Install]

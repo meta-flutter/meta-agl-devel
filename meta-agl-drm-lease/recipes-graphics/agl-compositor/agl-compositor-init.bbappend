@@ -1,0 +1,3 @@
+DRM_LEASE_DEVICE ??= "card0-HDMI-A-1"
+AGL_COMPOSITOR_ARGS:append = " --drm-lease=${DRM_LEASE_DEVICE}"
+

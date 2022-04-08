@@ -4,7 +4,7 @@ After=basic.target
 
 [Service]
 Type=simple
-ExecStart=drm-lease-manager
+ExecStart=drm-lease-manager --config=/etc/xdg/drm-lease-manager/drm-lease-manager.ini
 Group=video
 UMask=0007
 RuntimeDirectory=drm-lease-manager

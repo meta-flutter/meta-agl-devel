@@ -9,7 +9,7 @@ PV = "0.1.0+rev${SRCPV}"
 
 SRCREV = "e3a33d47195e4656f7117753d27a0f2d6b21aab9"
 SRC_URI = " \
-    git://github.com/AGLExport/ilm-manager.git;protocol=https \
+    git://github.com/AGLExport/ilm-manager.git;branch=master;protocol=https \
     file://agl.json \
     file://ilm-manager.service \
     "
@@ -17,7 +17,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig systemd
 
-do_install_append() {
+do_install:append() {
     #install scripts
     install -d ${D}/etc
     install -m 0644 ${WORKDIR}/agl.json ${D}/etc
@@ -26,6 +26,6 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/ilm-manager.service ${D}/lib/systemd/system
 }
 
-FILES_${PN} += " ${systemd_unitdir} /etc/* "
+FILES:${PN} += " ${systemd_unitdir} /etc/* "
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "ilm-manager.service"
+SYSTEMD_SERVICE:${PN} = "ilm-manager.service"

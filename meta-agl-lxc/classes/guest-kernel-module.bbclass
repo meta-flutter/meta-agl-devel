@@ -18,4 +18,4 @@ do_install:aglcontainerguest() {
 
 # Guest doesn't build the module, so go ahead and quiet warnings about
 # double '/' in base recipe definition
-FILES_${PN}:aglcontainerguest = ""
+FILES:${PN}:aglcontainerguest = ""

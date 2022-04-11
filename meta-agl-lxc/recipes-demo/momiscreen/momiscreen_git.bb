@@ -25,7 +25,7 @@ inherit qmake5 systemd
 
 QT_INSTALL_PREFIX = "/usr"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}/lib/systemd/system
 	install -m 0644 ${WORKDIR}/momiscreen.service ${D}/lib/systemd/system
 

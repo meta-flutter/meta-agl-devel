@@ -6,4 +6,4 @@ do_install:aglcontainerguest:append() {
 }
 
 PACKAGES:append:aglcontainerguest = " ${PN}-dev"
-FILES_${PN}-dev:aglcontainerguest += "${includedir}"
+FILES:${PN}-dev:aglcontainerguest += "${includedir}"

@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 inherit cmake
 
-FILES_${PN} += "${datadir} ${prefix}/startup"
+FILES:${PN} += "${datadir} ${prefix}/startup"
 
 do_install:append() {
     sed -i -e 's|${DEBUG_PREFIX_MAP}||g; s|--sysroot=${STAGING_DIR_TARGET}||g' ${D}${libdir}/pkgconfig/*.pc

@@ -7,7 +7,7 @@ PACKAGES = "\
     packagegroup-agl-ros2-ydlidar \
     "
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 RDEPENDS:${PN} += " \
       ydlidar-ros2-driver \

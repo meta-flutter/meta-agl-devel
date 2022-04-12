@@ -11,7 +11,7 @@ SRCREV = "53f4fe700dee88cc9840a91f2f297aacf05e08d4"
 
 S = "${WORKDIR}/git"
 
-inherit meson
+inherit meson pkgconfig
 inherit systemd
 inherit ptest
 

@@ -1,5 +1,10 @@
-# Pinned SRCREV
-SRCREV = "87c5567703906cfc2acd9280b71580fb97724abe"
+# Potentially pin SRCREV here.  Use upstream's AUTOINC default for
+# development for now.
+#SRCREV = ""
+
+# For now disable gstreamer to avoid needing to enable "commercial"
+# licenses for the stated ffmpeg dependency.
+PACKAGECONFIG:remove = "gstreamer"
 
 # AGL specifics
 IVI_HOMESCREEN_APP_OVERRIDE = "--a=/usr/share/gallery"

@@ -9,7 +9,18 @@ PACKAGECONFIG:remove = "gstreamer"
 # AGL specifics
 IVI_HOMESCREEN_APP_OVERRIDE = "--a=/usr/share/gallery"
 
-SERVICE_UNIT        = "Requires=weston.service\nAfter=weston.service"
-SERVICE_USER_GROUP  = "User=weston\nGroup=weston"
-SERVICE_RESTART     = ""
-SERVICE_ENVIRONMENT = "Environment=XDG_RUNTIME_DIR=/run/user/200"
+SERVICE_UNIT        = "Requires=agl-compositor.service\nAfter=agl-compositor.service"
+SERVICE_INSTALL     = "WantedBy=agl-session.target"
+# we have a regular/agl-driver user, so avoid setting one
+SERVICE_ENVIRONMENT = ""
+SERVICE_USER_GROUP  = ""
+SERVICE_RESTART	    = "Restart=on-failure"
+
+# we need to install as user session, not root.
+do_install:append() {
+    install -d ${D}${systemd_user_unitdir}/agl-session.target.wants
+    install -m0644 ${WORKDIR}/homescreen.service ${D}${systemd_user_unitdir}/homescreen.service
+    ln -s ../homescreen.service ${D}${systemd_user_unitdir}/agl-session.target.wants/homescreen.service
+}
+
+FILES:${PN} += " ${systemd_user_unitdir}"

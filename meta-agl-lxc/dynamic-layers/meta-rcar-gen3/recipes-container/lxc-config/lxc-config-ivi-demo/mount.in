@@ -10,7 +10,7 @@ lxc.mount.entry = /run/udev/data run/udev/data none ro,bind,optional,create=dir
 lxc.cgroup.devices.allow = c 226:* rwm
 lxc.mount.entry = /dev/dri dev/dri none bind,optional,create=dir
 
-lxc.mount.entry = /run/drm-lease-manager/@DRM_LEASE_DEVICE@ var/display/drm-lease-manager/@DRM_LEASE_DEVICE@ none bind,create=file
+lxc.mount.entry = /run/drm-lease-manager/lease-ivi var/display/drm-lease-manager/lease none bind,create=file
 
 lxc.cgroup.devices.allow = c 13:* rwm
 lxc.mount.entry = /dev/input dev/input none bind,optional,create=dir

@@ -8,5 +8,3 @@ SRC_URI:append = " \
 
 PACKAGECONFIG[drm-lease] = "-Ddrm-lease=true,-Ddrm-lease=false,drm-lease-manager"
 PACKAGECONFIG:append = " drm-lease"
-
-RDEPENDS:${PN}:append = " drm-lease-manager"

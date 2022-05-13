@@ -9,11 +9,11 @@ SRC_URI = " \
     "
 
 do_install() {
-	install -D -m0644 ${WORKDIR}/20-wired.network ${D}/etc/systemd/network/20-wired.network
+	install -D -m0644 ${WORKDIR}/20-wired.network ${D}${sysconfdir}/systemd/network/20-wired.network
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 FILES:${PN} = "\
-    /etc/systemd/network/* \
+    ${sysconfdir}/systemd/network/* \
 "

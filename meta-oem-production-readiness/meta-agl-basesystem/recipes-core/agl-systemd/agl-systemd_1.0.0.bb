@@ -14,10 +14,10 @@ do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
 do_install() {
-    install -d ${D}/etc/systemd/system/
-    install -m 644 ${S}/launch_sm.service ${D}/etc/systemd/system/
-    install -m 644 ${S}/systemd-udev-trigger.service ${D}/etc/systemd/system/
-    install -m 644 ${S}/setup_refhw.service ${D}/etc/systemd/system/
+    install -d ${D}${sysconfdir}/systemd/system/
+    install -m 644 ${S}/launch_sm.service ${D}${sysconfdir}/systemd/system/
+    install -m 644 ${S}/systemd-udev-trigger.service ${D}${sysconfdir}/systemd/system/
+    install -m 644 ${S}/setup_refhw.service ${D}${sysconfdir}/systemd/system/
 
     install -d ${D}${CONFDIR}/
     install -m 644 ${S}/env.txt ${D}${CONFDIR}/
@@ -25,8 +25,8 @@ do_install() {
     install -d ${D}${bindir}
     install -m 755 ${S}/tool_9E_SI/*.sh ${D}${bindir}/
 
-    install -d ${D}/lib/udev/rules.d
-    install -m 644 ${S}/99-basesystem.rules ${D}/lib/udev/rules.d/
+    install -d ${D}${libdir}/udev/rules.d
+    install -m 644 ${S}/99-basesystem.rules ${D}/${libdir}/udev/rules.d/
 }
 
 RDEPENDS:${PN} += "bash"

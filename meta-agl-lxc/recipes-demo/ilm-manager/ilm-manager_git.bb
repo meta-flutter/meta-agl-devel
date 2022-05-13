@@ -19,13 +19,13 @@ inherit autotools pkgconfig systemd
 
 do_install:append() {
     #install scripts
-    install -d ${D}/etc
-    install -m 0644 ${WORKDIR}/agl.json ${D}/etc
+    install -d ${D}${sysconfdir}
+    install -m 0644 ${WORKDIR}/agl.json ${D}${sysconfdir}
 
-    install -d ${D}/lib/systemd/system
-    install -m 0644 ${WORKDIR}/ilm-manager.service ${D}/lib/systemd/system
+    install -d ${D}/${systemd_system_unitdir}
+    install -m 0644 ${WORKDIR}/ilm-manager.service ${D}${systemd_system_unitdir}
 }
 
-FILES:${PN} += " ${systemd_unitdir} /etc/* "
+FILES:${PN} += " ${systemd_system_unitdir} ${sysconfdir} "
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE:${PN} = "ilm-manager.service"

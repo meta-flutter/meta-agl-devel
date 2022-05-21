@@ -10,6 +10,7 @@ DEPENDS = " \
 BRANCH = "master"
 SRC_URI = "git://git.automotivelinux.org/src/cluster-refgui;protocol=https;branch=${BRANCH} \
            file://cluster.service \
+           file://cluster \
 "
 SRCREV = "a16c6201be94a57eb8151a91699084d99694877c"
 
@@ -29,6 +30,9 @@ SYSTEMD_SERVICE:${PN} = "cluster.service"
 do_install:append() {
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/cluster.service ${D}${systemd_unitdir}/system/
+    
+    install -m 0755 -d ${D}${sysconfdir}/default/
+    install -m 0755 ${WORKDIR}/cluster ${D}${sysconfdir}/default/
 }
 
 FILES:${PN} += "${APP_DIR}/"

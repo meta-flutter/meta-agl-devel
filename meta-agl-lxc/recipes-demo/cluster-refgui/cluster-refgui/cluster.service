@@ -4,7 +4,7 @@ After=multi-user.target weston.service
 Requires=multi-user.target weston.service
 
 [Service]
-Environment=XDG_RUNTIME_DIR=/run/user/0
+EnvironmentFile=/etc/default/cluster
 ExecStart=/opt/apps/cluster
 
 [Install]

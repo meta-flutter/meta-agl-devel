@@ -14,7 +14,7 @@ SYSTEMD_SERVICE:${PN} = ""
 FILES:${PN}-firmware = " \
     ${systemd_system_unitdir}/* \
     ${sysconfdir}/udev/* \
-    /lib/firmware/* \
+    ${nonarch_base_libdir}/firmware/* \
     ${exec_prefix}/bin/pvrinit \
 "
 SYSTEMD_SERVICE:${PN}-firmware = "rc.pvr.service"

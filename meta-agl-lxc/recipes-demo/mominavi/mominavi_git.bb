@@ -34,8 +34,8 @@ do_configure:prepend() {
 	fi
 }
 do_install:append() {
-    install -d ${D}/lib/systemd/system
-    install -m 0644 ${WORKDIR}/mominavi.service ${D}/lib/systemd/system
+    install -d ${D}/${systemd_unitdir}/system
+    install -m 0644 ${WORKDIR}/mominavi.service ${D}/${systemd_unitdir}/system
 
     install -m 0755 -d ${D}${sysconfdir}/default/
     install -m 0755 ${WORKDIR}/mominavi ${D}${sysconfdir}/default/

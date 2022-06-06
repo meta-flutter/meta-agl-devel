@@ -15,5 +15,8 @@ SRCREV = "08bf271f7f1f14153a41005718a2090fa8e783f0"
 S = "${WORKDIR}/git"
 
 PUBSPEC_APPNAME = "flutter_homescreen"
+FLUTTER_APPLICATION_INSTALL_PREFIX = "/flutter"
+
+FLUTTER_BUILD_ARGS = "bundle -v"
 
 inherit flutter-app

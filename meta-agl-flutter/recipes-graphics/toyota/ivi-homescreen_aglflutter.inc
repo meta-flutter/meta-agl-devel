@@ -7,7 +7,7 @@
 PACKAGECONFIG:remove = "gstreamer"
 
 # AGL specifics
-IVI_HOMESCREEN_APP_OVERRIDE = "--a=/usr/share/gallery"
+IVI_HOMESCREEN_APP_OVERRIDE = "--a=/usr/share/flutter/gallery"
 
 SERVICE_UNIT        = "Requires=agl-compositor.service\nAfter=agl-compositor.service"
 SERVICE_INSTALL     = "WantedBy=agl-session.target"

@@ -1,1 +1,0 @@
-ALEXA_WAKEWORD = "true"

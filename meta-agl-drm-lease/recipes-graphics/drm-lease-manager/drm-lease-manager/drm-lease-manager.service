@@ -3,7 +3,7 @@ Description=DRM Lease Manager
 After=basic.target
 
 [Service]
-Type=simple
+Type=notify
 ExecStart=drm-lease-manager --config=/etc/xdg/drm-lease-manager/drm-lease-manager.ini
 Group=video
 UMask=0007

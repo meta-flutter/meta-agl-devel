@@ -1,4 +1,4 @@
-From c2ea6f3104035307aec0dcc5db62bbacfc2a6790 Mon Sep 17 00:00:00 2001
+From ed6cfbcf67221810f324a9889175c147728cf634 Mon Sep 17 00:00:00 2001
 From: Damian Hobson-Garcia <dhobsong@igel.co.jp>
 Date: Tue, 12 Apr 2022 15:12:27 +0900
 Subject: [PATCH] Add drm-lease support
@@ -21,10 +21,10 @@ Signed-off-by: Damian Hobson-Garcia <dhobsong@igel.co.jp>
  create mode 100644 src/drm-lease.h
 
 diff --git a/meson.build b/meson.build
-index 5f6c29d..159e1f4 100644
+index 0daf943..34c26f9 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -194,6 +194,12 @@ elif policy_to_install == 'rba'
+@@ -193,6 +193,12 @@ elif policy_to_install == 'rba'
    message('Installing rba policy')
  endif
  
@@ -53,7 +53,7 @@ index dd1f3c0..89de273 100644
 +	description: 'Support for running weston with a leased DRM Master'
 +)
 diff --git a/src/compositor.c b/src/compositor.c
-index 9a3a825..5fa459d 100644
+index 7540fe3..771b7ce 100644
 --- a/src/compositor.c
 +++ b/src/compositor.c
 @@ -64,6 +64,8 @@
@@ -65,21 +65,21 @@ index 9a3a825..5fa459d 100644
  static int cached_tm_mday = -1;
  static struct weston_log_scope *log_scope;
  
-@@ -876,18 +878,21 @@ load_drm_backend(struct ivi_compositor *ivi, int *argc, char *argv[])
- 	int use_current_mode = 0;
+@@ -877,11 +879,13 @@ load_drm_backend(struct ivi_compositor *ivi, int *argc, char *argv[])
  	int use_pixman = 0;
  	bool use_shadow;
+ 	bool without_input = false;
 +	char *drm_lease_name = NULL;
  	int ret;
  
  	const struct weston_option options[] = {
  		{ WESTON_OPTION_STRING, "seat", 0, &config.seat_id },
- 		{ WESTON_OPTION_INTEGER, "tty", 0, &config.tty },
  		{ WESTON_OPTION_STRING, "drm-device", 0, &config.specific_device },
 +		{ WESTON_OPTION_STRING, "drm-lease", 0, &drm_lease_name },
  		{ WESTON_OPTION_BOOLEAN, "current-mode", 0, &use_current_mode },
  		{ WESTON_OPTION_BOOLEAN, "use-pixman", 0, &use_pixman },
- 	};
+ 		{ WESTON_OPTION_BOOLEAN, "continue-without-input", false, &without_input }
+@@ -889,6 +893,7 @@ load_drm_backend(struct ivi_compositor *ivi, int *argc, char *argv[])
  
  	parse_options(options, ARRAY_LENGTH(options), argc, argv);
  	config.use_pixman = use_pixman;
@@ -87,7 +87,7 @@ index 9a3a825..5fa459d 100644
  	ivi->cmdline.use_current_mode = use_current_mode;
  
  	section = weston_config_get_section(ivi->config, "core", NULL, NULL);
-@@ -916,6 +921,7 @@ load_drm_backend(struct ivi_compositor *ivi, int *argc, char *argv[])
+@@ -920,6 +925,7 @@ load_drm_backend(struct ivi_compositor *ivi, int *argc, char *argv[])
  error:
  	free(config.gbm_format);
  	free(config.seat_id);
@@ -95,7 +95,7 @@ index 9a3a825..5fa459d 100644
  	return ret;
  }
  
-@@ -1774,6 +1780,7 @@ error_compositor:
+@@ -1789,6 +1795,7 @@ error_compositor:
  	free(modules);
  	modules = NULL;
  
@@ -187,7 +187,7 @@ index 0000000..9fdc428
 +#endif
 +#endif /* DRM_LEASE_H */
 diff --git a/src/ivi-compositor.h b/src/ivi-compositor.h
-index e89d215..f053848 100644
+index 78d1acd..8fe460b 100644
 --- a/src/ivi-compositor.h
 +++ b/src/ivi-compositor.h
 @@ -35,6 +35,7 @@

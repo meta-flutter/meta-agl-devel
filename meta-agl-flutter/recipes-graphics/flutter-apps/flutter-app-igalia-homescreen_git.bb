@@ -1,5 +1,5 @@
 SUMMARY = "Igalia Flutter Homescreen"
-DESCRIPTION = "Flutter Gallery Application"
+DESCRIPTION = "A prototype home screen for automotive grade Linux."
 AUTHOR = "Igalia"
 HOMEPAGE = "https://github.com/felipeerias/flutter_homescreen"
 BUGTRACKER = "https://github.com/felipeerias/flutter_homescreen/issues"
@@ -20,3 +20,5 @@ FLUTTER_APPLICATION_INSTALL_PREFIX = "/flutter"
 FLUTTER_BUILD_ARGS = "bundle -v"
 
 inherit flutter-app
+
+BBCLASSEXTEND = "flutterrelease flutterprofile flutterdebug"

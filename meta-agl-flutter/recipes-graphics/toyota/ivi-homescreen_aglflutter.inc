@@ -1,5 +1,4 @@
-# Potentially pin SRCREV here.  Use upstream's AUTOINC default for
-# development for now.
+# Upstream is now pinning ivi-homescreen
 #SRCREV = ""
 
 # For now disable gstreamer to avoid needing to enable "commercial"
@@ -7,7 +6,7 @@
 PACKAGECONFIG:remove = "gstreamer"
 
 # AGL specifics
-IVI_HOMESCREEN_APP_OVERRIDE = "--a=/usr/share/flutter/gallery"
+IVI_HOMESCREEN_APP_OVERRIDE = "--b=/usr/share/flutter/gallery"
 
 SERVICE_UNIT        = "Requires=agl-compositor.service\nAfter=agl-compositor.service"
 SERVICE_INSTALL     = "WantedBy=agl-session.target"

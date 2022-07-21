@@ -3,6 +3,7 @@ SUMMARY = "A minimal container host image"
 require recipes-platform/images/agl-image-boot.inc
 
 IMAGE_INSTALL += " \
+    kernel-image \
     lxc \
     ${LXC_CONTAINER_CONFIGS} \
     drm-lease-manager \

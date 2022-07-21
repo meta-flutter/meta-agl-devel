@@ -5,6 +5,7 @@ require recipes-platform/images/agl-image-boot.inc
 IMAGE_INSTALL += " \
     lxc \
     ${LXC_CONTAINER_CONFIGS} \
+    drm-lease-manager \
 "
 
 CONTAINER_IMAGES ??= ""

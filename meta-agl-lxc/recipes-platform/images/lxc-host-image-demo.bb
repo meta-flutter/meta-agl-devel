@@ -13,7 +13,6 @@ IMAGE_INSTALL += " \
     packagegroup-pipewire \
     pipewire-ic-ipc \
     wireplumber-config-agl \
-    ${@bb.utils.contains('AGL_FEATURES', 'agl-drm-lease', 'drm-lease-manager', '', d)} \
 "
 
 IMAGE_INSTALL:append:rcar-gen3 = " kernel-module-gles "

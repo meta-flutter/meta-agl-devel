@@ -5,16 +5,15 @@ LICENSE = "MIT"
 require agl-image-flutter.inc
 
 IMAGE_INSTALL:append = "\
-    weston-ini-conf-landscape \
+    weston-init-conf-landscape \
     \
-    ivi-homescreen-release \
-    flutter-engine-release \
+    ivi-homescreen-runtimerelease \
     \
-    flutter-gallery-release \
-    flutter-test-secure-storage-release \
-    flutter-test-texture-egl-release \
-    flutter-test-video-player-release \
+    flutter-gallery-runtimerelease \
+    flutter-test-texture-egl-runtimerelease \
+    flutter-test-secure-storage-runtimerelease \
+    flutter-test-localization-runtimerelease \
     \
-    flutter-app-igalia-homescreen-flutterrelease \
-    flutter-app-pumped-fuel-ped-flutterrelease \
+    flutter-app-igalia-homescreen-runtimerelease \
+    flutter-app-pumped-fuel-ped-runtimerelease \
     "

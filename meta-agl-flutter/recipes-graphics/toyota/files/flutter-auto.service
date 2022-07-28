@@ -3,7 +3,7 @@ Requires=agl-compositor.service
 After=agl-compositor.service
 
 [Service]
-ExecStart=/usr/bin/homescreen --j=/usr/share/flutter/config/gallery_on_bg.json
+ExecStart=/usr/bin/flutter-auto --j=/usr/share/flutter/default.json
 Restart=on-failure
 
 [Install]

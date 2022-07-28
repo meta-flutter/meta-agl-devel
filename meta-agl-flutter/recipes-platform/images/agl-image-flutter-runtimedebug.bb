@@ -5,9 +5,11 @@ LICENSE = "MIT"
 require agl-image-flutter.inc
 
 IMAGE_INSTALL:append = "\
-    weston-init-conf-landscape \
+    weston-ini-conf-landscape \
     \
-    ivi-homescreen-logging-runtimedebug \
+    flutter-auto-runtimedebug \
+    \
+    flutter-engine-runtimedebug-sdk-dev \
     \
     flutter-gallery-runtimedebug \
     flutter-test-texture-egl-runtimedebug \

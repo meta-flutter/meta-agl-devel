@@ -17,3 +17,5 @@ IMAGE_INSTALL:append = "\
     flutter-app-igalia-homescreen-runtimeprofile \
     flutter-app-pumped-fuel-ped-runtimeprofile	\
     "
+
+EXTRA_IMAGE_FEATURES += " ssh-server-openssh"

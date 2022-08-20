@@ -5,6 +5,7 @@ LICENSE = "MIT"
 require agl-image-flutter.inc
 
 IMAGE_INSTALL:append = "\
+    openssh \
     weston-ini-conf-landscape \
     \
     flutter-auto-runtimedebug \
@@ -19,5 +20,3 @@ IMAGE_INSTALL:append = "\
     flutter-app-igalia-homescreen-runtimedebug \
     flutter-app-pumped-fuel-ped-runtimedebug \
     "
-
-EXTRA_IMAGE_FEATURES += " ssh-server-openssh"

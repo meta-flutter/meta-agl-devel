@@ -15,24 +15,18 @@ SRC_URI += "\
     "
 
 
-cmake_do_install:runtimerelease:append() {
-
-    install -d ${D}${systemd_user_unitdir}/agl-session.target.wants
-    install -D -m0644 ${WORKDIR}/${USER_SERVICE} ${D}${systemd_user_unitdir}/${USER_SERVICE}
-
-    install -D -m0644 ${WORKDIR}/gallery_on_bg-release.json ${D}${datadir}/flutter/default.json
-}
-
-cmake_do_install:runtimedebug:append() {
+cmake_do_install:append() {
 
     # the dev host controls starting/stopping the flutter-auto process when runtime=debug
     install -D -m0644 ${WORKDIR}/gallery_on_bg.json ${D}${datadir}/flutter/default.json
 }
 
-cmake_do_install:runtimeprofile:append() {
+cmake_do_install:append:runtimerelease() {
 
-    # the dev host controls starting/stopping the flutter-auto process when runtime=profile
-    install -D -m0644 ${WORKDIR}/gallery_on_bg.json ${D}${datadir}/flutter/default.json
+    install -d ${D}${systemd_user_unitdir}/agl-session.target.wants
+    install -D -m0644 ${WORKDIR}/${USER_SERVICE} ${D}${systemd_user_unitdir}/${USER_SERVICE}
+
+    install -D -m0644 ${WORKDIR}/gallery_on_bg-release.json ${D}${datadir}/flutter/default.json
 }
 
 

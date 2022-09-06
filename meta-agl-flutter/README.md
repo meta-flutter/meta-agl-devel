@@ -80,6 +80,25 @@ At runtime you can edit `/usr/share/flutter/default.json` to point to any Flutte
 For more JSON key value options see [here](https://github.com/toyota-connected/ivi-homescreen/blob/agl/README.md#json-configuration-keys)
 
 
+## Custom Devices
+
+### desktop-auto
+
+This is a desktop build of flutter-auto.  The backend defaults to `vulkan` backend.  To change this to use the `egl` backend, change the `backend` key value in `meta-agl-flutter/tools/flutter_workspace_config.json` from `vulkan` to `egl`.
+
+If you are running a Gnome Display Manager (GDM) Wayland session, then it will be an available custom-device platform.  To enable a Wayland session, you select the gear icon at the login window.  If you don't have a gear icon available on your login screen, then you will need to adjust your system settings to enable a Wayland session.
+
+Append `--device-id=desktop-auto` to `flutter <cmd>` to select this device.
+
+### QEMU-agl
+
+This is a QEMU minimal Flutter image as referenced [here](#steps-to-build-a-minimal-flutter-image).  The required runtime packages are installed as part of setup_flutter_workspace.py.
+
+If qemu_run was sucessfully invoked, then this platform will be an available `custom-device`.  If QEMU instance is not running on port 2222, then this custom-device platform will not be available.
+
+Append `--device-id=AGL-qemu` to `flutter <cmd>` to select this device.
+
+
 ## Steps to Test Flutter Images
 
 ### Debug
@@ -110,7 +129,7 @@ _Answering with `y` appends QEMU connection to `~/.ssh/known_hosts`_
 6.  Or run from the same terminal as qemu_run was executed via
 ```
     cd $FLUTTER_WORKSPACE/app/gallery
-    flutter run -device-id=AGL-qemu
+    flutter run --device-id=AGL-qemu
 ```
 
 

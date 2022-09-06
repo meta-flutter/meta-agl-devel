@@ -1,0 +1,38 @@
+From 394f48a1e535f464879fa94196ee6d73b86894f5 Mon Sep 17 00:00:00 2001
+From: Scott Murray <scott.murray@konsulko.com>
+Date: Thu, 4 Aug 2022 14:36:08 -0400
+Subject: [PATCH] Add xdg-shell-app-id command-line argument
+
+Add a command-line argument for specifying the app id, so that basic
+applications do not need to supply a full JSON configuration just to
+do so.
+
+Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+---
+ shell/main.cc | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/shell/main.cc b/shell/main.cc
+index deb4876..ba35acc 100644
+--- a/shell/main.cc
++++ b/shell/main.cc
+@@ -161,6 +161,16 @@ int main(int argc, char** argv) {
+       FML_DLOG(INFO) << "Window Type: " << config.view.window_type;
+       RemoveArgument(config.view.vm_args, "--window-type=" + config.view.window_type);
+     }
++    if (cl.HasOption("xdg-shell-app-id")) {
++      cl.GetOptionValue("xdg-shell-app-id", &config.app_id);
++      if (config.app_id.empty()) {
++        FML_LOG(ERROR)
++            << "--xdg-shell-app-id option requires an argument (e.g. --xdg-shell-app-id=gallery)";
++        return EXIT_FAILURE;
++      }
++      FML_DLOG(INFO) << "Application ID: " << config.app_id;
++      RemoveArgument(config.view.vm_args, "--xdg-shell-app-id=" + config.app_id);
++    }
+   }
+ 
+   auto vm_arg_count = config.view.vm_args.size();
+-- 
+2.35.3
+

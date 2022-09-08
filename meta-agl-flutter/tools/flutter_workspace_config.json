@@ -1,14 +1,18 @@
 {
 	"flutter-version": "3.0.5",
-	"platforms": [{
+	"platforms": [
+		{
 			"id": "desktop-auto",
 			"type": "host",
 			"arch": "x86_64",
 			"flutter_runtime": "debug",
 			"runtime": {
-				"backend": "vulkan",
-				"default_width": 1920,
-				"default_height": 1080,
+				"backend": "egl",
+				"config": {
+					"width": 1920,
+					"height": 1080,
+					"cursor_theme": "DMZ-White"
+				},
 				"install_dependent_packages": true,
 				"artifact_source": "github",
 				"github_owner": "toyota-connected",
@@ -40,6 +44,12 @@
 			"arch": "x86_64",
 			"flutter_runtime": "debug",
 			"runtime": {
+				"config": {
+					"window_type": "BG",
+					"width": 1920,
+					"height": 1080,
+					"fullscreen": true
+				},
 				"install_dependent_packages": true,
 				"relative_path": ".agl/agl-image-flutter-runtime${FLUTTER_RUNTIME}-qemux86-64.wic.vmdk",
 				"artifact_source": "github",
@@ -63,7 +73,7 @@
 				],
 				"pingSuccessRegex": "open 2222",
 				"postBuild": [
-					"bash", "-c", "mkdir -p ${localPath}/../../.flutter-auto/data/flutter_assets && cp -r ${localPath}/* ${localPath}/../../.flutter-auto/data/flutter_assets && ssh -p 2222 -t -oBatchMode=yes root@localhost passwd -d agl-driver"
+					"bash", "-c", "mkdir -p ${localPath}/../../.flutter-auto/data/flutter_assets && cp -r ${localPath}/* ${localPath}/../../.flutter-auto/data/flutter_assets && cp -r ${FLUTTER_WORKSPACE}/.agl/default_config.json ${localPath}/../../.flutter-auto/ && ssh -p 2222 -t -oBatchMode=yes root@localhost passwd -d agl-driver"
 				],
 				"uninstall": [
 					"bash", "-c", "ssh -p 2222 -t -t -oBatchMode=yes agl-driver@localhost rm -rf \"/tmp/${appName}\""
@@ -74,7 +84,7 @@
 				"runDebug": [
 					"ssh", "-t", "-t", "-p", "2222", "-oBatchMode=yes", "agl-driver@localhost",
 					"flutter-auto",
-					"--j=/usr/share/flutter/default.json",
+					"--j=/tmp/${appName}/default_config.json",
 					"--b=/tmp/${appName}",
 					"--observatory-host=0.0.0.0",
 					"--observatory-port=1234"
@@ -85,7 +95,8 @@
 			}
 		}
 	],
-	"repos": [{
+	"repos": [
+		{
 			"uri": "https://github.com/flutter/gallery.git",
 			"branch": "master",
 			"rev": "9eb785cb997ff56c46e933c1c591f0a6f31454f6",
@@ -96,6 +107,11 @@
 			"branch": "main"
 		},
 		{
+			"uri": "https://github.com/meta-flutter/flutter_animated_background.git",
+			"branch": "meta-flutter",
+			"pubspec_path": "flutter_animated_background/example"
+		},
+		{
 			"uri": "https://github.com/mogol/flutter_secure_storage.git",
 			"branch": "develop",
 			"rev": "e716593352b80330e05729486eade7c2167d3c71",
@@ -104,13 +120,11 @@
 		{
 			"uri": "https://github.com/felipeerias/flutter_homescreen.git",
 			"branch": "main",
-			"rev": "08bf271f7f1f14153a41005718a2090fa8e783f0",
 			"pubspec_path": "flutter_homescreen"
 		},
 		{
 			"uri": "https://github.com/bernardpumped/ped.git",
-			"branch": "main",
-			"rev": "7a670295d5a94508862316e045e789e0dfd01b20",
+			"branch": "agl",
 			"pubspec_path": "ped"
 		},
 		{

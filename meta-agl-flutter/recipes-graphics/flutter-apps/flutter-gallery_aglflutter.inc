@@ -2,7 +2,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/flutter-gallery:"
 
 SRC_URI += " \
     file://flutter-gallery.service \
-    file://gallery_on_bg.json \
 "
 
 # To avoid conflicts with the systemd template scheme added via bbappend in
@@ -20,13 +19,9 @@ do_install:append() {
     install -D -m 0644 ${WORKDIR}/flutter-gallery.service ${D}${systemd_user_unitdir}/flutter-gallery.service
     install -d ${D}${systemd_user_unitdir}/agl-session.target.wants
     ln -s ../flutter-gallery.service ${D}${systemd_user_unitdir}/agl-session.target.wants/flutter-gallery.service
-
-    install -D -m 0644 ${WORKDIR}/gallery_on_bg.json ${D}${datadir}/flutter/default.json
 }
 
 PACKAGE_BEFORE_PN += "${PN}-init"
-
-FILES:${PN} += "${datadir}"
 
 FILES:${PN}-init = "${systemd_user_unitdir}"
 

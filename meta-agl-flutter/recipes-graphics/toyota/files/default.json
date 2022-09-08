@@ -1,0 +1,9 @@
+{
+    "view" : [
+        {
+            "window_type" : "BG",
+            "width" : 1920,
+            "height": 1080
+        }
+    ]
+}

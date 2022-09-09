@@ -3,7 +3,7 @@ Requires=agl-compositor.service
 After=agl-compositor.service
 
 [Service]
-ExecStart=/usr/bin/flutter-auto --j=/usr/share/flutter/default.json
+ExecStart=/usr/bin/flutter-auto --j=/usr/share/flutter/default.json --b=/usr/share/flutter/gallery --f
 Restart=on-failure
 
 [Install]

@@ -1,5 +1,7 @@
 FILESEXTRAPATHS:append := "${THISDIR}/files:"
 
+SRCREV = "${AUTOREV}"
+
 SRC_URI += " \
     file://0001-Add-xdg-shell-app-id-command-line-argument.patch \
 "
